@@ -49,7 +49,7 @@ jobs:
           # optional: set permissions (#TBD)
           permissions_contents: write
           # optional: set repositories
-          account: gr2m
+          owner: gr2m
           repositories: my-repo1,my-repo2
       # do something with the token
 ```
