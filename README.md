@@ -51,6 +51,8 @@ jobs:
           # optional: set repositories
           owner: gr2m
           repositories: my-repo1,my-repo2
+          # optional: disable token revocation
+          revoke: false
       # do something with the token
 ```
 
@@ -79,6 +81,22 @@ jobs:
         with:
           github_token: ${{ steps.app-token.outputs.token }}
 ```
+
+## Inputs
+
+### `app_id`
+
+**Required:** GitHub app ID.
+
+### `private_key`
+
+**Required:** GitHub app private key.
+
+## Outputs
+
+### `token`
+
+GitHub installation access token.
 
 ## How it works
 
