@@ -5,6 +5,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.16'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
       - uses: ./ # Uses the action in the root directory
         id: demo
         with:

@@ -5928,6 +5928,7 @@ async function post(core3, request2) {
       authorization: `token ${token}`
     }
   });
+  core3.info("Token revoked");
 }
 
 // post.js
