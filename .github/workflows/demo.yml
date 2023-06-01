@@ -4,6 +4,7 @@ jobs:
   demo:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: ./ # Uses the action in the root directory
         id: demo
         with:
