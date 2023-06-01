@@ -15,5 +15,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ steps.demo.outputs.token }}
         with:
-          route: GET /installations/repositories
+          route: GET /installation/repositories
       - run: echo '${{ steps.get-repository.outputs.data }}'
