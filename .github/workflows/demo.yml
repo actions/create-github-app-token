@@ -4,7 +4,7 @@ jobs:
   demo:
     runs-on: ubuntu-latest
     steps:
-      - uses: .
+      - uses: ./ # Uses the action in the root directory
         id: demo
         with:
           app_id: ${{ secrets.APP_ID }}
