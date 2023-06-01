@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "scripts": {
+    "build": "esbuild main.js --bundle --outfile=dist/main.cjs --platform=node --target=node16.16",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "license": "MIT",
@@ -14,6 +15,7 @@
     "@octokit/request": "^6.2.5"
   },
   "devDependencies": {
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "esbuild": "^0.17.19"
   }
 }
