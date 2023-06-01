@@ -14,4 +14,4 @@ outputs:
 runs:
   using: 'node16'
   main: 'dist/main.cjs'
-  # post: 'dist/post.cjs'
+  post: 'dist/post.cjs'
