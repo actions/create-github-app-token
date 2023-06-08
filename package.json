@@ -17,5 +17,11 @@
   "devDependencies": {
     "dotenv": "^16.0.3",
     "esbuild": "^0.17.19"
+  },
+  "release": {
+    "branches": [
+      "+([0-9]).x",
+      "main"
+    ]
   }
 }
