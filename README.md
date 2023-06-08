@@ -46,13 +46,6 @@ jobs:
           # required
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
-          # optional: set permissions (#TBD)
-          permissions_contents: write
-          # optional: set repositories
-          owner: gr2m
-          repositories: my-repo1,my-repo2
-          # optional: disable token revocation
-          revoke: false
       # do something with the token
 ```
 
@@ -103,17 +96,13 @@ GitHub installation access token.
 The action creates an installation access token using [the `POST /app/installations/{installation_id}/access_tokens` endpoint](https://docs.github.com/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app). By default,
 
 1. The token is scoped to the current repository
-2. The token inherits all of the installations permissions
+2. The token inherits all the installation's permissions
 3. The token is set as output `token` which can be used in subsequent steps
-4. The token is revoked in the `post` step of the action, which means it cannot be passed to another job. Set `revoke: false` to disable revoking
+4. The token is revoked in the `post` step of the action, which means it cannot be passed to another job.
 5. The token is masked, it cannot be logged accidentally. That is not a feature by the action, but by the GitHub Actions runner itself, due to the specific format of GitHub tokens.
 
 > **Note**
 > Installation permissions can differ from the app's permissions they belong to. Installation permissions are set when an app is installed on an account. When the app adds more permissions after the installation, an account administrator will have to approve the new permissions before they are set on the installation.
-
-It is considered best practice to only request the permissions that are needed. You can define a subset of permissions using the `permissions_*` inputs. For example, if you only need to read the contents of a repository, you can set `permissions_contents: read`. If you need to read and write, you can set `permissions_contents: write`. You can only define permissions that are a subset of the respective installation's permissions.
-
-You can grant access to the token to multiple repositories using the `account` and `repositories` inputs. For example, if you want to grant access to all repositories of the `gr2m` account, you can set `account: gr2m`. If you want to grant access to specific repositories, you can set `account: gr2m` and `repositories: repo1,repo2`. Unfortunately it is not possible to create a single token that has access across multiple accounts, as different accounts have different installations. You will have to call `gr2m/app-token-action` once per account instead.
 
 ## License
 
