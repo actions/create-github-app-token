@@ -1,0 +1,17 @@
+name: 'github-app-token'
+description: ''
+author: 'Gregor Martynus and Parker Brown'
+inputs:
+  app_id:
+    description: 'GitHub app ID'
+    required: true
+  private_key:
+    description: 'GitHub app private key'
+    required: true
+outputs:
+  token:
+    description: 'GitHub installation access token'
+runs:
+  using: 'node16'
+  main: 'dist/main.cjs'
+  post: 'dist/post.cjs'
