@@ -1,4 +1,4 @@
-# `app-token-action`
+# `gr2m/github-app-token-action`
 
 > GitHub Action for creating a GitHub App Installation Access Token
 
@@ -19,7 +19,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: gr2m/app-token-action@v1
+      - uses: gr2m/github-app-token-action@v1
         id: app-token
         with:
           app_id: ${{ vars.APP_ID }}
@@ -40,7 +40,7 @@ jobs:
   with-scoped-token:
     runs-on: ubuntu-latest
     steps:
-      - uses: gr2m/app-token-action@v1
+      - uses: gr2m/github-app-token-action@v1
         id: app-token
         with:
           # required
@@ -58,7 +58,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: gr2m/app-token-action@v1
+      - uses: gr2m/github-app-token-action@v1
         id: app-token
         with:
           # required
