@@ -61,17 +61,17 @@ jobs:
 
 ### `app_id`
 
-**Required:** GitHub app ID.
+**Required:** GitHub App ID.
 
 ### `private_key`
 
-**Required:** GitHub app private key.
+**Required:** GitHub App private key.
 
 ## Outputs
 
 ### `token`
 
-GitHub installation access token.
+GitHub App installation access token.
 
 ## How it works
 
