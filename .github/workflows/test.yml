@@ -1,21 +1,22 @@
+name: test
 on: [push]
 
 jobs:
-  demo:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.16'
-          cache: 'npm'
+          node-version: "16.16"
+          cache: "npm"
       - run: npm ci
       - run: npm run build
       - uses: ./ # Uses the action in the root directory
         id: demo
         with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+          app_id: ${{ vars.TEST_APP_ID }}
+          private_key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
       - uses: octokit/request-action@v2.x
         id: get-repository
         env:
