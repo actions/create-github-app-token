@@ -1,4 +1,4 @@
-# `gr2m/github-app-token-action`
+# `actions/github-app-token`
 
 > GitHub Action for creating a GitHub App Installation Access Token
 
@@ -19,7 +19,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: gr2m/github-app-token-action@v1
+      - uses: actions/github-app-token@v1
         id: app-token
         with:
           app_id: ${{ vars.APP_ID }}
@@ -31,24 +31,6 @@ jobs:
           body: "Hello, World!"
 ```
 
-### Limit the app's permissions and access to repositories
-
-```yaml
-on: [issues]
-
-jobs:
-  with-scoped-token:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: gr2m/github-app-token-action@v1
-        id: app-token
-        with:
-          # required
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
-      # do something with the token
-```
-
 ### Use app token with `actions/checkout`
 
 ```yaml
@@ -58,7 +40,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: gr2m/github-app-token-action@v1
+      - uses: actions/github-app-token@v1
         id: app-token
         with:
           # required
