@@ -1,4 +1,4 @@
-# `actions/github-app-token`
+# Create GitHub App Token
 
 > GitHub Action for creating a GitHub App Installation Access Token
 
