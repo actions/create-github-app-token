@@ -1,12 +1,15 @@
 name: "Create GitHub App Token"
-description: "GitHub Action for creating a GitHub App Installation Access Token"
+description: "GitHub Action for creating a GitHub App installation access token"
 author: "Gregor Martynus and Parker Brown"
+branding:
+  icon: 'lock'
+  color: 'gray-dark'
 inputs:
   app_id:
-    description: "GitHub app ID"
+    description: "GitHub App ID"
     required: true
   private_key:
-    description: "GitHub app private key"
+    description: "GitHub App private key"
     required: true
 outputs:
   token:
