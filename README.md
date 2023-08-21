@@ -1,6 +1,6 @@
 # Create GitHub App Token
 
-> GitHub Action for creating a GitHub App Installation Access Token
+GitHub Action for creating a GitHub App installation access token.
 
 ## Usage
 
