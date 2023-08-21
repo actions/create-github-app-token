@@ -19,7 +19,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-app-token@v1
+      - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app_id: ${{ vars.APP_ID }}
@@ -40,7 +40,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/github-app-token@v1
+      - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           # required
