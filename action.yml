@@ -1,17 +1,17 @@
-name: 'github-app-token'
-description: ''
-author: 'Gregor Martynus and Parker Brown'
+name: "Create GitHub App Token"
+description: "GitHub Action for creating a GitHub App Installation Access Token"
+author: "Gregor Martynus and Parker Brown"
 inputs:
   app_id:
-    description: 'GitHub app ID'
+    description: "GitHub app ID"
     required: true
   private_key:
-    description: 'GitHub app private key'
+    description: "GitHub app private key"
     required: true
 outputs:
   token:
-    description: 'GitHub installation access token'
+    description: "GitHub installation access token"
 runs:
-  using: 'node16'
-  main: 'dist/main.cjs'
-  post: 'dist/post.cjs'
+  using: "node16"
+  main: "dist/main.cjs"
+  post: "dist/post.cjs"
