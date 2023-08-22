@@ -13,14 +13,14 @@ jobs:
       - run: npm ci
       - run: npm run build
       - uses: ./ # Uses the action in the root directory
-        id: demo
+        id: test
         with:
           app_id: ${{ vars.TEST_APP_ID }}
           private_key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
       - uses: octokit/request-action@v2.x
         id: get-repository
         env:
-          GITHUB_TOKEN: ${{ steps.demo.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.test.outputs.token }}
         with:
           route: GET /installation/repositories
       - run: echo '${{ steps.get-repository.outputs.data }}'
