@@ -26,12 +26,7 @@ jobs:
         with:
           app_id: ${{ vars.RELEASER_APP_ID }}
           private_key: ${{ secrets.RELEASER_APP_PRIVATE_KEY }}
-
-      - id: commit
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "build: update dist files"
-      - run: npm i semantic-release-plugin-github-breaking-version-tag
+      - run: npm install --no-save @semantic-release/git semantic-release-plugin-github-breaking-version-tag
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
