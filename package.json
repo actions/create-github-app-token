@@ -15,7 +15,7 @@
     "@octokit/request": "^6.2.5"
   },
   "devDependencies": {
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "esbuild": "^0.19.2"
   },
   "release": {
