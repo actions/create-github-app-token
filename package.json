@@ -1,5 +1,5 @@
 {
-  "name": "app-token-action",
+  "name": "create-github-app-token",
   "private": true,
   "type": "module",
   "version": "1.0.5",
