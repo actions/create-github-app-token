@@ -1,8 +1,8 @@
 {
-  "name": "app-token-action",
+  "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node16.16",
@@ -11,12 +11,12 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@octokit/auth-app": "^4.0.13",
-    "@octokit/request": "^6.2.5"
+    "@octokit/auth-app": "^6.0.0",
+    "@octokit/request": "^8.1.1"
   },
   "devDependencies": {
-    "dotenv": "^16.0.3",
-    "esbuild": "^0.17.19"
+    "dotenv": "^16.3.1",
+    "esbuild": "^0.19.2"
   },
   "release": {
     "branches": [
@@ -27,7 +27,17 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/github",
-      "semantic-release-plugin-github-breaking-version-tag"
+      "semantic-release-plugin-github-breaking-version-tag",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "package.json",
+            "dist/*"
+          ],
+          "message": "build(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        }
+      ]
     ]
   }
 }
