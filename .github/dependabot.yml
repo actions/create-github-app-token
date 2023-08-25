@@ -9,6 +9,10 @@ updates:
         dependency-type: "production"
       development-dependencies:
         dependency-type: "development"
+    commit-message:
+      prefix: "fix"
+      prefix-development: "build"
+      include: "scope"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
