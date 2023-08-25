@@ -81,7 +81,7 @@ The action creates an installation access token using [the `POST /app/installati
 2. The token inherits all the installation's permissions.
 3. The token is set as output `token` which can be used in subsequent steps.
 4. The token is revoked in the `post` step of the action, which means it cannot be passed to another job.
-5. The token is masked, it cannot be logged accidentally. That is not a feature by the action, but by the GitHub Actions runner itself, due to the specific format of GitHub tokens.
+5. The token is masked, it cannot be logged accidentally.
 
 > [!NOTE]
 > Installation permissions can differ from the app's permissions they belong to. Installation permissions are set when an app is installed on an account. When the app adds more permissions after the installation, an account administrator will have to approve the new permissions before they are set on the installation.
