@@ -23,6 +23,7 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
       - run: npm install --no-save @semantic-release/git semantic-release-plugin-github-breaking-version-tag
-      - run: npx semantic-release
+      - run: npm run build
+      - run: npx semantic-release --debug
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
