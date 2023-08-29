@@ -2969,12 +2969,15 @@ async function post(core3, request2) {
 }
 
 // post.js
-post(import_core2.default, import_request.request).catch(
-  (error) => {
-    console.error(error);
-    import_core2.default.setFailed(error.message);
-  }
-);
+post(
+  import_core2.default,
+  import_request.request.defaults({
+    baseUrl: process.env["GITHUB_API_URL"]
+  })
+).catch((error) => {
+  console.error(error);
+  import_core2.default.setFailed(error.message);
+});
 /*! Bundled license information:
 
 is-plain-object/dist/is-plain-object.js:

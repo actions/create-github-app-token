@@ -15081,12 +15081,19 @@ if (!process.env.GITHUB_REPOSITORY) {
 var appId = import_core2.default.getInput("app_id");
 var privateKey = import_core2.default.getInput("private_key");
 var repository = process.env.GITHUB_REPOSITORY;
-main(appId, privateKey, repository, import_core2.default, import_auth_app.createAppAuth, import_request.request).catch(
-  (error) => {
-    console.error(error);
-    import_core2.default.setFailed(error.message);
-  }
-);
+main(
+  appId,
+  privateKey,
+  repository,
+  import_core2.default,
+  import_auth_app.createAppAuth,
+  import_request.request.defaults({
+    baseUrl: process.env["GITHUB_API_URL"]
+  })
+).catch((error) => {
+  console.error(error);
+  import_core2.default.setFailed(error.message);
+});
 /*! Bundled license information:
 
 is-plain-object/dist/is-plain-object.js:
