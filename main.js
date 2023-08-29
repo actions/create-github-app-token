@@ -15,9 +15,16 @@ const privateKey = core.getInput("private_key");
 
 const repository = process.env.GITHUB_REPOSITORY;
 
-main(appId, privateKey, repository, core, createAppAuth, request).catch(
-  (error) => {
-    console.error(error);
-    core.setFailed(error.message);
-  }
-);
+main(
+  appId,
+  privateKey,
+  repository,
+  core,
+  createAppAuth,
+  request.defaults({
+    baseUrl: process.env["GITHUB_API_URL"],
+  })
+).catch((error) => {
+  console.error(error);
+  core.setFailed(error.message);
+});
