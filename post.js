@@ -1,9 +1,9 @@
 // @ts-check
 
 import core from "@actions/core";
-import { request } from "@octokit/request";
 
 import { post } from "./lib/post.js";
+import request from "./lib/request.js";
 
 post(
   core,

@@ -2,9 +2,9 @@
 
 import core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
-import { request } from "@octokit/request";
 
 import { main } from "./lib/main.js";
+import request from "./lib/request.js";
 
 if (!process.env.GITHUB_REPOSITORY) {
   throw new Error("GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'");
