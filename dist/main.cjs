@@ -3077,7 +3077,7 @@ var require_dist_node7 = __commonJS({
     module2.exports = __toCommonJS2(dist_src_exports);
     var VERSION = "4.0.0";
     var import_oauth_authorization_url = require_dist_node6();
-    var import_request2 = require_dist_node5();
+    var import_request3 = require_dist_node5();
     var import_request_error = require_dist_node4();
     function requestToOAuthBaseUrl(request2) {
       const endpointDefaults = request2.endpoint.DEFAULTS;
@@ -3110,7 +3110,7 @@ var require_dist_node7 = __commonJS({
       return response;
     }
     function getWebFlowAuthorizationUrl({
-      request: request2 = import_request2.request,
+      request: request2 = import_request3.request,
       ...options
     }) {
       const baseUrl = requestToOAuthBaseUrl(request2);
@@ -3158,10 +3158,10 @@ var require_dist_node7 = __commonJS({
     function toTimestamp(apiTimeInMs, expirationInSeconds) {
       return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
     }
-    var import_request3 = require_dist_node5();
+    var import_request32 = require_dist_node5();
     async function createDeviceCode(options) {
       const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-      import_request3.request;
+      import_request32.request;
       const parameters = {
         client_id: options.clientId
       };
@@ -3399,7 +3399,7 @@ var require_dist_node8 = __commonJS({
     });
     module2.exports = __toCommonJS2(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var import_request2 = require_dist_node5();
+    var import_request3 = require_dist_node5();
     var import_oauth_methods = require_dist_node7();
     async function getOAuthAccessToken(state, options) {
       const cachedAuthentication = getCachedAuthentication(state, options.auth);
@@ -3496,7 +3496,7 @@ var require_dist_node8 = __commonJS({
     }
     var VERSION = "6.0.0";
     function createOAuthDeviceAuth(options) {
-      const requestWithDefaults = options.request || import_request2.request.defaults({
+      const requestWithDefaults = options.request || import_request3.request.defaults({
         headers: {
           "user-agent": `octokit-auth-oauth-device.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
         }
@@ -3567,7 +3567,7 @@ var require_dist_node9 = __commonJS({
     });
     module2.exports = __toCommonJS2(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var import_request2 = require_dist_node5();
+    var import_request3 = require_dist_node5();
     var VERSION = "4.0.0";
     var import_auth_oauth_device = require_dist_node8();
     var import_oauth_methods = require_dist_node7();
@@ -3732,7 +3732,7 @@ var require_dist_node9 = __commonJS({
       clientId,
       clientSecret,
       clientType = "oauth-app",
-      request: request2 = import_request2.request.defaults({
+      request: request2 = import_request3.request.defaults({
         headers: {
           "user-agent": `octokit-auth-oauth-app.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
         }
@@ -3795,7 +3795,7 @@ var require_dist_node10 = __commonJS({
     });
     module2.exports = __toCommonJS2(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var import_request2 = require_dist_node5();
+    var import_request3 = require_dist_node5();
     var import_btoa_lite = __toESM2(require_btoa_node());
     var import_auth_oauth_user = require_dist_node9();
     async function auth(state, authOptions) {
@@ -3865,7 +3865,7 @@ var require_dist_node10 = __commonJS({
     function createOAuthAppAuth(options) {
       const state = Object.assign(
         {
-          request: import_request2.request.defaults({
+          request: import_request3.request.defaults({
             headers: {
               "user-agent": `octokit-auth-oauth-app.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
             }
@@ -14610,7 +14610,7 @@ var require_dist_node12 = __commonJS({
     });
     module2.exports = __toCommonJS2(dist_src_exports);
     var import_universal_user_agent = require_dist_node();
-    var import_request2 = require_dist_node5();
+    var import_request3 = require_dist_node5();
     var import_auth_oauth_app = require_dist_node10();
     var import_deprecation = require_dist_node3();
     var OAuthAppAuth = __toESM2(require_dist_node10());
@@ -15009,7 +15009,7 @@ var require_dist_node12 = __commonJS({
         },
         options.log
       );
-      const request2 = options.request || import_request2.request.defaults({
+      const request2 = options.request || import_request3.request.defaults({
         headers: {
           "user-agent": `octokit-auth-app.js/${VERSION} ${(0, import_universal_user_agent.getUserAgent)()}`
         }
@@ -15039,17 +15039,16 @@ var require_dist_node12 = __commonJS({
 });
 
 // main.js
-var import_core2 = __toESM(require_core(), 1);
+var import_core = __toESM(require_core(), 1);
 var import_auth_app = __toESM(require_dist_node12(), 1);
-var import_request = __toESM(require_dist_node5(), 1);
 
 // lib/main.js
-var import_core = __toESM(require_core(), 1);
-async function main(appId2, privateKey2, repository2, core3, createAppAuth2, request2) {
+async function main(appId2, privateKey2, repository2, core2, createAppAuth2, request2) {
   const [owner, repo] = repository2.split("/");
   const auth = createAppAuth2({
     appId: appId2,
-    privateKey: privateKey2
+    privateKey: privateKey2,
+    request: request2
   });
   const appAuthentication = await auth({
     type: "app"
@@ -15069,30 +15068,39 @@ async function main(appId2, privateKey2, repository2, core3, createAppAuth2, req
     installationId: installation.id,
     repositoryNames: [repo]
   });
-  core3.setSecret(authentication.token);
-  core3.setOutput("token", authentication.token);
-  core3.saveState("token", authentication.token);
+  core2.setSecret(authentication.token);
+  core2.setOutput("token", authentication.token);
+  core2.saveState("token", authentication.token);
 }
+
+// lib/request.js
+var import_request = __toESM(require_dist_node5(), 1);
+var request_default = import_request.request.defaults({
+  baseUrl: process.env["GITHUB_API_URL"],
+  headers: {
+    "user-agent": "actions/create-github-app-token"
+  }
+});
 
 // main.js
 if (!process.env.GITHUB_REPOSITORY) {
   throw new Error("GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'");
 }
-var appId = import_core2.default.getInput("app_id");
-var privateKey = import_core2.default.getInput("private_key");
+var appId = import_core.default.getInput("app_id");
+var privateKey = import_core.default.getInput("private_key");
 var repository = process.env.GITHUB_REPOSITORY;
 main(
   appId,
   privateKey,
   repository,
-  import_core2.default,
+  import_core.default,
   import_auth_app.createAppAuth,
-  import_request.request.defaults({
+  request_default.defaults({
     baseUrl: process.env["GITHUB_API_URL"]
   })
 ).catch((error) => {
   console.error(error);
-  import_core2.default.setFailed(error.message);
+  import_core.default.setFailed(error.message);
 });
 /*! Bundled license information:
 

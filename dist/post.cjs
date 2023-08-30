@@ -2951,13 +2951,11 @@ var require_dist_node5 = __commonJS({
 });
 
 // post.js
-var import_core2 = __toESM(require_core(), 1);
-var import_request = __toESM(require_dist_node5(), 1);
+var import_core = __toESM(require_core(), 1);
 
 // lib/post.js
-var import_core = __toESM(require_core(), 1);
-async function post(core3, request2) {
-  const token = core3.getState("token");
+async function post(core2, request2) {
+  const token = core2.getState("token");
   if (!token)
     return;
   await request2("DELETE /installation/token", {
@@ -2965,18 +2963,27 @@ async function post(core3, request2) {
       authorization: `token ${token}`
     }
   });
-  core3.info("Token revoked");
+  core2.info("Token revoked");
 }
+
+// lib/request.js
+var import_request = __toESM(require_dist_node5(), 1);
+var request_default = import_request.request.defaults({
+  baseUrl: process.env["GITHUB_API_URL"],
+  headers: {
+    "user-agent": "actions/create-github-app-token"
+  }
+});
 
 // post.js
 post(
-  import_core2.default,
-  import_request.request.defaults({
+  import_core.default,
+  request_default.defaults({
     baseUrl: process.env["GITHUB_API_URL"]
   })
 ).catch((error) => {
   console.error(error);
-  import_core2.default.setFailed(error.message);
+  import_core.default.setFailed(error.message);
 });
 /*! Bundled license information:
 
