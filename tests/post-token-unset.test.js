@@ -1,13 +1,5 @@
-import { request, setGlobalDispatcher, Agent } from 'undici'
+// state variables are set as environment variables with the prefix STATE_
+// https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#sending-values-to-the-pre-and-post-actions
+delete process.env.STATE_token;
 
-delete process.env.STATE_token
-
-// https://undici.nodejs.org/#/docs/best-practices/writing-tests
-const agent = new Agent({
-  keepAliveTimeout: 10, // milliseconds
-  keepAliveMaxTimeout: 10 // milliseconds
-})
-
-setGlobalDispatcher(agent)
-
-await import('../post.js')
+await import("../post.js");

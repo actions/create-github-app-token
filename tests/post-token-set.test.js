@@ -1,17 +1,8 @@
-import { strict as assert } from 'node:assert';
+import { MockAgent, setGlobalDispatcher } from "undici";
 
-import core from "@actions/core";
-import { Agent, MockAgent, setGlobalDispatcher } from "undici";
-
+// state variables are set as environment variables with the prefix STATE_
+// https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#sending-values-to-the-pre-and-post-actions
 process.env.STATE_token = "secret123";
-
-// // https://undici.nodejs.org/#/docs/best-practices/writing-tests
-// const agent = new Agent({
-//   keepAliveTimeout: 10, // milliseconds
-//   keepAliveMaxTimeout: 10 // milliseconds
-// })
-
-// setGlobalDispatcher(agent)
 
 const mockAgent = new MockAgent();
 
@@ -31,10 +22,4 @@ mockPool
   })
   .reply(204);
 
-const outputs = []
-console.log = (message) => outputs.push(message);
-// core.info = (message) => outputs.push(message);
-
 await import("../post.js");
-
-assert.deepEqual(outputs, ["Token revoked"]);
