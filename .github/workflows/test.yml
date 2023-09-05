@@ -1,5 +1,8 @@
 name: test
 on:
+  push:
+    branches:
+      - main
   pull_request:
 
 concurrency:
@@ -7,13 +10,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  integration:
+    name: Integration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "16.16"
+          node-version: 20
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+      - uses: ./ # Uses the action in the root directory
+        id: test
+        with:
+          app_id: ${{ vars.TEST_APP_ID }}
+          private_key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
+      - uses: octokit/request-action@v2.x
+        id: get-repository
+        env:
+          GITHUB_TOKEN: ${{ steps.test.outputs.token }}
+        with:
+          route: GET /installation/repositories
+      - run: echo '${{ steps.get-repository.outputs.data }}'
+
+  end-to-end:
+    name: End-to-End
+    runs-on: ubuntu-latest
+    # do not run from forks, as forks don’t have access to repository secrets
+    if: github.repository_owner == 'actions'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
           cache: "npm"
       - run: npm ci
       - run: npm run build

@@ -6,7 +6,7 @@
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node16.16",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava tests/index.js"
   },
   "license": "MIT",
   "dependencies": {
@@ -15,8 +15,11 @@
     "@octokit/request": "^8.1.1"
   },
   "devDependencies": {
+    "ava": "^5.3.1",
     "dotenv": "^16.3.1",
-    "esbuild": "^0.19.2"
+    "esbuild": "^0.19.2",
+    "execa": "^8.0.1",
+    "undici": "^5.23.0"
   },
   "release": {
     "branches": [
