@@ -2956,8 +2956,10 @@ var import_core = __toESM(require_core(), 1);
 // lib/post.js
 async function post(core2, request2) {
   const token = core2.getState("token");
-  if (!token)
+  if (!token) {
+    core2.info("Token is not set");
     return;
+  }
   await request2("DELETE /installation/token", {
     headers: {
       authorization: `token ${token}`
