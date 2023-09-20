@@ -24,6 +24,7 @@ jobs:
         with:
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
+          repositories: repo1,repo2
       - uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -46,6 +47,10 @@ jobs:
           # required
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
+          # optional - defaults to current repository owner
+          owner: an-organization
+          # optional - defaults to current repository name
+          repositories: repo1,repo2
       - uses: actions/checkout@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -67,6 +72,14 @@ jobs:
 
 **Required:** GitHub App private key.
 
+### `owner`
+
+**Optional:** GitHub App installation owner. Defaults to the current repository owner.
+
+### `repositories`
+
+**Optional:** Comma-separated list of repositories to grant access to. Defaults to the current repository.
+
 ## Outputs
 
 ### `token`
@@ -77,7 +90,7 @@ GitHub App installation access token.
 
 The action creates an installation access token using [the `POST /app/installations/{installation_id}/access_tokens` endpoint](https://docs.github.com/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app). By default,
 
-1. The token is scoped to the current repository.
+1. The token is scoped to the current repository or the repositories given.
 2. The token inherits all the installation's permissions.
 3. The token is set as output `token` which can be used in subsequent steps.
 4. The token is revoked in the `post` step of the action, which means it cannot be passed to another job.
