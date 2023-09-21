@@ -10,10 +10,14 @@ if (!process.env.GITHUB_REPOSITORY) {
   throw new Error("GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'");
 }
 
+if (!process.env.GITHUB_REPOSITORY_OWNER) {
+  throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
+}
+
 const appId = core.getInput("app_id");
 const privateKey = core.getInput("private_key");
-const owner = core.getInput("owner") || process.env.GITHUB_REPOSITORY.split("/")[0];
-const repositories = core.getInput("repositories") || process.env.GITHUB_REPOSITORY.split("/")[1];
+const owner = core.getInput("owner") == "" ? process.env.GITHUB_REPOSITORY_OWNER?.trim() : core.getInput("owner");
+const repositories = core.getInput("repositories");
 
 main(
   appId,
