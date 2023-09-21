@@ -20,19 +20,7 @@ jobs:
           node-version: 20
           cache: "npm"
       - run: npm ci
-      - run: npm run build
-      - uses: ./ # Uses the action in the root directory
-        id: test
-        with:
-          app_id: ${{ vars.TEST_APP_ID }}
-          private_key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
-      - uses: octokit/request-action@v2.x
-        id: get-repository
-        env:
-          GITHUB_TOKEN: ${{ steps.test.outputs.token }}
-        with:
-          route: GET /installation/repositories
-      - run: echo '${{ steps.get-repository.outputs.data }}'
+      - run: npm test
 
   end-to-end:
     name: End-to-End
