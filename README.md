@@ -9,6 +9,7 @@ In order to use this action, you need to:
 1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app)
 2. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
 3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
+4. We recommend that `owner` be set to `env.GITHUB_REPOSITORY_OWNER` (See [environment variables](https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables))
 
 ### Minimal usage
 
@@ -24,6 +25,7 @@ jobs:
         with:
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
+          owener: ${{ github.repository_owner }}
           repositories: repo1,repo2
       - uses: peter-evans/create-or-update-comment@v3
         with:
@@ -47,9 +49,9 @@ jobs:
           # required
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
-          # optional - defaults to current repository owner
-          owner: an-organization
-          # optional - defaults to current repository name
+          # optional - if not used, defaults to current repository owner
+          owner: ${{ github.repository_owner }}
+          # optional - if not used, defaults to all repositories in the organization where the app is installed
           repositories: repo1,repo2
       - uses: actions/checkout@v3
         with:
