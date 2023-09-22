@@ -1,4 +1,4 @@
-name: "Create GitHub App Token"
+name: "Tim's Create GitHub App Token"
 description: "GitHub Action for creating a GitHub App installation access token"
 author: "Gregor Martynus and Parker Brown"
 branding:
