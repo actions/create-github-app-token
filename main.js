@@ -16,7 +16,7 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 
 const appId = core.getInput("app_id");
 const privateKey = core.getInput("private_key");
-const owner = core.getInput("owner") == "" ? process.env.GITHUB_REPOSITORY_OWNER?.trim() : core.getInput("owner");
+const owner = core.getInput("owner");
 const repositories = core.getInput("repositories");
 
 main(
