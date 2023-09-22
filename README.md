@@ -9,9 +9,8 @@ In order to use this action, you need to:
 1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app)
 2. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
 3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
-4. We recommend that `owner` be set to `env.GITHUB_REPOSITORY_OWNER` (See [environment variables](https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables))
 
-### Minimal usage
+### Create token for current repository
 
 ```yaml
 on: [issues]
@@ -25,8 +24,6 @@ jobs:
         with:
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
-          owener: ${{ github.repository_owner }}
-          repositories: repo1,repo2
       - uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -49,10 +46,6 @@ jobs:
           # required
           app_id: ${{ vars.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
-          # optional - if not used, defaults to current repository owner
-          owner: ${{ github.repository_owner }}
-          # optional - if not used, defaults to all repositories in the organization where the app is installed
-          repositories: repo1,repo2
       - uses: actions/checkout@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -62,6 +55,73 @@ jobs:
       - uses: creyD/prettier_action@v4.3
         with:
           github_token: ${{ steps.app-token.outputs.token }}
+```
+
+### Create token for all repositories in current owner's installation
+
+```yaml
+on: [workflow_dispatch]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app_id: ${{ vars.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: "Hello, World!"
+```
+
+### Create a token for selected repositories in current owner's installation
+
+```yaml
+on: [issues]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app_id: ${{ vars.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: "repo1,repo2"
+      - uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: "Hello, World!"
+```
+
+### Create token for all repositories in another owner's installation
+
+```yaml
+on: [issues]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app_id: ${{ vars.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          owner: another-owner
+      - uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: "Hello, World!"
 ```
 
 ## Inputs
@@ -80,7 +140,7 @@ jobs:
 
 ### `repositories`
 
-**Optional:** Comma-separated list of repositories to grant access to. If 'owner' is set and 'repositories' is empty then the access will be scoped to all repositories in the organization where the app is installed. If 'owner' and 'repositories' are empty then the access will be scoped to the current repository.
+**Optional:** Comma-separated list of repositories to grant access to. If 'owner' is set and 'repositories' is empty then the access will be scoped to all repositories in the current repository owner's installation. If 'owner' and 'repositories' are empty then the access will be scoped to the current repository.
 
 ## Outputs
 
