@@ -76,11 +76,11 @@ jobs:
 
 ### `owner`
 
-**Optional:** GitHub App installation owner. Defaults to the current repository owner.
+**Optional:** GitHub App installation owner. If empty, defaults to the current repository owner.
 
 ### `repositories`
 
-**Optional:** Comma-separated list of repositories to grant access to. Defaults to the current repository.
+**Optional:** Comma-separated list of repositories to grant access to. If 'owner' is set and 'repositories' is empty then the access will be scoped to all repositories in the organization where the app is installed. If 'owner' and 'repositories' are empty then the access will be scoped to the current repository.
 
 ## Outputs
 
