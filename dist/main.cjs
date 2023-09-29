@@ -15044,16 +15044,35 @@ var import_auth_app = __toESM(require_dist_node12(), 1);
 
 // lib/main.js
 async function main(appId2, privateKey2, owner2, repositories2, core2, createAppAuth2, request2) {
-  let org = "";
-  if (owner2.length == 0) {
-    org = process.env.GITHUB_REPOSITORY_OWNER || "";
+  let parsedOwner = "";
+  let parsedRepositoryNames = "";
+  if (!owner2 && !repositories2) {
+    [parsedOwner, parsedRepositoryNames] = String(
+      process.env.GITHUB_REPOSITORY
+    ).split("/");
+    core2.info(
+      `owner and repositories not set, creating token for the current repository ("${parsedRepositoryNames}")`
+    );
   }
-  if (owner2.length == 0 && repositories2.length == 0) {
-    repositories2 = process.env.GITHUB_REPOSITORY?.split("/")[1] || "";
+  if (owner2 && !repositories2) {
+    parsedOwner = owner2;
+    core2.info(
+      `repositories not set, creating token for all repositories for given owner "${owner2}"`
+    );
   }
-  let repos = [];
-  if (repositories2.trim() != "") {
-    repos = repositories2.split(",").map((repo) => repo.trim());
+  if (!owner2 && repositories2) {
+    parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
+    parsedRepositoryNames = repositories2;
+    core2.info(
+      `owner not set, creating owner for given repositories "${repositories2}" in current owner ("${parsedOwner}")`
+    );
+  }
+  if (owner2 && repositories2) {
+    parsedOwner = owner2;
+    parsedRepositoryNames = repositories2;
+    core2.info(
+      `owner and repositories set, creating token for repositories "${repositories2}" owned by "${owner2}"`
+    );
   }
   const auth = createAppAuth2({
     appId: appId2,
@@ -15063,30 +15082,43 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
   const appAuthentication = await auth({
     type: "app"
   });
-  const { data: installation } = await request2(
-    "GET /orgs/{org}/installation",
-    {
-      org,
+  let authentication;
+  if (parsedRepositoryNames) {
+    const response = await request2("GET /repos/{owner}/{repo}/installation", {
+      owner: parsedOwner,
+      repo: parsedRepositoryNames.split(",")[0],
       headers: {
         authorization: `bearer ${appAuthentication.token}`
       }
-    }
-  );
-  let authentication;
-  if (repositories2.length == 0) {
+    });
     authentication = await auth({
       type: "installation",
-      installationId: installation.id
+      installationId: response.data.id,
+      repositoryNames: parsedRepositoryNames.split(",")
     });
   } else {
+    const response = await request2("GET /orgs/{org}/installation", {
+      org: parsedOwner,
+      headers: {
+        authorization: `bearer ${appAuthentication.token}`
+      }
+    }).catch((error) => {
+      if (error.status !== 404)
+        throw error;
+      return request2("GET /users/{username}/installation", {
+        username: parsedOwner,
+        headers: {
+          authorization: `bearer ${appAuthentication.token}`
+        }
+      });
+    });
     authentication = await auth({
       type: "installation",
-      installationId: installation.id,
-      repositoryNames: repos
+      installationId: response.data.id
     });
   }
-  core2.setSecret(authentication.token);
   core2.setOutput("token", authentication.token);
+  core2.setSecret(authentication.token);
   core2.saveState("token", authentication.token);
 }
 
