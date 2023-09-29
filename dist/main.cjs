@@ -14795,7 +14795,7 @@ var require_dist_node12 = __commonJS({
         data: {
           token,
           expires_at: expiresAt,
-          repositories,
+          repositories: repositories2,
           permissions: permissionsOptional,
           repository_selection: repositorySelectionOptional,
           single_file: singleFileName
@@ -14814,8 +14814,8 @@ var require_dist_node12 = __commonJS({
       });
       const permissions = permissionsOptional || {};
       const repositorySelection = repositorySelectionOptional || "all";
-      const repositoryIds = repositories ? repositories.map((r) => r.id) : void 0;
-      const repositoryNames = repositories ? repositories.map((repo) => repo.name) : void 0;
+      const repositoryIds = repositories2 ? repositories2.map((r) => r.id) : void 0;
+      const repositoryNames = repositories2 ? repositories2.map((repo) => repo.name) : void 0;
       const createdAt = (/* @__PURE__ */ new Date()).toISOString();
       await set(state.cache, optionsWithInstallationTokenFromState, {
         token,
@@ -15043,8 +15043,18 @@ var import_core = __toESM(require_core(), 1);
 var import_auth_app = __toESM(require_dist_node12(), 1);
 
 // lib/main.js
-async function main(appId2, privateKey2, repository2, core2, createAppAuth2, request2) {
-  const [owner, repo] = repository2.split("/");
+async function main(appId2, privateKey2, owner2, repositories2, core2, createAppAuth2, request2) {
+  let org = "";
+  if (owner2.length == 0) {
+    org = process.env.GITHUB_REPOSITORY_OWNER || "";
+  }
+  if (owner2.length == 0 && repositories2.length == 0) {
+    repositories2 = process.env.GITHUB_REPOSITORY?.split("/")[1] || "";
+  }
+  let repos = [];
+  if (repositories2.trim() != "") {
+    repos = repositories2.split(",").map((repo) => repo.trim());
+  }
   const auth = createAppAuth2({
     appId: appId2,
     privateKey: privateKey2,
@@ -15054,20 +15064,27 @@ async function main(appId2, privateKey2, repository2, core2, createAppAuth2, req
     type: "app"
   });
   const { data: installation } = await request2(
-    "GET /repos/{owner}/{repo}/installation",
+    "GET /orgs/{org}/installation",
     {
-      owner,
-      repo,
+      org,
       headers: {
         authorization: `bearer ${appAuthentication.token}`
       }
     }
   );
-  const authentication = await auth({
-    type: "installation",
-    installationId: installation.id,
-    repositoryNames: [repo]
-  });
+  let authentication;
+  if (repositories2.length == 0) {
+    authentication = await auth({
+      type: "installation",
+      installationId: installation.id
+    });
+  } else {
+    authentication = await auth({
+      type: "installation",
+      installationId: installation.id,
+      repositoryNames: repos
+    });
+  }
   core2.setSecret(authentication.token);
   core2.setOutput("token", authentication.token);
   core2.saveState("token", authentication.token);
@@ -15086,13 +15103,18 @@ var request_default = import_request.request.defaults({
 if (!process.env.GITHUB_REPOSITORY) {
   throw new Error("GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'");
 }
+if (!process.env.GITHUB_REPOSITORY_OWNER) {
+  throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
+}
 var appId = import_core.default.getInput("app_id");
 var privateKey = import_core.default.getInput("private_key");
-var repository = process.env.GITHUB_REPOSITORY;
+var owner = import_core.default.getInput("owner");
+var repositories = import_core.default.getInput("repositories");
 main(
   appId,
   privateKey,
-  repository,
+  owner,
+  repositories,
   import_core.default,
   import_auth_app.createAppAuth,
   request_default.defaults({
