@@ -1602,7 +1602,7 @@ var require_oidc_utils = __commonJS({
  
         Error Code : ${error.statusCode}
  
-        Error Message: ${error.result.message}`);
+        Error Message: ${error.message}`);
           });
           const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
           if (!id_token) {
@@ -2793,7 +2793,7 @@ var require_dist_node5 = __commonJS({
     module2.exports = __toCommonJS2(dist_src_exports);
     var import_endpoint = require_dist_node2();
     var import_universal_user_agent = require_dist_node();
-    var VERSION = "8.1.1";
+    var VERSION = "8.1.2";
     var import_is_plain_object = require_is_plain_object();
     var import_request_error = require_dist_node4();
     function getBufferResponse(response) {
@@ -2956,8 +2956,10 @@ var import_core = __toESM(require_core(), 1);
 // lib/post.js
 async function post(core2, request2) {
   const token = core2.getState("token");
-  if (!token)
+  if (!token) {
+    core2.info("Token is not set");
     return;
+  }
   await request2("DELETE /installation/token", {
     headers: {
       authorization: `token ${token}`
