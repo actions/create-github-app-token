@@ -17,9 +17,9 @@
   "devDependencies": {
     "ava": "^5.3.1",
     "dotenv": "^16.3.1",
-    "esbuild": "^0.19.2",
+    "esbuild": "^0.19.4",
     "execa": "^8.0.1",
-    "undici": "^5.23.0"
+    "undici": "^5.25.2"
   },
   "release": {
     "branches": [
