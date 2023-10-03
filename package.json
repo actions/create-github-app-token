@@ -18,8 +18,15 @@
     "ava": "^5.3.1",
     "dotenv": "^16.3.1",
     "esbuild": "^0.19.4",
+    "esmock": "^2.5.1",
     "execa": "^8.0.1",
     "undici": "^5.25.2"
+  },
+  "ava": {
+    "nodeArguments": [
+      "--no-warnings=ExperimentalWarning",
+      "--loader=esmock"
+    ]
   },
   "release": {
     "branches": [
