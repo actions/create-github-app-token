@@ -1602,7 +1602,7 @@ var require_oidc_utils = __commonJS({
  
         Error Code : ${error.statusCode}
  
-        Error Message: ${error.message}`);
+        Error Message: ${error.result.message}`);
           });
           const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
           if (!id_token) {
@@ -2793,7 +2793,7 @@ var require_dist_node5 = __commonJS({
     module2.exports = __toCommonJS2(dist_src_exports);
     var import_endpoint = require_dist_node2();
     var import_universal_user_agent = require_dist_node();
-    var VERSION = "8.1.2";
+    var VERSION = "8.1.1";
     var import_is_plain_object = require_is_plain_object();
     var import_request_error = require_dist_node4();
     function getBufferResponse(response) {
@@ -14984,7 +14984,7 @@ var require_dist_node12 = __commonJS({
         return sendRequestWithRetries(state, request2, options, createdAt, retries);
       }
     }
-    var VERSION = "6.0.1";
+    var VERSION = "6.0.0";
     var import_auth_oauth_user2 = require_dist_node9();
     function createAppAuth2(options) {
       if (!options.appId) {
