@@ -17,6 +17,10 @@ inputs:
   repositories:
     description: "Repositories to install the GitHub App on (defaults to current repository if owner is unset)"
     required: false
+  revoke:
+    description: "Whether to revoke the token when the current job is complete"
+    required: false
+    default: "true"
 outputs:
   token:
     description: "GitHub installation access token"

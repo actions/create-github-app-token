@@ -6,7 +6,7 @@ process.env.STATE_token = "secret123";
 
 // inputs are set as environment variables with the prefix INPUT_
 // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
-process.env.INPUT_REVOKE = "true";
+process.env.INPUT_REVOKE = "false";
 
 const mockAgent = new MockAgent();
 
