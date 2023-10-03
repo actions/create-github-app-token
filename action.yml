@@ -15,7 +15,7 @@ inputs:
     description: "GitHub App owner (defaults to current repository owner)"
     required: false
   repositories:
-    description: "Repositories to install the GitHub App on (defaults to current repository)"
+    description: "Repositories to install the GitHub App on (defaults to current repository if owner is unset)"
     required: false
 outputs:
   token:
