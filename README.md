@@ -10,7 +10,7 @@ In order to use this action, you need to:
 2. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
 3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
 
-### Create token for current repository
+### Create a token for the current repository
 
 ```yaml
 on: [issues]
@@ -57,7 +57,7 @@ jobs:
           github_token: ${{ steps.app-token.outputs.token }}
 ```
 
-### Create token for all repositories in current owner's installation
+### Create a token for all repositories in the current owner's installation
 
 ```yaml
 on: [workflow_dispatch]
@@ -79,7 +79,7 @@ jobs:
           body: "Hello, World!"
 ```
 
-### Create a token for selected repositories in current owner's installation
+### Create a token for multiple repositories in the current owner's installation
 
 ```yaml
 on: [issues]
@@ -102,7 +102,7 @@ jobs:
           body: "Hello, World!"
 ```
 
-### Create token for all repositories in another owner's installation
+### Create a token for all repositories in another owner's installation
 
 ```yaml
 on: [issues]
