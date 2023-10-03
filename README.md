@@ -140,7 +140,10 @@ jobs:
 
 ### `repositories`
 
-**Optional:** Comma-separated list of repositories to grant access to. If 'owner' is set and 'repositories' is empty then the access will be scoped to all repositories in the provided repository owner's installation. If 'owner' and 'repositories' are empty then the access will be scoped to only the current repository.
+**Optional:** Comma-separated list of repositories to grant access to.
+
+> [!NOTE]
+> If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
 
 ## Outputs
 
