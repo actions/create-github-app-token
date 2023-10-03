@@ -155,7 +155,7 @@ GitHub App installation access token.
 
 The action creates an installation access token using [the `POST /app/installations/{installation_id}/access_tokens` endpoint](https://docs.github.com/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app). By default,
 
-1. The token is scoped to the current repository or the repositories given.
+1. The token is scoped to the current repository or `repositories` if set.
 2. The token inherits all the installation's permissions.
 3. The token is set as output `token` which can be used in subsequent steps.
 4. The token is revoked in the `post` step of the action, which means it cannot be passed to another job.
