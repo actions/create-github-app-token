@@ -2,7 +2,7 @@
   "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node16.16",
