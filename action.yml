@@ -11,6 +11,12 @@ inputs:
   private_key:
     description: "GitHub App private key"
     required: true
+  owner:
+    description: "GitHub App owner (defaults to current repository owner)"
+    required: false
+  repositories:
+    description: "Repositories to install the GitHub App on (defaults to current repository if owner is unset)"
+    required: false
 outputs:
   token:
     description: "GitHub installation access token"
