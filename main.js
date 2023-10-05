@@ -19,7 +19,7 @@ const privateKey = core.getInput("private_key");
 const owner = core.getInput("owner");
 const repositories = core.getInput("repositories");
 
-const skipTokenRevoke = Boolean(core.getInput("skip-token-revoke"));
+const skipTokenRevoke = Boolean(core.getInput("skip_token_revoke"));
 
 main(
   appId,

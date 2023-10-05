@@ -10107,7 +10107,7 @@ var appId = import_core.default.getInput("app_id");
 var privateKey = import_core.default.getInput("private_key");
 var owner = import_core.default.getInput("owner");
 var repositories = import_core.default.getInput("repositories");
-var skipTokenRevoke = Boolean(import_core.default.getInput("skip-token-revoke"));
+var skipTokenRevoke = Boolean(import_core.default.getInput("skip_token_revoke"));
 main(
   appId,
   privateKey,
