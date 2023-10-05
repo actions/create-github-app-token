@@ -4,10 +4,6 @@ import { MockAgent, setGlobalDispatcher } from "undici";
 // https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#sending-values-to-the-pre-and-post-actions
 process.env.STATE_token = "secret123";
 
-// inputs are set as environment variables with the prefix INPUT_
-// https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
-process.env.INPUT_REVOKE = "true";
-
 const mockAgent = new MockAgent();
 
 setGlobalDispatcher(mockAgent);

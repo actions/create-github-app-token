@@ -19,7 +19,7 @@ const privateKey = core.getInput("private_key");
 const owner = core.getInput("owner");
 const repositories = core.getInput("repositories");
 
-const revoke = core.getInput("revoke") === "true";
+const skipTokenRevoke = Boolean(core.getInput("skip-token-revoke"));
 
 main(
   appId,
@@ -31,7 +31,7 @@ main(
   request.defaults({
     baseUrl: process.env["GITHUB_API_URL"],
   }),
-  revoke
+  skipTokenRevoke
 ).catch((error) => {
   console.error(error);
   core.setFailed(error.message);
