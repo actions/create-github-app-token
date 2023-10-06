@@ -1,5 +1,3 @@
-// @ts-check
-
 delete process.env.GITHUB_REPOSITORY;
 
 // Verify `main` exits with an error when `GITHUB_REPOSITORY` is missing.

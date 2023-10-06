@@ -1,4 +1,3 @@
-// @ts-check
 import { test } from "./main.js";
 
 // Verify `main` successfully obtains a token when the `owner` input is set (to a user), but the `repositories` input isn’t set.

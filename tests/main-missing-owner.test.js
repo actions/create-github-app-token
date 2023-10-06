@@ -1,5 +1,3 @@
-// @ts-check
-
 process.env.GITHUB_REPOSITORY = "actions/create-github-app-token";
 delete process.env.GITHUB_REPOSITORY_OWNER;
 
