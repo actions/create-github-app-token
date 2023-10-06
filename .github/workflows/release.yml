@@ -14,16 +14,21 @@ jobs:
     name: release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      # build local version to create token
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+      - uses: .
         id: app-token
         with:
           app-id: ${{ vars.RELEASER_APP_ID }}
           private-key: ${{ secrets.RELEASER_APP_PRIVATE_KEY }}
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ steps.app-token.outputs.token }}
+      # install release dependencies and release
       - run: npm install --no-save @semantic-release/git semantic-release-plugin-github-breaking-version-tag
-      - run: npm run build
       - run: npx semantic-release --debug
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
