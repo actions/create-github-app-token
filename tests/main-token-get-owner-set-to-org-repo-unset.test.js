@@ -1,7 +1,7 @@
-// Verify `main` creates a token when the `owner` input is set (specifically, to a user) but the `repositories` input is not set.
 // @ts-check
 import { test } from "./main.js";
 
+// Verify `main` successfully obtains a token when the `owner` input is set (to an org), but the `repositories` input isn’t set.
 await test((mockPool) => {
   delete process.env.INPUT_REPOSITORIES;
   const mockInstallationId = "123456";
