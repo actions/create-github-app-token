@@ -8,8 +8,6 @@ export async function test(cb = (_mockPool) => {}) {
   process.env.GITHUB_REPOSITORY = "actions/create-github-app-token";
   // inputs are set as environment variables with the prefix INPUT_
   // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
-  process.env.INPUT_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
-  process.env.INPUT_REPOSITORIES = process.env.GITHUB_REPOSITORY;
   process.env.INPUT_APP_ID = "123456";
   process.env.INPUT_PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA280nfuUM9w00Ib9E2rvZJ6Qu3Ua3IqR34ZlK53vn/Iobn2EL
@@ -51,8 +49,12 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
   const mockInstallationId = "123456";
   mockPool
     .intercept({
-      path: `/repos/${process.env.INPUT_OWNER}/${encodeURIComponent(
-        process.env.INPUT_REPOSITORIES.split(",")[0]
+      path: `/repos/${
+        process.env.INPUT_OWNER ?? process.env.GITHUB_REPOSITORY_OWNER
+      }/${encodeURIComponent(
+        (process.env.INPUT_REPOSITORIES ?? process.env.GITHUB_REPOSITORY).split(
+          ","
+        )[0]
       )}/installation`,
       method: "GET",
       headers: {
