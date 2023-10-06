@@ -7,7 +7,12 @@ const tests = readdirSync("tests").filter((file) => file.endsWith(".test.js"));
 
 for (const file of tests) {
   test(file, async (t) => {
-    const { stderr, stdout } = await execa("node", [`tests/${file}`]);
+    // Override Actions environment variables that change `core`’s behavior
+    const env = {
+      GITHUB_OUTPUT: undefined,
+      GITHUB_STATE: undefined,
+    };
+    const { stderr, stdout } = await execa("node", [`tests/${file}`], { env });
     t.snapshot(stderr, "stderr");
     t.snapshot(stdout, "stdout");
   });
