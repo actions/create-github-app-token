@@ -22,8 +22,8 @@ jobs:
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
       - uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -44,8 +44,8 @@ jobs:
         id: app-token
         with:
           # required
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
       - uses: actions/checkout@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -69,8 +69,8 @@ jobs:
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
       - uses: peter-evans/create-or-update-comment@v3
         with:
@@ -91,8 +91,8 @@ jobs:
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: "repo1,repo2"
       - uses: peter-evans/create-or-update-comment@v3
@@ -114,8 +114,8 @@ jobs:
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
           owner: another-owner
       - uses: peter-evans/create-or-update-comment@v3
         with:
@@ -126,11 +126,11 @@ jobs:
 
 ## Inputs
 
-### `app_id`
+### `app-id`
 
 **Required:** GitHub App ID.
 
-### `private_key`
+### `private-key`
 
 **Required:** GitHub App private key.
 
@@ -145,7 +145,7 @@ jobs:
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
 
-### `skip_token_revoke`
+### `skip-token-revoke`
 
 **Optional:** If truthy, the token will not be revoked when the current job is complete.
 

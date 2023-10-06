@@ -38,8 +38,8 @@ jobs:
       - uses: ./ # Uses the action in the root directory
         id: test
         with:
-          app_id: ${{ vars.TEST_APP_ID }}
-          private_key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
+          app-id: ${{ vars.TEST_APP_ID }}
+          private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
       - uses: octokit/request-action@v2.x
         id: get-repository
         env:

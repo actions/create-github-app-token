@@ -10103,11 +10103,19 @@ if (!process.env.GITHUB_REPOSITORY) {
 if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
-var appId = import_core.default.getInput("app_id");
-var privateKey = import_core.default.getInput("private_key");
+var appId = import_core.default.getInput("app-id") || import_core.default.getInput("app_id");
+if (!appId) {
+  throw new Error("Input required and not supplied: app-id");
+}
+var privateKey = import_core.default.getInput("private-key") || import_core.default.getInput("private_key");
+if (!privateKey) {
+  throw new Error("Input required and not supplied: private-key");
+}
 var owner = import_core.default.getInput("owner");
 var repositories = import_core.default.getInput("repositories");
-var skipTokenRevoke = Boolean(import_core.default.getInput("skip_token_revoke"));
+var skipTokenRevoke = Boolean(
+  import_core.default.getInput("skip-token-revoke") || import_core.default.getInput("skip_token_revoke")
+);
 main(
   appId,
   privateKey,
