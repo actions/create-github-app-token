@@ -47,15 +47,15 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
 
   // Mock installation id request
   const mockInstallationId = "123456";
+  const owner = process.env.INPUT_OWNER ?? process.env.GITHUB_REPOSITORY_OWNER;
+  const repo = encodeURIComponent(
+    (process.env.INPUT_REPOSITORIES ?? process.env.GITHUB_REPOSITORY).split(
+      ","
+    )[0]
+  );
   mockPool
     .intercept({
-      path: `/repos/${
-        process.env.INPUT_OWNER ?? process.env.GITHUB_REPOSITORY_OWNER
-      }/${encodeURIComponent(
-        (process.env.INPUT_REPOSITORIES ?? process.env.GITHUB_REPOSITORY).split(
-          ","
-        )[0]
-      )}/installation`,
+      path: `/repos/${owner}/${repo}/installation`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
