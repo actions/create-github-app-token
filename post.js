@@ -11,6 +11,7 @@ post(
     baseUrl: process.env["GITHUB_API_URL"],
   })
 ).catch((error) => {
+  /* c8 ignore next 3 */
   console.error(error);
   core.setFailed(error.message);
 });
