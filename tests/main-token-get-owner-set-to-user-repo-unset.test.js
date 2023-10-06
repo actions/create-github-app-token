@@ -1,4 +1,4 @@
-// Verify `main` creates a token when the `owner` input is set but the `repositories` input is not set.
+// Verify `main` creates a token when the `owner` input is set (specifically, to a user) but the `repositories` input is not set.
 // @ts-check
 import { MockAgent, setGlobalDispatcher } from "undici";
 
@@ -7,7 +7,7 @@ process.env.GITHUB_REPOSITORY_OWNER = "actions";
 process.env.GITHUB_REPOSITORY = "actions/create-github-app-token";
 // inputs are set as environment variables with the prefix INPUT_
 // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
-process.env.INPUT_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
+process.env.INPUT_OWNER = "smockle";
 delete process.env.INPUT_REPOSITORIES;
 process.env.INPUT_APP_ID = "123456";
 process.env.INPUT_PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
@@ -46,11 +46,22 @@ const mockPool = mockAgent.get("https://api.github.com");
 
 // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
 
-// Mock installation id request
+// Mock installation id requests
 const mockInstallationId = "123456";
 mockPool
   .intercept({
     path: `/orgs/${process.env.INPUT_OWNER}/installation`,
+    method: "GET",
+    headers: {
+      accept: "application/vnd.github.v3+json",
+      "user-agent": "actions/create-github-app-token",
+      // Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
+    },
+  })
+  .reply(404);
+mockPool
+  .intercept({
+    path: `/users/${process.env.INPUT_OWNER}/installation`,
     method: "GET",
     headers: {
       accept: "application/vnd.github.v3+json",
