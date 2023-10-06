@@ -5,21 +5,33 @@ branding:
   icon: "lock"
   color: "gray-dark"
 inputs:
+  app-id:
+    description: "GitHub App ID"
+    required: true # TODO: When 'app_id' is removed, make 'app-id' required
   app_id:
     description: "GitHub App ID"
-    required: true
+    required: false
+    deprecationMessage: "'app_id' is deprecated and will be removed in a future version. Use 'app-id' instead."
+  private-key:
+    description: "GitHub App private key"
+    required: false # TODO: When 'private_key' is removed, make 'private-key' required
   private_key:
     description: "GitHub App private key"
-    required: true
+    required: false
+    deprecationMessage: "'private_key' is deprecated and will be removed in a future version. Use 'private-key' instead."
   owner:
     description: "GitHub App owner (defaults to current repository owner)"
     required: false
   repositories:
     description: "Repositories to install the GitHub App on (defaults to current repository if owner is unset)"
     required: false
+  skip-token-revoke:
+    description: "If truthy, the token will not be revoked when the current job is complete"
+    required: false
   skip_token_revoke:
     description: "If truthy, the token will not be revoked when the current job is complete"
     required: false
+    deprecationMessage: "'skip_token_revoke' is deprecated and will be removed in a future version. Use 'skip-token-revoke' instead."
 outputs:
   token:
     description: "GitHub installation access token"
