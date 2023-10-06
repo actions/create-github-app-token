@@ -3,6 +3,9 @@
 import { MockAgent, setGlobalDispatcher } from "undici";
 
 export async function test(cb = (_mockPool) => {}) {
+  // Clear Actions environment variables that change `core`’s behavior
+  delete process.env.GITHUB_OUTPUT;
+  delete process.env.GITHUB_STATE;
   // Set required environment variables and inputs
   process.env.GITHUB_REPOSITORY_OWNER = "actions";
   process.env.GITHUB_REPOSITORY = "actions/create-github-app-token";
