@@ -1,7 +1,5 @@
 // Base for all `main` tests.
 // @ts-check
-import { readFileSync } from "node:fs";
-import * as url from "node:url";
 import { MockAgent, setGlobalDispatcher } from "undici";
 
 export async function test(cb = (_mockPool) => {}) {
