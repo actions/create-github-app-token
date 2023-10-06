@@ -82,7 +82,11 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
         // Note: Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
       },
     })
-    .reply(201, { token: mockInstallationAccessToken });
+    .reply(
+      201,
+      { token: mockInstallationAccessToken },
+      { headers: { "content-type": "application/json" } }
+    );
 
   // Run the callback
   cb(mockPool);
