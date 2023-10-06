@@ -1,10 +1,14 @@
+// Verify `main` creates a token when the `owner` input is not set but the `repositories` input is set.
 // @ts-check
 import { MockAgent, setGlobalDispatcher } from "undici";
 
 // Set required environment variables and inputs
+process.env.GITHUB_REPOSITORY_OWNER = "actions";
 process.env.GITHUB_REPOSITORY = "actions/create-github-app-token";
 // inputs are set as environment variables with the prefix INPUT_
 // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
+delete process.env.INPUT_OWNER;
+process.env.INPUT_REPOSITORIES = process.env.GITHUB_REPOSITORY;
 process.env.INPUT_APP_ID = "123456";
 process.env.INPUT_PRIVATE_KEY = `-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA280nfuUM9w00Ib9E2rvZJ6Qu3Ua3IqR34ZlK53vn/Iobn2EL
@@ -46,7 +50,9 @@ const mockPool = mockAgent.get("https://api.github.com");
 const mockInstallationId = "123456";
 mockPool
   .intercept({
-    path: `/repos/${process.env.GITHUB_REPOSITORY}/installation`,
+    path: `/repos/${process.env.GITHUB_REPOSITORY_OWNER}/${encodeURIComponent(
+      process.env.INPUT_REPOSITORIES.split(",")[0]
+    )}/installation`,
     method: "GET",
     headers: {
       accept: "application/vnd.github.v3+json",
