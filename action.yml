@@ -7,7 +7,7 @@ branding:
 inputs:
   app-id:
     description: "GitHub App ID"
-    required: true # TODO: When 'app_id' is removed, make 'app-id' required
+    required: false # TODO: When 'app_id' is removed, make 'app-id' required
   app_id:
     description: "GitHub App ID"
     required: false
