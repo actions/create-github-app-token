@@ -19,6 +19,8 @@ const privateKey = core.getInput("private_key");
 const owner = core.getInput("owner");
 const repositories = core.getInput("repositories");
 
+const skipTokenRevoke = Boolean(core.getInput("skip_token_revoke"));
+
 main(
   appId,
   privateKey,
@@ -28,7 +30,8 @@ main(
   createAppAuth,
   request.defaults({
     baseUrl: process.env["GITHUB_API_URL"],
-  })
+  }),
+  skipTokenRevoke
 ).catch((error) => {
   console.error(error);
   core.setFailed(error.message);

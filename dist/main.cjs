@@ -10006,7 +10006,7 @@ var import_core = __toESM(require_core(), 1);
 var import_auth_app = __toESM(require_dist_node12(), 1);
 
 // lib/main.js
-async function main(appId2, privateKey2, owner2, repositories2, core2, createAppAuth2, request2) {
+async function main(appId2, privateKey2, owner2, repositories2, core2, createAppAuth2, request2, skipTokenRevoke2) {
   let parsedOwner = "";
   let parsedRepositoryNames = "";
   if (!owner2 && !repositories2) {
@@ -10082,7 +10082,9 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
   }
   core2.setSecret(authentication.token);
   core2.setOutput("token", authentication.token);
-  core2.saveState("token", authentication.token);
+  if (!skipTokenRevoke2) {
+    core2.saveState("token", authentication.token);
+  }
 }
 
 // lib/request.js
@@ -10105,6 +10107,7 @@ var appId = import_core.default.getInput("app_id");
 var privateKey = import_core.default.getInput("private_key");
 var owner = import_core.default.getInput("owner");
 var repositories = import_core.default.getInput("repositories");
+var skipTokenRevoke = Boolean(import_core.default.getInput("skip_token_revoke"));
 main(
   appId,
   privateKey,
@@ -10114,7 +10117,8 @@ main(
   import_auth_app.createAppAuth,
   request_default.defaults({
     baseUrl: process.env["GITHUB_API_URL"]
-  })
+  }),
+  skipTokenRevoke
 ).catch((error) => {
   console.error(error);
   import_core.default.setFailed(error.message);

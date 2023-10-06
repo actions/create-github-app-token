@@ -145,6 +145,10 @@ jobs:
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
 
+### `skip_token_revoke`
+
+**Optional:** If truthy, the token will not be revoked when the current job is complete.
+
 ## Outputs
 
 ### `token`
@@ -158,7 +162,7 @@ The action creates an installation access token using [the `POST /app/installati
 1. The token is scoped to the current repository or `repositories` if set.
 2. The token inherits all the installation's permissions.
 3. The token is set as output `token` which can be used in subsequent steps.
-4. The token is revoked in the `post` step of the action, which means it cannot be passed to another job.
+4. Unless the `skip_token_revoke` input is set to a truthy value, the token is revoked in the `post` step of the action, which means it cannot be passed to another job.
 5. The token is masked, it cannot be logged accidentally.
 
 > [!NOTE]

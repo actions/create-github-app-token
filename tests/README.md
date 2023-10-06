@@ -6,7 +6,7 @@ Add one test file per scenario. You can run them in isolation with:
 node tests/post-token-set.test.js
 ```
 
-All tests are run together in [tests/index.js](index.js), which can be execauted with ava
+All tests are run together in [tests/index.js](index.js), which can be executed with ava
 
 ```
 npx ava tests/index.js
