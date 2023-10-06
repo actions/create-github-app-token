@@ -23,7 +23,8 @@
     "esbuild": "^0.19.4",
     "execa": "^8.0.1",
     "open-cli": "^7.2.0",
-    "undici": "^5.25.2"
+    "undici": "^5.25.2",
+    "yaml": "^2.3.2"
   },
   "release": {
     "branches": [
