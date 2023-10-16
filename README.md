@@ -124,6 +124,52 @@ jobs:
           body: "Hello, World!"
 ```
 
+### Create tokens for multiple user or organization accounts
+
+You can use a matrix strategy to create tokens for multiple user or organization accounts.
+
+> [!NOTE]
+> See [this documentation](https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings) for information on using multiline strings in workflows.
+
+```yaml
+on: [workflow_dispatch]
+
+jobs:
+  set-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{steps.set.outputs.matrix }}
+    steps:
+      - id: set
+        run: echo 'matrix=[{"owner":"owner1"},{"owner":"owner2","repos":["repo1"]}]' >>"$GITHUB_OUTPUT"
+
+  use-matrix:
+    name: '@${{ matrix.owners-and-repos.owner }} installation'
+    needs: [set-matrix]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        owners-and-repos: ${{ fromJson(needs.set-matrix.outputs.matrix) }}
+
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app_id: ${{ vars.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ matrix.owners-and-repos.owner }}
+          repositories: ${{ join(matrix.owners-and-repos.repos) }}
+      - uses: octokit/request-action@v2.x
+        id: get-installation-repositories
+        with:
+          route: GET /installation/repositories
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+      - run: echo "$MULTILINE_JSON_STRING"
+        env:
+          MULTILINE_JSON_STRING: ${{ steps.get-installation-repositories.outputs.data }}
+```
+
 ## Inputs
 
 ### `app-id`
