@@ -128,6 +128,9 @@ jobs:
 
 You can use a matrix strategy to create tokens for multiple user or organization accounts.
 
+> [!NOTE]
+> See [this documentation](https://docs.github.com/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings) for information on using multiline strings in workflows.
+
 ```yaml
 on: [workflow_dispatch]
 
