@@ -2811,7 +2811,7 @@ var require_dist_node5 = __commonJS({
     module2.exports = __toCommonJS2(dist_src_exports);
     var import_endpoint = require_dist_node2();
     var import_universal_user_agent = require_dist_node();
-    var VERSION = "8.1.2";
+    var VERSION = "8.1.4";
     var import_is_plain_object = require_is_plain_object();
     var import_request_error = require_dist_node4();
     function getBufferResponse(response) {
@@ -2911,7 +2911,15 @@ var require_dist_node5 = __commonJS({
           throw error;
         else if (error.name === "AbortError")
           throw error;
-        throw new import_request_error.RequestError(error.message, 500, {
+        let message = error.message;
+        if (error.name === "TypeError" && "cause" in error) {
+          if (error.cause instanceof Error) {
+            message = error.cause.message;
+          } else if (typeof error.cause === "string") {
+            message = error.cause;
+          }
+        }
+        throw new import_request_error.RequestError(message, 500, {
           request: requestOptions
         });
       });
