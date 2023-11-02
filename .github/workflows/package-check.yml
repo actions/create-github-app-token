@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: rebuild the dist/ directory
-        run: npm run bundle
+        run: npm run build
 
       - name: compare the expected and actual dist/ directories
         run: |
