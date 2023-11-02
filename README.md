@@ -1,5 +1,7 @@
 # Create GitHub App Token
 
+[![test](https://github.com/actions/create-github-app-token/actions/workflows/test.yml/badge.svg)](https://github.com/actions/create-github-app-token/actions/workflows/test.yml)
+
 GitHub Action for creating a GitHub App installation access token.
 
 ## Usage
