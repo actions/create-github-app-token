@@ -1,6 +1,6 @@
 # Create GitHub App Token
 
-[![test](https://github.com/actions/create-github-app-token/actions/workflows/test.yml/badge.svg)](https://github.com/actions/create-github-app-token/actions/workflows/test.yml)
+[![test](https://github.com/actions/create-github-app-token/actions/workflows/test.yml/badge.svg)](https://github.com/actions/create-github-app-token/actions/workflows/test.yml) [![package-check](https://github.com/actions/create-github-app-token/actions/workflows/package-check.yml/badge.svg)](https://github.com/actions/create-github-app-token/actions/workflows/package-check.yml)
 
 GitHub Action for creating a GitHub App installation access token.
 
