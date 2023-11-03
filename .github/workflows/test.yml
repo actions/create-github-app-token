@@ -1,4 +1,5 @@
 name: test
+
 on:
   push:
     branches:
@@ -15,10 +16,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: "npm"
+          node-version-file: .node-version
+          cache: 'npm'
+
       - run: npm ci
       - run: npm test
 

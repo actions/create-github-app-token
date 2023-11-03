@@ -1,5 +1,7 @@
 # Create GitHub App Token
 
+[![test](https://github.com/actions/create-github-app-token/actions/workflows/test.yml/badge.svg)](https://github.com/actions/create-github-app-token/actions/workflows/test.yml)
+
 GitHub Action for creating a GitHub App installation access token.
 
 ## Usage
@@ -46,7 +48,7 @@ jobs:
           # required
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.head_ref }}
