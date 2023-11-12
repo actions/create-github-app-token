@@ -17,7 +17,7 @@ await test((mockPool) => {
         // Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
       },
     })
-    .reply(500);
+    .reply(500, 'GitHub API not available')
     mockPool
     .intercept({
       path: `/orgs/${process.env.INPUT_OWNER}/installation`,
