@@ -7664,7 +7664,7 @@ var require_lodash = __commonJS({
     }
     var objectProto = Object.prototype;
     var hasOwnProperty = objectProto.hasOwnProperty;
-    var objectToString = objectProto.toString;
+    var objectToString2 = objectProto.toString;
     var propertyIsEnumerable = objectProto.propertyIsEnumerable;
     var nativeKeys = overArg(Object.keys, Object);
     var nativeMax = Math.max;
@@ -7708,7 +7708,7 @@ var require_lodash = __commonJS({
       return isString(collection) ? fromIndex <= length && collection.indexOf(value, fromIndex) > -1 : !!length && baseIndexOf(collection, value, fromIndex) > -1;
     }
     function isArguments(value) {
-      return isArrayLikeObject(value) && hasOwnProperty.call(value, "callee") && (!propertyIsEnumerable.call(value, "callee") || objectToString.call(value) == argsTag);
+      return isArrayLikeObject(value) && hasOwnProperty.call(value, "callee") && (!propertyIsEnumerable.call(value, "callee") || objectToString2.call(value) == argsTag);
     }
     var isArray = Array.isArray;
     function isArrayLike(value) {
@@ -7718,7 +7718,7 @@ var require_lodash = __commonJS({
       return isObjectLike(value) && isArrayLike(value);
     }
     function isFunction(value) {
-      var tag = isObject(value) ? objectToString.call(value) : "";
+      var tag = isObject(value) ? objectToString2.call(value) : "";
       return tag == funcTag || tag == genTag;
     }
     function isLength(value) {
@@ -7732,10 +7732,10 @@ var require_lodash = __commonJS({
       return !!value && typeof value == "object";
     }
     function isString(value) {
-      return typeof value == "string" || !isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag;
+      return typeof value == "string" || !isArray(value) && isObjectLike(value) && objectToString2.call(value) == stringTag;
     }
     function isSymbol(value) {
-      return typeof value == "symbol" || isObjectLike(value) && objectToString.call(value) == symbolTag;
+      return typeof value == "symbol" || isObjectLike(value) && objectToString2.call(value) == symbolTag;
     }
     function toFinite(value) {
       if (!value) {
@@ -7785,9 +7785,9 @@ var require_lodash2 = __commonJS({
   "node_modules/lodash.isboolean/index.js"(exports, module2) {
     var boolTag = "[object Boolean]";
     var objectProto = Object.prototype;
-    var objectToString = objectProto.toString;
+    var objectToString2 = objectProto.toString;
     function isBoolean(value) {
-      return value === true || value === false || isObjectLike(value) && objectToString.call(value) == boolTag;
+      return value === true || value === false || isObjectLike(value) && objectToString2.call(value) == boolTag;
     }
     function isObjectLike(value) {
       return !!value && typeof value == "object";
@@ -7809,7 +7809,7 @@ var require_lodash3 = __commonJS({
     var reIsOctal = /^0o[0-7]+$/i;
     var freeParseInt = parseInt;
     var objectProto = Object.prototype;
-    var objectToString = objectProto.toString;
+    var objectToString2 = objectProto.toString;
     function isInteger(value) {
       return typeof value == "number" && value == toInteger(value);
     }
@@ -7821,7 +7821,7 @@ var require_lodash3 = __commonJS({
       return !!value && typeof value == "object";
     }
     function isSymbol(value) {
-      return typeof value == "symbol" || isObjectLike(value) && objectToString.call(value) == symbolTag;
+      return typeof value == "symbol" || isObjectLike(value) && objectToString2.call(value) == symbolTag;
     }
     function toFinite(value) {
       if (!value) {
@@ -7865,12 +7865,12 @@ var require_lodash4 = __commonJS({
   "node_modules/lodash.isnumber/index.js"(exports, module2) {
     var numberTag = "[object Number]";
     var objectProto = Object.prototype;
-    var objectToString = objectProto.toString;
+    var objectToString2 = objectProto.toString;
     function isObjectLike(value) {
       return !!value && typeof value == "object";
     }
     function isNumber(value) {
-      return typeof value == "number" || isObjectLike(value) && objectToString.call(value) == numberTag;
+      return typeof value == "number" || isObjectLike(value) && objectToString2.call(value) == numberTag;
     }
     module2.exports = isNumber;
   }
@@ -7900,13 +7900,13 @@ var require_lodash5 = __commonJS({
     var funcToString = funcProto.toString;
     var hasOwnProperty = objectProto.hasOwnProperty;
     var objectCtorString = funcToString.call(Object);
-    var objectToString = objectProto.toString;
+    var objectToString2 = objectProto.toString;
     var getPrototype = overArg(Object.getPrototypeOf, Object);
     function isObjectLike(value) {
       return !!value && typeof value == "object";
     }
     function isPlainObject(value) {
-      if (!isObjectLike(value) || objectToString.call(value) != objectTag || isHostObject(value)) {
+      if (!isObjectLike(value) || objectToString2.call(value) != objectTag || isHostObject(value)) {
         return false;
       }
       var proto = getPrototype(value);
@@ -7925,13 +7925,13 @@ var require_lodash6 = __commonJS({
   "node_modules/lodash.isstring/index.js"(exports, module2) {
     var stringTag = "[object String]";
     var objectProto = Object.prototype;
-    var objectToString = objectProto.toString;
+    var objectToString2 = objectProto.toString;
     var isArray = Array.isArray;
     function isObjectLike(value) {
       return !!value && typeof value == "object";
     }
     function isString(value) {
-      return typeof value == "string" || !isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag;
+      return typeof value == "string" || !isArray(value) && isObjectLike(value) && objectToString2.call(value) == stringTag;
     }
     module2.exports = isString;
   }
@@ -7951,7 +7951,7 @@ var require_lodash7 = __commonJS({
     var reIsOctal = /^0o[0-7]+$/i;
     var freeParseInt = parseInt;
     var objectProto = Object.prototype;
-    var objectToString = objectProto.toString;
+    var objectToString2 = objectProto.toString;
     function before(n, func) {
       var result;
       if (typeof func != "function") {
@@ -7979,7 +7979,7 @@ var require_lodash7 = __commonJS({
       return !!value && typeof value == "object";
     }
     function isSymbol(value) {
-      return typeof value == "symbol" || isObjectLike(value) && objectToString.call(value) == symbolTag;
+      return typeof value == "symbol" || isObjectLike(value) && objectToString2.call(value) == symbolTag;
     }
     function toFinite(value) {
       if (!value) {
@@ -10009,9 +10009,339 @@ var require_dist_node12 = __commonJS({
   }
 });
 
+// node_modules/retry/lib/retry_operation.js
+var require_retry_operation = __commonJS({
+  "node_modules/retry/lib/retry_operation.js"(exports, module2) {
+    function RetryOperation(timeouts, options) {
+      if (typeof options === "boolean") {
+        options = { forever: options };
+      }
+      this._originalTimeouts = JSON.parse(JSON.stringify(timeouts));
+      this._timeouts = timeouts;
+      this._options = options || {};
+      this._maxRetryTime = options && options.maxRetryTime || Infinity;
+      this._fn = null;
+      this._errors = [];
+      this._attempts = 1;
+      this._operationTimeout = null;
+      this._operationTimeoutCb = null;
+      this._timeout = null;
+      this._operationStart = null;
+      this._timer = null;
+      if (this._options.forever) {
+        this._cachedTimeouts = this._timeouts.slice(0);
+      }
+    }
+    module2.exports = RetryOperation;
+    RetryOperation.prototype.reset = function() {
+      this._attempts = 1;
+      this._timeouts = this._originalTimeouts.slice(0);
+    };
+    RetryOperation.prototype.stop = function() {
+      if (this._timeout) {
+        clearTimeout(this._timeout);
+      }
+      if (this._timer) {
+        clearTimeout(this._timer);
+      }
+      this._timeouts = [];
+      this._cachedTimeouts = null;
+    };
+    RetryOperation.prototype.retry = function(err) {
+      if (this._timeout) {
+        clearTimeout(this._timeout);
+      }
+      if (!err) {
+        return false;
+      }
+      var currentTime = (/* @__PURE__ */ new Date()).getTime();
+      if (err && currentTime - this._operationStart >= this._maxRetryTime) {
+        this._errors.push(err);
+        this._errors.unshift(new Error("RetryOperation timeout occurred"));
+        return false;
+      }
+      this._errors.push(err);
+      var timeout = this._timeouts.shift();
+      if (timeout === void 0) {
+        if (this._cachedTimeouts) {
+          this._errors.splice(0, this._errors.length - 1);
+          timeout = this._cachedTimeouts.slice(-1);
+        } else {
+          return false;
+        }
+      }
+      var self = this;
+      this._timer = setTimeout(function() {
+        self._attempts++;
+        if (self._operationTimeoutCb) {
+          self._timeout = setTimeout(function() {
+            self._operationTimeoutCb(self._attempts);
+          }, self._operationTimeout);
+          if (self._options.unref) {
+            self._timeout.unref();
+          }
+        }
+        self._fn(self._attempts);
+      }, timeout);
+      if (this._options.unref) {
+        this._timer.unref();
+      }
+      return true;
+    };
+    RetryOperation.prototype.attempt = function(fn, timeoutOps) {
+      this._fn = fn;
+      if (timeoutOps) {
+        if (timeoutOps.timeout) {
+          this._operationTimeout = timeoutOps.timeout;
+        }
+        if (timeoutOps.cb) {
+          this._operationTimeoutCb = timeoutOps.cb;
+        }
+      }
+      var self = this;
+      if (this._operationTimeoutCb) {
+        this._timeout = setTimeout(function() {
+          self._operationTimeoutCb();
+        }, self._operationTimeout);
+      }
+      this._operationStart = (/* @__PURE__ */ new Date()).getTime();
+      this._fn(this._attempts);
+    };
+    RetryOperation.prototype.try = function(fn) {
+      console.log("Using RetryOperation.try() is deprecated");
+      this.attempt(fn);
+    };
+    RetryOperation.prototype.start = function(fn) {
+      console.log("Using RetryOperation.start() is deprecated");
+      this.attempt(fn);
+    };
+    RetryOperation.prototype.start = RetryOperation.prototype.try;
+    RetryOperation.prototype.errors = function() {
+      return this._errors;
+    };
+    RetryOperation.prototype.attempts = function() {
+      return this._attempts;
+    };
+    RetryOperation.prototype.mainError = function() {
+      if (this._errors.length === 0) {
+        return null;
+      }
+      var counts = {};
+      var mainError = null;
+      var mainErrorCount = 0;
+      for (var i = 0; i < this._errors.length; i++) {
+        var error = this._errors[i];
+        var message = error.message;
+        var count = (counts[message] || 0) + 1;
+        counts[message] = count;
+        if (count >= mainErrorCount) {
+          mainError = error;
+          mainErrorCount = count;
+        }
+      }
+      return mainError;
+    };
+  }
+});
+
+// node_modules/retry/lib/retry.js
+var require_retry = __commonJS({
+  "node_modules/retry/lib/retry.js"(exports) {
+    var RetryOperation = require_retry_operation();
+    exports.operation = function(options) {
+      var timeouts = exports.timeouts(options);
+      return new RetryOperation(timeouts, {
+        forever: options && (options.forever || options.retries === Infinity),
+        unref: options && options.unref,
+        maxRetryTime: options && options.maxRetryTime
+      });
+    };
+    exports.timeouts = function(options) {
+      if (options instanceof Array) {
+        return [].concat(options);
+      }
+      var opts = {
+        retries: 10,
+        factor: 2,
+        minTimeout: 1 * 1e3,
+        maxTimeout: Infinity,
+        randomize: false
+      };
+      for (var key in options) {
+        opts[key] = options[key];
+      }
+      if (opts.minTimeout > opts.maxTimeout) {
+        throw new Error("minTimeout is greater than maxTimeout");
+      }
+      var timeouts = [];
+      for (var i = 0; i < opts.retries; i++) {
+        timeouts.push(this.createTimeout(i, opts));
+      }
+      if (options && options.forever && !timeouts.length) {
+        timeouts.push(this.createTimeout(i, opts));
+      }
+      timeouts.sort(function(a, b) {
+        return a - b;
+      });
+      return timeouts;
+    };
+    exports.createTimeout = function(attempt, opts) {
+      var random = opts.randomize ? Math.random() + 1 : 1;
+      var timeout = Math.round(random * Math.max(opts.minTimeout, 1) * Math.pow(opts.factor, attempt));
+      timeout = Math.min(timeout, opts.maxTimeout);
+      return timeout;
+    };
+    exports.wrap = function(obj, options, methods) {
+      if (options instanceof Array) {
+        methods = options;
+        options = null;
+      }
+      if (!methods) {
+        methods = [];
+        for (var key in obj) {
+          if (typeof obj[key] === "function") {
+            methods.push(key);
+          }
+        }
+      }
+      for (var i = 0; i < methods.length; i++) {
+        var method = methods[i];
+        var original = obj[method];
+        obj[method] = function retryWrapper(original2) {
+          var op = exports.operation(options);
+          var args = Array.prototype.slice.call(arguments, 1);
+          var callback = args.pop();
+          args.push(function(err) {
+            if (op.retry(err)) {
+              return;
+            }
+            if (err) {
+              arguments[0] = op.mainError();
+            }
+            callback.apply(this, arguments);
+          });
+          op.attempt(function() {
+            original2.apply(obj, args);
+          });
+        }.bind(obj, original);
+        obj[method].options = options;
+      }
+    };
+  }
+});
+
+// node_modules/retry/index.js
+var require_retry2 = __commonJS({
+  "node_modules/retry/index.js"(exports, module2) {
+    module2.exports = require_retry();
+  }
+});
+
 // main.js
 var import_core = __toESM(require_core(), 1);
 var import_auth_app = __toESM(require_dist_node12(), 1);
+
+// node_modules/p-retry/index.js
+var import_retry = __toESM(require_retry2(), 1);
+
+// node_modules/is-network-error/index.js
+var objectToString = Object.prototype.toString;
+var isError = (value) => objectToString.call(value) === "[object Error]";
+var errorMessages = /* @__PURE__ */ new Set([
+  "Failed to fetch",
+  // Chrome
+  "NetworkError when attempting to fetch resource.",
+  // Firefox
+  "The Internet connection appears to be offline.",
+  // Safari 16
+  "Load failed",
+  // Safari 17+
+  "Network request failed",
+  // `cross-fetch`
+  "fetch failed"
+  // Undici (Node.js)
+]);
+function isNetworkError(error) {
+  const isValid = error && isError(error) && error.name === "TypeError" && typeof error.message === "string";
+  if (!isValid) {
+    return false;
+  }
+  if (error.message === "Load failed") {
+    return error.stack === void 0;
+  }
+  return errorMessages.has(error.message);
+}
+
+// node_modules/p-retry/index.js
+var AbortError = class extends Error {
+  constructor(message) {
+    super();
+    if (message instanceof Error) {
+      this.originalError = message;
+      ({ message } = message);
+    } else {
+      this.originalError = new Error(message);
+      this.originalError.stack = this.stack;
+    }
+    this.name = "AbortError";
+    this.message = message;
+  }
+};
+var decorateErrorWithCounts = (error, attemptNumber, options) => {
+  const retriesLeft = options.retries - (attemptNumber - 1);
+  error.attemptNumber = attemptNumber;
+  error.retriesLeft = retriesLeft;
+  return error;
+};
+async function pRetry(input, options) {
+  return new Promise((resolve, reject) => {
+    options = {
+      onFailedAttempt() {
+      },
+      retries: 10,
+      ...options
+    };
+    const operation = import_retry.default.operation(options);
+    const abortHandler = () => {
+      operation.stop();
+      reject(options.signal?.reason);
+    };
+    if (options.signal && !options.signal.aborted) {
+      options.signal.addEventListener("abort", abortHandler, { once: true });
+    }
+    const cleanUp = () => {
+      options.signal?.removeEventListener("abort", abortHandler);
+      operation.stop();
+    };
+    operation.attempt(async (attemptNumber) => {
+      try {
+        const result = await input(attemptNumber);
+        cleanUp();
+        resolve(result);
+      } catch (error) {
+        try {
+          if (!(error instanceof Error)) {
+            throw new TypeError(`Non-error was thrown: "${error}". You should only throw errors.`);
+          }
+          if (error instanceof AbortError) {
+            throw error.originalError;
+          }
+          if (error instanceof TypeError && !isNetworkError(error)) {
+            throw error;
+          }
+          await options.onFailedAttempt(decorateErrorWithCounts(error, attemptNumber, options));
+          if (!operation.retry(error)) {
+            throw operation.mainError();
+          }
+        } catch (finalError) {
+          decorateErrorWithCounts(finalError, attemptNumber, options);
+          cleanUp();
+          reject(finalError);
+        }
+      }
+    });
+  });
+}
 
 // lib/main.js
 async function main(appId2, privateKey2, owner2, repositories2, core2, createAppAuth2, request2, skipTokenRevoke2) {
@@ -10055,37 +10385,22 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
   });
   let authentication;
   if (parsedRepositoryNames) {
-    const response = await request2("GET /repos/{owner}/{repo}/installation", {
-      owner: parsedOwner,
-      repo: parsedRepositoryNames.split(",")[0],
-      headers: {
-        authorization: `bearer ${appAuthentication.token}`
-      }
-    });
-    authentication = await auth({
-      type: "installation",
-      installationId: response.data.id,
-      repositoryNames: parsedRepositoryNames.split(",")
+    authentication = await pRetry(() => getTokenFromRepository(request2, auth, parsedOwner, appAuthentication, parsedRepositoryNames), {
+      onFailedAttempt: (error) => {
+        core2.info(
+          `Failed to create token for "${parsedRepositoryNames}" (attempt ${error.attemptNumber}): ${error.message}`
+        );
+      },
+      retries: 3
     });
   } else {
-    const response = await request2("GET /orgs/{org}/installation", {
-      org: parsedOwner,
-      headers: {
-        authorization: `bearer ${appAuthentication.token}`
-      }
-    }).catch((error) => {
-      if (error.status !== 404)
-        throw error;
-      return request2("GET /users/{username}/installation", {
-        username: parsedOwner,
-        headers: {
-          authorization: `bearer ${appAuthentication.token}`
-        }
-      });
-    });
-    authentication = await auth({
-      type: "installation",
-      installationId: response.data.id
+    authentication = await pRetry(() => getTokenFromOwner(request2, auth, appAuthentication, parsedOwner), {
+      onFailedAttempt: (error) => {
+        core2.info(
+          `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
+        );
+      },
+      retries: 3
     });
   }
   core2.setSecret(authentication.token);
@@ -10093,6 +10408,43 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
   if (!skipTokenRevoke2) {
     core2.saveState("token", authentication.token);
   }
+}
+async function getTokenFromOwner(request2, auth, appAuthentication, parsedOwner) {
+  const response = await request2("GET /orgs/{org}/installation", {
+    org: parsedOwner,
+    headers: {
+      authorization: `bearer ${appAuthentication.token}`
+    }
+  }).catch((error) => {
+    if (error.status !== 404)
+      throw error;
+    return request2("GET /users/{username}/installation", {
+      username: parsedOwner,
+      headers: {
+        authorization: `bearer ${appAuthentication.token}`
+      }
+    });
+  });
+  const authentication = await auth({
+    type: "installation",
+    installationId: response.data.id
+  });
+  return authentication;
+}
+async function getTokenFromRepository(request2, auth, parsedOwner, appAuthentication, parsedRepositoryNames) {
+  const response = await request2("GET /repos/{owner}/{repo}/installation", {
+    owner: parsedOwner,
+    repo: parsedRepositoryNames.split(",")[0],
+    headers: {
+      authorization: `bearer ${appAuthentication.token}`
+    }
+  });
+  const authentication = await auth({
+    type: "installation",
+    installationId: response.data.id,
+    repositoryNames: parsedRepositoryNames.split(",")
+  });
+  return authentication;
 }
 
 // lib/request.js
