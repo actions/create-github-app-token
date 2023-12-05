@@ -157,8 +157,8 @@ jobs:
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.PRIVATE_KEY }}
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ matrix.owners-and-repos.owner }}
           repositories: ${{ join(matrix.owners-and-repos.repos) }}
       - uses: octokit/request-action@v2.x
