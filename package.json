@@ -18,6 +18,7 @@
     "p-retry": "^6.1.0"
   },
   "devDependencies": {
+    "@sinonjs/fake-timers": "^11.2.2",
     "ava": "^5.3.1",
     "c8": "^8.0.1",
     "dotenv": "^16.3.1",
