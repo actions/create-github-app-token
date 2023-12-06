@@ -10390,12 +10390,9 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
     privateKey: privateKey2,
     request: request2
   });
-  const appAuthentication = await auth({
-    type: "app"
-  });
   let authentication;
   if (parsedRepositoryNames) {
-    authentication = await pRetry(() => getTokenFromRepository(request2, auth, parsedOwner, appAuthentication, parsedRepositoryNames), {
+    authentication = await pRetry(() => getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames), {
       onFailedAttempt: (error) => {
         core2.info(
           `Failed to create token for "${parsedRepositoryNames}" (attempt ${error.attemptNumber}): ${error.message}`
@@ -10404,7 +10401,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
       retries: 3
     });
   } else {
-    authentication = await pRetry(() => getTokenFromOwner(request2, auth, appAuthentication, parsedOwner), {
+    authentication = await pRetry(() => getTokenFromOwner(request2, auth, parsedOwner), {
       onFailedAttempt: (error) => {
         core2.info(
           `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
@@ -10419,19 +10416,19 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
     core2.saveState("token", authentication.token);
   }
 }
-async function getTokenFromOwner(request2, auth, appAuthentication, parsedOwner) {
+async function getTokenFromOwner(request2, auth, parsedOwner) {
   const response = await request2("GET /orgs/{org}/installation", {
     org: parsedOwner,
-    headers: {
-      authorization: `bearer ${appAuthentication.token}`
+    request: {
+      hook: auth.hook
     }
   }).catch((error) => {
     if (error.status !== 404)
       throw error;
     return request2("GET /users/{username}/installation", {
       username: parsedOwner,
-      headers: {
-        authorization: `bearer ${appAuthentication.token}`
+      request: {
+        hook: auth.hook
       }
     });
   });
@@ -10441,12 +10438,12 @@ async function getTokenFromOwner(request2, auth, appAuthentication, parsedOwner)
   });
   return authentication;
 }
-async function getTokenFromRepository(request2, auth, parsedOwner, appAuthentication, parsedRepositoryNames) {
+async function getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames) {
   const response = await request2("GET /repos/{owner}/{repo}/installation", {
     owner: parsedOwner,
     repo: parsedRepositoryNames.split(",")[0],
-    headers: {
-      authorization: `bearer ${appAuthentication.token}`
+    request: {
+      hook: auth.hook
     }
   });
   const authentication = await auth({
