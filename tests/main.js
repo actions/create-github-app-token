@@ -6,8 +6,10 @@ export async function test(cb = (_mockPool) => {}) {
   // Set required environment variables and inputs
   process.env.GITHUB_REPOSITORY_OWNER = "actions";
   process.env.GITHUB_REPOSITORY = "actions/create-github-app-token";
+
   // inputs are set as environment variables with the prefix INPUT_
   // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
+  process.env["INPUT_GITHUB-API-URL"] = "https://api.github.com";
   process.env["INPUT_APP-ID"] = "123456";
   process.env["INPUT_PRIVATE-KEY"] = `-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA280nfuUM9w00Ib9E2rvZJ6Qu3Ua3IqR34ZlK53vn/Iobn2EL
