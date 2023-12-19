@@ -175,7 +175,7 @@ jobs:
           MULTILINE_JSON_STRING: ${{ steps.get-installation-repositories.outputs.data }}
 ```
 
-### Run the workflow in a github.com repository against an organization in Github Enterprise.
+### Run the workflow in a github.com repository against an organization in GitHub Enterprise Server
 
 ```yaml
 on: [push]
@@ -208,7 +208,7 @@ on: [push]
 
 ### `github-api-url`
 
-**Optional:** GitHub API URL. Defaults to `https://api.github.com`.
+**Optional:** The URL of the GitHub REST API. Defaults to the URL of the GitHub Rest API where the workflow is run from.
 
 ## Outputs
 

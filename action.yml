@@ -32,10 +32,10 @@ inputs:
     description: "If truthy, the token will not be revoked when the current job is complete"
     required: false
     deprecationMessage: "'skip_token_revoke' is deprecated and will be removed in a future version. Use 'skip-token-revoke' instead."
-  # Make GitHub API consigurable to support GitHub Enterprise server usecases
+  # Make GitHub API configurable to support non-GitHub Cloud use cases
   # see https://github.com/actions/create-github-app-token/issues/77
   github-api-url:
-    description: The API URL of the GitHub server.
+    description: The URL of the GitHub REST API.
     default: ${{ github.api_url }}
 outputs:
   token:
