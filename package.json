@@ -13,9 +13,9 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "@octokit/auth-app": "^6.0.1",
+    "@octokit/auth-app": "^6.0.2",
     "@octokit/request": "^8.1.6",
-    "p-retry": "^6.1.0"
+    "p-retry": "^6.2.0"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "^11.2.2",
