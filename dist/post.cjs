@@ -3003,12 +3003,28 @@ async function post(core2, request2) {
     core2.info("Token is not set");
     return;
   }
-  await request2("DELETE /installation/token", {
-    headers: {
-      authorization: `token ${token}`
-    }
-  });
-  core2.info("Token revoked");
+  const expiresAt = core2.getState("expiresAt");
+  if (expiresAt && tokenExpiresIn(expiresAt) < 0) {
+    core2.info("Token already expired");
+    return;
+  }
+  try {
+    await request2("DELETE /installation/token", {
+      headers: {
+        authorization: `token ${token}`
+      }
+    });
+    core2.info("Token revoked");
+  } catch (error) {
+    core2.warning(
+      `Token revocation failed: ${error.message}`
+    );
+  }
+}
+function tokenExpiresIn(expiresAt) {
+  const now = /* @__PURE__ */ new Date();
+  const expiresAtDate = new Date(expiresAt);
+  return Math.round((expiresAtDate.getTime() - now.getTime()) / 1e3);
 }
 
 // lib/request.js

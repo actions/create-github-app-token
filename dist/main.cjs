@@ -10420,6 +10420,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
   core2.setOutput("token", authentication.token);
   if (!skipTokenRevoke2) {
     core2.saveState("token", authentication.token);
+    core2.setOutput("expiresAt", authentication.expiresAt);
   }
 }
 async function getTokenFromOwner(request2, auth, parsedOwner) {
