@@ -23,6 +23,6 @@ mockPool
       authorization: "token secret123",
     },
   })
-  .reply(204);
+  .reply(401);
 
 await import("../post.js");
