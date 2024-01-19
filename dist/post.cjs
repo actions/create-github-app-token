@@ -3005,7 +3005,7 @@ async function post(core2, request2) {
   }
   const expiresAt = core2.getState("expiresAt");
   if (expiresAt && tokenExpiresIn(expiresAt) < 0) {
-    core2.info("Token already expired");
+    core2.info("Token expired, skipping token revocation");
     return;
   }
   try {
