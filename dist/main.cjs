@@ -3023,7 +3023,7 @@ var require_dist_node6 = __commonJS({
     module2.exports = __toCommonJS2(dist_src_exports);
     function oauthAuthorizationUrl(options) {
       const clientType = options.clientType || "oauth-app";
-      const baseUrl = options.baseUrl || "https://github.com";
+      const baseUrl2 = options.baseUrl || "https://github.com";
       const result = {
         clientType,
         allowSignup: options.allowSignup === false ? false : true,
@@ -3037,7 +3037,7 @@ var require_dist_node6 = __commonJS({
         const scopes = "scopes" in options ? options.scopes : [];
         result.scopes = typeof scopes === "string" ? scopes.split(/[,\s]+/).filter(Boolean) : scopes;
       }
-      result.url = urlBuilderAuthorize(`${baseUrl}/login/oauth/authorize`, result);
+      result.url = urlBuilderAuthorize(`${baseUrl2}/login/oauth/authorize`, result);
       return result;
     }
     function urlBuilderAuthorize(base, options) {
@@ -3149,10 +3149,10 @@ var require_dist_node7 = __commonJS({
       request: request2 = import_request3.request,
       ...options
     }) {
-      const baseUrl = requestToOAuthBaseUrl(request2);
+      const baseUrl2 = requestToOAuthBaseUrl(request2);
       return (0, import_oauth_authorization_url.oauthAuthorizationUrl)({
         ...options,
-        baseUrl
+        baseUrl: baseUrl2
       });
     }
     var import_request22 = require_dist_node5();
@@ -10483,6 +10483,7 @@ var repositories = import_core.default.getInput("repositories");
 var skipTokenRevoke = Boolean(
   import_core.default.getInput("skip-token-revoke") || import_core.default.getInput("skip_token_revoke")
 );
+var baseUrl = import_core.default.getInput("github-api-url").replace(/\/$/, "");
 main(
   appId,
   privateKey,
@@ -10490,9 +10491,7 @@ main(
   repositories,
   import_core.default,
   import_auth_app.createAppAuth,
-  request_default.defaults({
-    baseUrl: process.env["GITHUB_API_URL"]
-  }),
+  request_default.defaults({ baseUrl }),
   skipTokenRevoke
 ).catch((error) => {
   console.error(error);
