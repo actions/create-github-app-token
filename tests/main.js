@@ -74,6 +74,7 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
   // Mock installation access token request
   const mockInstallationAccessToken =
     "ghs_16C7e42F292c6912E7710c838347Ae178B4a"; // This token is invalidated. It’s from https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app.
+  const mockExpiresAt = "2016-07-11T22:14:10Z";
   mockPool
     .intercept({
       path: `/app/installations/${mockInstallationId}/access_tokens`,
@@ -86,7 +87,7 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
     })
     .reply(
       201,
-      { token: mockInstallationAccessToken },
+      { token: mockInstallationAccessToken, expires_at: mockExpiresAt },
       { headers: { "content-type": "application/json" } }
     );
 
