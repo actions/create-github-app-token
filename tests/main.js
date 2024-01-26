@@ -61,7 +61,10 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   );
   mockPool
     .intercept({
-      path: `${baseUrl.pathname}/repos/${owner}/${repo}/installation`,
+      path: `${baseUrl.pathname}/repos/${owner}/${repo}/installation`.replace(
+        "//",
+        "/"
+      ),
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -81,7 +84,10 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const mockExpiresAt = "2016-07-11T22:14:10Z";
   mockPool
     .intercept({
-      path: `${baseUrl.pathname}/app/installations/${mockInstallationId}/access_tokens`,
+      path: `${baseUrl.pathname}/app/installations/${mockInstallationId}/access_tokens`.replace(
+        "//",
+        "/"
+      ),
       method: "POST",
       headers: {
         accept: "application/vnd.github.v3+json",
