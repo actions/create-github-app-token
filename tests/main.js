@@ -45,12 +45,12 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   }
 
   // Set up mocking
-  const baseUrl = env["INPUT_GITHUB-API-URL"];
-  const url = new URL(baseUrl);
+  const baseUrl = new URL(env["INPUT_GITHUB-API-URL"]);
+  const basePath = baseUrl.pathname === '/' ? '' : baseUrl.pathname;
   const mockAgent = new MockAgent();
   mockAgent.disableNetConnect();
   setGlobalDispatcher(mockAgent);
-  const mockPool = mockAgent.get(baseUrl);
+  const mockPool = mockAgent.get(baseUrl.origin);
 
   // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
 
@@ -60,10 +60,9 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const repo = encodeURIComponent(
     (env.INPUT_REPOSITORIES ?? env.GITHUB_REPOSITORY).split(",")[0]
   );
-  url.pathname = `/repos/${owner}/${repo}/installation`;
   mockPool
     .intercept({
-      path: `${url.toString()}`,
+      path: `${basePath}/repos/${owner}/${repo}/installation`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -81,10 +80,9 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const mockInstallationAccessToken =
     "ghs_16C7e42F292c6912E7710c838347Ae178B4a"; // This token is invalidated. It’s from https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app.
   const mockExpiresAt = "2016-07-11T22:14:10Z";
-  url.pathname = `/app/installations/${mockInstallationId}/access_tokens`
   mockPool
     .intercept({
-      path: `${url.toString()}`,
+      path: `${basePath}/app/installations/${mockInstallationId}/access_tokens`,
       method: "POST",
       headers: {
         accept: "application/vnd.github.v3+json",
