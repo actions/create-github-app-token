@@ -4,12 +4,8 @@ import { MockAgent, setGlobalDispatcher } from "undici";
 // https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#sending-values-to-the-pre-and-post-actions
 process.env.STATE_token = "secret123";
 
-// inputs are set as environment variables with the prefix INPUT_
-// https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
-process.env["INPUT_GITHUB-API-URL"] = "https://api.github.com";
-
-// 1 hour in the future, not expired
-process.env.STATE_expiresAt = new Date(Date.now() + 1000 * 60 * 60).toISOString();
+// 1 hour in the past, expired
+process.env.STATE_expiresAt = new Date(Date.now() - 1000 * 60 * 60).toISOString();
 
 const mockAgent = new MockAgent();
 

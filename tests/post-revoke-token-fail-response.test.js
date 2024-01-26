@@ -9,7 +9,9 @@ process.env.STATE_token = "secret123";
 process.env["INPUT_GITHUB-API-URL"] = "https://api.github.com";
 
 // 1 hour in the future, not expired
-process.env.STATE_expiresAt = new Date(Date.now() + 1000 * 60 * 60).toISOString();
+process.env.STATE_expiresAt = new Date(
+  Date.now() + 1000 * 60 * 60
+).toISOString();
 
 const mockAgent = new MockAgent();
 
@@ -27,6 +29,6 @@ mockPool
       authorization: "token secret123",
     },
   })
-  .reply(204);
+  .reply(401);
 
 await import("../post.js");

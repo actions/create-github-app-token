@@ -31,6 +31,8 @@ const skipTokenRevoke = Boolean(
   core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke")
 );
 
+const baseUrl = core.getInput("github-api-url").replace(/\/$/, "");
+
 main(
   appId,
   privateKey,
@@ -38,9 +40,7 @@ main(
   repositories,
   core,
   createAppAuth,
-  request.defaults({
-    baseUrl: process.env["GITHUB_API_URL"],
-  }),
+  request.defaults({ baseUrl }),
   skipTokenRevoke
 ).catch((error) => {
   /* c8 ignore next 3 */
