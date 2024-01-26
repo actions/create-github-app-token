@@ -3030,7 +3030,6 @@ function tokenExpiresIn(expiresAt) {
 // lib/request.js
 var import_request = __toESM(require_dist_node5(), 1);
 var request_default = import_request.request.defaults({
-  baseUrl: process.env["GITHUB_API_URL"],
   headers: {
     "user-agent": "actions/create-github-app-token"
   }
