@@ -15,7 +15,11 @@ In order to use this action, you need to:
 ### Create a token for the current repository
 
 ```yaml
-on: [issues]
+name: Run tests on staging
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   hello-world:
@@ -26,11 +30,10 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
-      - uses: peter-evans/create-or-update-comment@v3
+          github-api-url: "https://github.acme-inc.com/api/v3"
+      - uses: ./actions/staging-tests
         with:
           token: ${{ steps.app-token.outputs.token }}
-          issue-number: ${{ github.event.issue.number }}
-          body: "Hello, World!"
 ```
 
 ### Use app token with `actions/checkout`
@@ -146,7 +149,7 @@ jobs:
         run: echo 'matrix=[{"owner":"owner1"},{"owner":"owner2","repos":["repo1"]}]' >>"$GITHUB_OUTPUT"
 
   use-matrix:
-    name: '@${{ matrix.owners-and-repos.owner }} installation'
+    name: "@${{ matrix.owners-and-repos.owner }} installation"
     needs: [set-matrix]
     runs-on: ubuntu-latest
     strategy:
@@ -170,6 +173,12 @@ jobs:
       - run: echo "$MULTILINE_JSON_STRING"
         env:
           MULTILINE_JSON_STRING: ${{ steps.get-installation-repositories.outputs.data }}
+```
+
+### Run the workflow in a github.com repository against an organization in GitHub Enterprise Server
+
+```yaml
+on: [push]
 ```
 
 ## Inputs
@@ -196,6 +205,10 @@ jobs:
 ### `skip-token-revoke`
 
 **Optional:** If truthy, the token will not be revoked when the current job is complete.
+
+### `github-api-url`
+
+**Optional:** The URL of the GitHub REST API. Defaults to the URL of the GitHub Rest API where the workflow is run from.
 
 ## Outputs
 

@@ -3030,19 +3030,14 @@ function tokenExpiresIn(expiresAt) {
 // lib/request.js
 var import_request = __toESM(require_dist_node5(), 1);
 var request_default = import_request.request.defaults({
-  baseUrl: process.env["GITHUB_API_URL"],
   headers: {
     "user-agent": "actions/create-github-app-token"
   }
 });
 
 // post.js
-post(
-  import_core.default,
-  request_default.defaults({
-    baseUrl: process.env["GITHUB_API_URL"]
-  })
-).catch((error) => {
+var baseUrl = import_core.default.getInput("github-api-url").replace(/\/$/, "");
+post(import_core.default, request_default.defaults({ baseUrl })).catch((error) => {
   console.error(error);
   import_core.default.setFailed(error.message);
 });

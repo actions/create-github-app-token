@@ -2,14 +2,15 @@
 // @ts-check
 import { MockAgent, setGlobalDispatcher } from "undici";
 
-export async function test(cb = (_mockPool) => {}) {
-  // Set required environment variables and inputs
-  process.env.GITHUB_REPOSITORY_OWNER = "actions";
-  process.env.GITHUB_REPOSITORY = "actions/create-github-app-token";
+export const DEFAULT_ENV = {
+  GITHUB_REPOSITORY_OWNER: "actions",
+  GITHUB_REPOSITORY: "actions/create-github-app-token",
   // inputs are set as environment variables with the prefix INPUT_
   // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
-  process.env["INPUT_APP-ID"] = "123456";
-  process.env["INPUT_PRIVATE-KEY"] = `-----BEGIN RSA PRIVATE KEY-----
+  "INPUT_GITHUB-API-URL": "https://api.github.com",
+  "INPUT_APP-ID": "123456",
+  // This key is invalidated. It’s from https://github.com/octokit/auth-app.js/issues/465#issuecomment-1564998327.
+  "INPUT_PRIVATE-KEY": `-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA280nfuUM9w00Ib9E2rvZJ6Qu3Ua3IqR34ZlK53vn/Iobn2EL
 Z9puc5Q/nFBU15NKwHyQNb+OG2hTCkjd1Xi9XPzEOH1r42YQmTGq8YCkUSkk6KZA
 5dnhLwN9pFquT9fQgrf4r1D5GJj3rqvj8JDr1sBmunArqY5u4gziSrIohcjLIZV0
@@ -35,27 +36,33 @@ r4J2gqb0xTDfq7gLMNrIXc2QQM4gKbnJp60JQM3p9NmH8huavBZGvSvNzTwXyGG3
 so0tiQKBgGQXZaxaXhYUcxYHuCkQ3V4Vsj3ezlM92xXlP32SGFm3KgFhYy9kATxw
 Cax1ytZzvlrKLQyQFVK1COs2rHt7W4cJ7op7C8zXfsigXCiejnS664oAuX8sQZID
 x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
------END RSA PRIVATE KEY-----`; // This key is invalidated. It’s from https://github.com/octokit/auth-app.js/issues/465#issuecomment-1564998327.
+-----END RSA PRIVATE KEY-----`,
+};
+
+export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
+  for (const [key, value] of Object.entries(env)) {
+    process.env[key] = value;
+  }
 
   // Set up mocking
+  const baseUrl = new URL(env["INPUT_GITHUB-API-URL"]);
+  const basePath = baseUrl.pathname === '/' ? '' : baseUrl.pathname;
   const mockAgent = new MockAgent();
   mockAgent.disableNetConnect();
   setGlobalDispatcher(mockAgent);
-  const mockPool = mockAgent.get("https://api.github.com");
+  const mockPool = mockAgent.get(baseUrl.origin);
 
   // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
 
   // Mock installation id request
   const mockInstallationId = "123456";
-  const owner = process.env.INPUT_OWNER ?? process.env.GITHUB_REPOSITORY_OWNER;
+  const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;
   const repo = encodeURIComponent(
-    (process.env.INPUT_REPOSITORIES ?? process.env.GITHUB_REPOSITORY).split(
-      ","
-    )[0]
+    (env.INPUT_REPOSITORIES ?? env.GITHUB_REPOSITORY).split(",")[0]
   );
   mockPool
     .intercept({
-      path: `/repos/${owner}/${repo}/installation`,
+      path: `${basePath}/repos/${owner}/${repo}/installation`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -75,7 +82,7 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
   const mockExpiresAt = "2016-07-11T22:14:10Z";
   mockPool
     .intercept({
-      path: `/app/installations/${mockInstallationId}/access_tokens`,
+      path: `${basePath}/app/installations/${mockInstallationId}/access_tokens`,
       method: "POST",
       headers: {
         accept: "application/vnd.github.v3+json",
