@@ -19,13 +19,13 @@
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "^11.2.2",
-    "ava": "^6.0.1",
-    "c8": "^8.0.1",
-    "dotenv": "^16.3.1",
-    "esbuild": "^0.19.11",
+    "ava": "^6.1.1",
+    "c8": "^9.1.0",
+    "dotenv": "^16.4.1",
+    "esbuild": "^0.20.0",
     "execa": "^8.0.1",
     "open-cli": "^8.0.0",
-    "undici": "^6.2.1",
+    "undici": "^6.6.0",
     "yaml": "^2.3.4"
   },
   "release": {
