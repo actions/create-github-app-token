@@ -10019,6 +10019,234 @@ var require_dist_node12 = __commonJS({
   }
 });
 
+// node_modules/retry/lib/retry_operation.js
+var require_retry_operation = __commonJS({
+  "node_modules/retry/lib/retry_operation.js"(exports2, module2) {
+    function RetryOperation(timeouts, options) {
+      if (typeof options === "boolean") {
+        options = { forever: options };
+      }
+      this._originalTimeouts = JSON.parse(JSON.stringify(timeouts));
+      this._timeouts = timeouts;
+      this._options = options || {};
+      this._maxRetryTime = options && options.maxRetryTime || Infinity;
+      this._fn = null;
+      this._errors = [];
+      this._attempts = 1;
+      this._operationTimeout = null;
+      this._operationTimeoutCb = null;
+      this._timeout = null;
+      this._operationStart = null;
+      this._timer = null;
+      if (this._options.forever) {
+        this._cachedTimeouts = this._timeouts.slice(0);
+      }
+    }
+    module2.exports = RetryOperation;
+    RetryOperation.prototype.reset = function() {
+      this._attempts = 1;
+      this._timeouts = this._originalTimeouts.slice(0);
+    };
+    RetryOperation.prototype.stop = function() {
+      if (this._timeout) {
+        clearTimeout(this._timeout);
+      }
+      if (this._timer) {
+        clearTimeout(this._timer);
+      }
+      this._timeouts = [];
+      this._cachedTimeouts = null;
+    };
+    RetryOperation.prototype.retry = function(err) {
+      if (this._timeout) {
+        clearTimeout(this._timeout);
+      }
+      if (!err) {
+        return false;
+      }
+      var currentTime = (/* @__PURE__ */ new Date()).getTime();
+      if (err && currentTime - this._operationStart >= this._maxRetryTime) {
+        this._errors.push(err);
+        this._errors.unshift(new Error("RetryOperation timeout occurred"));
+        return false;
+      }
+      this._errors.push(err);
+      var timeout = this._timeouts.shift();
+      if (timeout === void 0) {
+        if (this._cachedTimeouts) {
+          this._errors.splice(0, this._errors.length - 1);
+          timeout = this._cachedTimeouts.slice(-1);
+        } else {
+          return false;
+        }
+      }
+      var self = this;
+      this._timer = setTimeout(function() {
+        self._attempts++;
+        if (self._operationTimeoutCb) {
+          self._timeout = setTimeout(function() {
+            self._operationTimeoutCb(self._attempts);
+          }, self._operationTimeout);
+          if (self._options.unref) {
+            self._timeout.unref();
+          }
+        }
+        self._fn(self._attempts);
+      }, timeout);
+      if (this._options.unref) {
+        this._timer.unref();
+      }
+      return true;
+    };
+    RetryOperation.prototype.attempt = function(fn, timeoutOps) {
+      this._fn = fn;
+      if (timeoutOps) {
+        if (timeoutOps.timeout) {
+          this._operationTimeout = timeoutOps.timeout;
+        }
+        if (timeoutOps.cb) {
+          this._operationTimeoutCb = timeoutOps.cb;
+        }
+      }
+      var self = this;
+      if (this._operationTimeoutCb) {
+        this._timeout = setTimeout(function() {
+          self._operationTimeoutCb();
+        }, self._operationTimeout);
+      }
+      this._operationStart = (/* @__PURE__ */ new Date()).getTime();
+      this._fn(this._attempts);
+    };
+    RetryOperation.prototype.try = function(fn) {
+      console.log("Using RetryOperation.try() is deprecated");
+      this.attempt(fn);
+    };
+    RetryOperation.prototype.start = function(fn) {
+      console.log("Using RetryOperation.start() is deprecated");
+      this.attempt(fn);
+    };
+    RetryOperation.prototype.start = RetryOperation.prototype.try;
+    RetryOperation.prototype.errors = function() {
+      return this._errors;
+    };
+    RetryOperation.prototype.attempts = function() {
+      return this._attempts;
+    };
+    RetryOperation.prototype.mainError = function() {
+      if (this._errors.length === 0) {
+        return null;
+      }
+      var counts = {};
+      var mainError = null;
+      var mainErrorCount = 0;
+      for (var i = 0; i < this._errors.length; i++) {
+        var error = this._errors[i];
+        var message = error.message;
+        var count = (counts[message] || 0) + 1;
+        counts[message] = count;
+        if (count >= mainErrorCount) {
+          mainError = error;
+          mainErrorCount = count;
+        }
+      }
+      return mainError;
+    };
+  }
+});
+
+// node_modules/retry/lib/retry.js
+var require_retry = __commonJS({
+  "node_modules/retry/lib/retry.js"(exports2) {
+    var RetryOperation = require_retry_operation();
+    exports2.operation = function(options) {
+      var timeouts = exports2.timeouts(options);
+      return new RetryOperation(timeouts, {
+        forever: options && (options.forever || options.retries === Infinity),
+        unref: options && options.unref,
+        maxRetryTime: options && options.maxRetryTime
+      });
+    };
+    exports2.timeouts = function(options) {
+      if (options instanceof Array) {
+        return [].concat(options);
+      }
+      var opts = {
+        retries: 10,
+        factor: 2,
+        minTimeout: 1 * 1e3,
+        maxTimeout: Infinity,
+        randomize: false
+      };
+      for (var key in options) {
+        opts[key] = options[key];
+      }
+      if (opts.minTimeout > opts.maxTimeout) {
+        throw new Error("minTimeout is greater than maxTimeout");
+      }
+      var timeouts = [];
+      for (var i = 0; i < opts.retries; i++) {
+        timeouts.push(this.createTimeout(i, opts));
+      }
+      if (options && options.forever && !timeouts.length) {
+        timeouts.push(this.createTimeout(i, opts));
+      }
+      timeouts.sort(function(a, b) {
+        return a - b;
+      });
+      return timeouts;
+    };
+    exports2.createTimeout = function(attempt, opts) {
+      var random = opts.randomize ? Math.random() + 1 : 1;
+      var timeout = Math.round(random * Math.max(opts.minTimeout, 1) * Math.pow(opts.factor, attempt));
+      timeout = Math.min(timeout, opts.maxTimeout);
+      return timeout;
+    };
+    exports2.wrap = function(obj, options, methods) {
+      if (options instanceof Array) {
+        methods = options;
+        options = null;
+      }
+      if (!methods) {
+        methods = [];
+        for (var key in obj) {
+          if (typeof obj[key] === "function") {
+            methods.push(key);
+          }
+        }
+      }
+      for (var i = 0; i < methods.length; i++) {
+        var method = methods[i];
+        var original = obj[method];
+        obj[method] = function retryWrapper(original2) {
+          var op = exports2.operation(options);
+          var args = Array.prototype.slice.call(arguments, 1);
+          var callback = args.pop();
+          args.push(function(err) {
+            if (op.retry(err)) {
+              return;
+            }
+            if (err) {
+              arguments[0] = op.mainError();
+            }
+            callback.apply(this, arguments);
+          });
+          op.attempt(function() {
+            original2.apply(obj, args);
+          });
+        }.bind(obj, original);
+        obj[method].options = options;
+      }
+    };
+  }
+});
+
+// node_modules/retry/index.js
+var require_retry2 = __commonJS({
+  "node_modules/retry/index.js"(exports2, module2) {
+    module2.exports = require_retry();
+  }
+});
+
 // node_modules/undici/lib/core/symbols.js
 var require_symbols = __commonJS({
   "node_modules/undici/lib/core/symbols.js"(exports2, module2) {
@@ -27316,238 +27544,9 @@ var require_undici = __commonJS({
   }
 });
 
-// node_modules/retry/lib/retry_operation.js
-var require_retry_operation = __commonJS({
-  "node_modules/retry/lib/retry_operation.js"(exports2, module2) {
-    function RetryOperation(timeouts, options) {
-      if (typeof options === "boolean") {
-        options = { forever: options };
-      }
-      this._originalTimeouts = JSON.parse(JSON.stringify(timeouts));
-      this._timeouts = timeouts;
-      this._options = options || {};
-      this._maxRetryTime = options && options.maxRetryTime || Infinity;
-      this._fn = null;
-      this._errors = [];
-      this._attempts = 1;
-      this._operationTimeout = null;
-      this._operationTimeoutCb = null;
-      this._timeout = null;
-      this._operationStart = null;
-      this._timer = null;
-      if (this._options.forever) {
-        this._cachedTimeouts = this._timeouts.slice(0);
-      }
-    }
-    module2.exports = RetryOperation;
-    RetryOperation.prototype.reset = function() {
-      this._attempts = 1;
-      this._timeouts = this._originalTimeouts.slice(0);
-    };
-    RetryOperation.prototype.stop = function() {
-      if (this._timeout) {
-        clearTimeout(this._timeout);
-      }
-      if (this._timer) {
-        clearTimeout(this._timer);
-      }
-      this._timeouts = [];
-      this._cachedTimeouts = null;
-    };
-    RetryOperation.prototype.retry = function(err) {
-      if (this._timeout) {
-        clearTimeout(this._timeout);
-      }
-      if (!err) {
-        return false;
-      }
-      var currentTime = (/* @__PURE__ */ new Date()).getTime();
-      if (err && currentTime - this._operationStart >= this._maxRetryTime) {
-        this._errors.push(err);
-        this._errors.unshift(new Error("RetryOperation timeout occurred"));
-        return false;
-      }
-      this._errors.push(err);
-      var timeout = this._timeouts.shift();
-      if (timeout === void 0) {
-        if (this._cachedTimeouts) {
-          this._errors.splice(0, this._errors.length - 1);
-          timeout = this._cachedTimeouts.slice(-1);
-        } else {
-          return false;
-        }
-      }
-      var self = this;
-      this._timer = setTimeout(function() {
-        self._attempts++;
-        if (self._operationTimeoutCb) {
-          self._timeout = setTimeout(function() {
-            self._operationTimeoutCb(self._attempts);
-          }, self._operationTimeout);
-          if (self._options.unref) {
-            self._timeout.unref();
-          }
-        }
-        self._fn(self._attempts);
-      }, timeout);
-      if (this._options.unref) {
-        this._timer.unref();
-      }
-      return true;
-    };
-    RetryOperation.prototype.attempt = function(fn, timeoutOps) {
-      this._fn = fn;
-      if (timeoutOps) {
-        if (timeoutOps.timeout) {
-          this._operationTimeout = timeoutOps.timeout;
-        }
-        if (timeoutOps.cb) {
-          this._operationTimeoutCb = timeoutOps.cb;
-        }
-      }
-      var self = this;
-      if (this._operationTimeoutCb) {
-        this._timeout = setTimeout(function() {
-          self._operationTimeoutCb();
-        }, self._operationTimeout);
-      }
-      this._operationStart = (/* @__PURE__ */ new Date()).getTime();
-      this._fn(this._attempts);
-    };
-    RetryOperation.prototype.try = function(fn) {
-      console.log("Using RetryOperation.try() is deprecated");
-      this.attempt(fn);
-    };
-    RetryOperation.prototype.start = function(fn) {
-      console.log("Using RetryOperation.start() is deprecated");
-      this.attempt(fn);
-    };
-    RetryOperation.prototype.start = RetryOperation.prototype.try;
-    RetryOperation.prototype.errors = function() {
-      return this._errors;
-    };
-    RetryOperation.prototype.attempts = function() {
-      return this._attempts;
-    };
-    RetryOperation.prototype.mainError = function() {
-      if (this._errors.length === 0) {
-        return null;
-      }
-      var counts = {};
-      var mainError = null;
-      var mainErrorCount = 0;
-      for (var i = 0; i < this._errors.length; i++) {
-        var error = this._errors[i];
-        var message = error.message;
-        var count = (counts[message] || 0) + 1;
-        counts[message] = count;
-        if (count >= mainErrorCount) {
-          mainError = error;
-          mainErrorCount = count;
-        }
-      }
-      return mainError;
-    };
-  }
-});
-
-// node_modules/retry/lib/retry.js
-var require_retry = __commonJS({
-  "node_modules/retry/lib/retry.js"(exports2) {
-    var RetryOperation = require_retry_operation();
-    exports2.operation = function(options) {
-      var timeouts = exports2.timeouts(options);
-      return new RetryOperation(timeouts, {
-        forever: options && (options.forever || options.retries === Infinity),
-        unref: options && options.unref,
-        maxRetryTime: options && options.maxRetryTime
-      });
-    };
-    exports2.timeouts = function(options) {
-      if (options instanceof Array) {
-        return [].concat(options);
-      }
-      var opts = {
-        retries: 10,
-        factor: 2,
-        minTimeout: 1 * 1e3,
-        maxTimeout: Infinity,
-        randomize: false
-      };
-      for (var key in options) {
-        opts[key] = options[key];
-      }
-      if (opts.minTimeout > opts.maxTimeout) {
-        throw new Error("minTimeout is greater than maxTimeout");
-      }
-      var timeouts = [];
-      for (var i = 0; i < opts.retries; i++) {
-        timeouts.push(this.createTimeout(i, opts));
-      }
-      if (options && options.forever && !timeouts.length) {
-        timeouts.push(this.createTimeout(i, opts));
-      }
-      timeouts.sort(function(a, b) {
-        return a - b;
-      });
-      return timeouts;
-    };
-    exports2.createTimeout = function(attempt, opts) {
-      var random = opts.randomize ? Math.random() + 1 : 1;
-      var timeout = Math.round(random * Math.max(opts.minTimeout, 1) * Math.pow(opts.factor, attempt));
-      timeout = Math.min(timeout, opts.maxTimeout);
-      return timeout;
-    };
-    exports2.wrap = function(obj, options, methods) {
-      if (options instanceof Array) {
-        methods = options;
-        options = null;
-      }
-      if (!methods) {
-        methods = [];
-        for (var key in obj) {
-          if (typeof obj[key] === "function") {
-            methods.push(key);
-          }
-        }
-      }
-      for (var i = 0; i < methods.length; i++) {
-        var method = methods[i];
-        var original = obj[method];
-        obj[method] = function retryWrapper(original2) {
-          var op = exports2.operation(options);
-          var args = Array.prototype.slice.call(arguments, 1);
-          var callback = args.pop();
-          args.push(function(err) {
-            if (op.retry(err)) {
-              return;
-            }
-            if (err) {
-              arguments[0] = op.mainError();
-            }
-            callback.apply(this, arguments);
-          });
-          op.attempt(function() {
-            original2.apply(obj, args);
-          });
-        }.bind(obj, original);
-        obj[method].options = options;
-      }
-    };
-  }
-});
-
-// node_modules/retry/index.js
-var require_retry2 = __commonJS({
-  "node_modules/retry/index.js"(exports2, module2) {
-    module2.exports = require_retry();
-  }
-});
-
 // main.js
-var import_core = __toESM(require_core(), 1);
+var import_core2 = __toESM(require_core(), 1);
 var import_auth_app = __toESM(require_dist_node12(), 1);
-var import_undici = __toESM(require_undici(), 1);
 
 // node_modules/p-retry/index.js
 var import_retry = __toESM(require_retry2(), 1);
@@ -27658,34 +27657,34 @@ async function pRetry(input, options) {
 }
 
 // lib/main.js
-async function main(appId2, privateKey2, owner2, repositories2, core2, createAppAuth2, request2, skipTokenRevoke2) {
+async function main(appId2, privateKey2, owner2, repositories2, core3, createAppAuth2, request2, skipTokenRevoke2) {
   let parsedOwner = "";
   let parsedRepositoryNames = "";
   if (!owner2 && !repositories2) {
     [parsedOwner, parsedRepositoryNames] = String(
       process.env.GITHUB_REPOSITORY
     ).split("/");
-    core2.info(
+    core3.info(
       `owner and repositories not set, creating token for the current repository ("${parsedRepositoryNames}")`
     );
   }
   if (owner2 && !repositories2) {
     parsedOwner = owner2;
-    core2.info(
+    core3.info(
       `repositories not set, creating token for all repositories for given owner "${owner2}"`
     );
   }
   if (!owner2 && repositories2) {
     parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
     parsedRepositoryNames = repositories2;
-    core2.info(
+    core3.info(
       `owner not set, creating owner for given repositories "${repositories2}" in current owner ("${parsedOwner}")`
     );
   }
   if (owner2 && repositories2) {
     parsedOwner = owner2;
     parsedRepositoryNames = repositories2;
-    core2.info(
+    core3.info(
       `owner and repositories set, creating token for repositories "${repositories2}" owned by "${owner2}"`
     );
   }
@@ -27698,7 +27697,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
   if (parsedRepositoryNames) {
     authentication = await pRetry(() => getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames), {
       onFailedAttempt: (error) => {
-        core2.info(
+        core3.info(
           `Failed to create token for "${parsedRepositoryNames}" (attempt ${error.attemptNumber}): ${error.message}`
         );
       },
@@ -27707,18 +27706,18 @@ async function main(appId2, privateKey2, owner2, repositories2, core2, createApp
   } else {
     authentication = await pRetry(() => getTokenFromOwner(request2, auth, parsedOwner), {
       onFailedAttempt: (error) => {
-        core2.info(
+        core3.info(
           `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
         );
       },
       retries: 3
     });
   }
-  core2.setSecret(authentication.token);
-  core2.setOutput("token", authentication.token);
+  core3.setSecret(authentication.token);
+  core3.setOutput("token", authentication.token);
   if (!skipTokenRevoke2) {
-    core2.saveState("token", authentication.token);
-    core2.setOutput("expiresAt", authentication.expiresAt);
+    core3.saveState("token", authentication.token);
+    core3.setOutput("expiresAt", authentication.expiresAt);
   }
 }
 async function getTokenFromOwner(request2, auth, parsedOwner) {
@@ -27760,11 +27759,30 @@ async function getTokenFromRepository(request2, auth, parsedOwner, parsedReposit
 }
 
 // lib/request.js
+var import_core = __toESM(require_core(), 1);
 var import_request = __toESM(require_dist_node5(), 1);
+var import_undici = __toESM(require_undici(), 1);
+var baseUrl = import_core.default.getInput("github-api-url").replace(/\/$/, "");
+var proxyUrl = process.env.https_proxy || process.env.HTTPS_PROXY || process.env.http_proxy || process.env.HTTP_PROXY;
+var proxyFetch = (url, options) => {
+  const urlHost = new URL(url).hostname;
+  const noProxy = (process.env.no_proxy || process.env.NO_PROXY || "").split(
+    ","
+  );
+  if (!noProxy.includes(urlHost)) {
+    options = {
+      ...options,
+      dispatcher: new import_undici.ProxyAgent(String(proxyUrl))
+    };
+  }
+  return (0, import_undici.fetch)(url, options);
+};
 var request_default = import_request.request.defaults({
   headers: {
     "user-agent": "actions/create-github-app-token"
-  }
+  },
+  baseUrl,
+  request: proxyUrl ? { fetch: proxyFetch } : {}
 });
 
 // main.js
@@ -27774,42 +27792,31 @@ if (!process.env.GITHUB_REPOSITORY) {
 if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
-var appId = import_core.default.getInput("app-id") || import_core.default.getInput("app_id");
+var appId = import_core2.default.getInput("app-id") || import_core2.default.getInput("app_id");
 if (!appId) {
   throw new Error("Input required and not supplied: app-id");
 }
-var privateKey = import_core.default.getInput("private-key") || import_core.default.getInput("private_key");
+var privateKey = import_core2.default.getInput("private-key") || import_core2.default.getInput("private_key");
 if (!privateKey) {
   throw new Error("Input required and not supplied: private-key");
 }
-var owner = import_core.default.getInput("owner");
-var repositories = import_core.default.getInput("repositories");
+var owner = import_core2.default.getInput("owner");
+var repositories = import_core2.default.getInput("repositories");
 var skipTokenRevoke = Boolean(
-  import_core.default.getInput("skip-token-revoke") || import_core.default.getInput("skip_token_revoke")
+  import_core2.default.getInput("skip-token-revoke") || import_core2.default.getInput("skip_token_revoke")
 );
-var baseUrl = import_core.default.getInput("github-api-url").replace(/\/$/, "");
-var proxyUrl = process.env.https_proxy || process.env.HTTPS_PROXY || process.env.http_proxy || process.env.HTTP_PROXY;
-var proxyFetch = (url, options) => {
-  return (0, import_undici.fetch)(url, {
-    ...options,
-    dispatcher: new import_undici.ProxyAgent(String(proxyUrl))
-  });
-};
 main(
   appId,
   privateKey,
   owner,
   repositories,
-  import_core.default,
+  import_core2.default,
   import_auth_app.createAppAuth,
-  request_default.defaults({
-    baseUrl,
-    request: proxyUrl ? { fetch: proxyFetch } : {}
-  }),
+  request_default,
   skipTokenRevoke
 ).catch((error) => {
   console.error(error);
-  import_core.default.setFailed(error.message);
+  import_core2.default.setFailed(error.message);
 });
 /*! Bundled license information:
 
