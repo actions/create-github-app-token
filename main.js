@@ -2,7 +2,6 @@
 
 import core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
-import { fetch as undiciFetch, ProxyAgent } from "undici";
 
 import { main } from "./lib/main.js";
 import request from "./lib/request.js";
@@ -32,21 +31,6 @@ const skipTokenRevoke = Boolean(
   core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke")
 );
 
-const baseUrl = core.getInput("github-api-url").replace(/\/$/, "");
-
-const proxyUrl =
-  process.env.https_proxy ||
-  process.env.HTTPS_PROXY ||
-  process.env.http_proxy ||
-  process.env.HTTP_PROXY;
-
-const proxyFetch = (url, options) => {
-  return undiciFetch(url, {
-    ...options,
-    dispatcher: new ProxyAgent(String(proxyUrl)),
-  });
-};
-
 main(
   appId,
   privateKey,
@@ -54,10 +38,7 @@ main(
   repositories,
   core,
   createAppAuth,
-  request.defaults({
-    baseUrl,
-    request: proxyUrl ? { fetch: proxyFetch } : {},
-  }),
+  request,
   skipTokenRevoke
 ).catch((error) => {
   /* c8 ignore next 3 */
