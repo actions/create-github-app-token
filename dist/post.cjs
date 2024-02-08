@@ -20348,6 +20348,7 @@ var request_default = import_request.request.defaults({
     "user-agent": "actions/create-github-app-token"
   },
   baseUrl,
+  /* c8 ignore next */
   request: proxyUrl ? { fetch: proxyFetch } : {}
 });
 
