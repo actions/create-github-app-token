@@ -5,8 +5,9 @@ await test((mockPool) => {
   process.env.INPUT_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
   delete process.env.INPUT_REPOSITORIES;
 
-  // Mock installation id request
+  // Mock installation id and app slug request
   const mockInstallationId = "123456";
+  const mockAppSlug = "github-actions";
   mockPool
     .intercept({
       path: `/orgs/${process.env.INPUT_OWNER}/installation`,
@@ -19,7 +20,7 @@ await test((mockPool) => {
     })
     .reply(
       200,
-      { id: mockInstallationId },
+      { id: mockInstallationId, "app_slug": mockAppSlug },
       { headers: { "content-type": "application/json" } }
     );
 });

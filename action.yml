@@ -40,6 +40,8 @@ inputs:
 outputs:
   token:
     description: "GitHub installation access token"
+  app-slug:
+    description: "GitHub App's slug"
 runs:
   using: "node20"
   main: "dist/main.cjs"

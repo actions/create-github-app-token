@@ -6539,15 +6539,16 @@ var require_util2 = __commonJS({
       return result;
     }
     var esIteratorPrototype = Object.getPrototypeOf(Object.getPrototypeOf([][Symbol.iterator]()));
-    function makeIterator(iterator, name, kind) {
+    function makeIterator(iterator, name, kind, keyIndex = 0, valueIndex = 1) {
       const object = {
         index: 0,
         kind,
         target: iterator
       };
-      const i = {
-        next() {
-          if (Object.getPrototypeOf(this) !== i) {
+      const iteratorObject = Object.create(esIteratorPrototype);
+      Object.defineProperty(iteratorObject, "next", {
+        value: function next() {
+          if (Object.getPrototypeOf(this) !== iteratorObject) {
             throw new TypeError(
               `'next' called on an object that does not implement interface ${name} Iterator.`
             );
@@ -6558,34 +6559,36 @@ var require_util2 = __commonJS({
           if (index >= len) {
             return { value: void 0, done: true };
           }
-          const pair = values[index];
+          const { [keyIndex]: key, [valueIndex]: value } = values[index];
           object.index = index + 1;
-          return iteratorResult(pair, kind2);
+          let result;
+          switch (kind2) {
+            case "key":
+              result = key;
+              break;
+            case "value":
+              result = value;
+              break;
+            case "key+value":
+              result = [key, value];
+              break;
+          }
+          return {
+            value: result,
+            done: false
+          };
         },
-        // The class string of an iterator prototype object for a given interface is the
-        // result of concatenating the identifier of the interface and the string " Iterator".
-        [Symbol.toStringTag]: `${name} Iterator`
-      };
-      Object.setPrototypeOf(i, esIteratorPrototype);
-      return Object.setPrototypeOf({}, i);
-    }
-    function iteratorResult(pair, kind) {
-      let result;
-      switch (kind) {
-        case "key": {
-          result = pair[0];
-          break;
-        }
-        case "value": {
-          result = pair[1];
-          break;
-        }
-        case "key+value": {
-          result = pair;
-          break;
-        }
-      }
-      return { value: result, done: false };
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+      Object.defineProperty(iteratorObject, Symbol.toStringTag, {
+        value: `${name} Iterator`,
+        writable: false,
+        enumerable: false,
+        configurable: true
+      });
+      return Object.create(iteratorObject);
     }
     async function fullyReadBody(body, processBody, processBodyError) {
       const successSteps = processBody;
@@ -7455,9 +7458,10 @@ var require_formdata = __commonJS({
     "use strict";
     var { isBlobLike, toUSVString, makeIterator } = require_util2();
     var { kState } = require_symbols2();
+    var { kEnumerableProperty } = require_util();
     var { File: UndiciFile, FileLike, isFileLike } = require_file();
     var { webidl } = require_webidl();
-    var { Blob: Blob2, File: NativeFile } = require("node:buffer");
+    var { File: NativeFile } = require("node:buffer");
     var File = NativeFile ?? UndiciFile;
     var FormData = class _FormData {
       constructor(form) {
@@ -7538,24 +7542,30 @@ var require_formdata = __commonJS({
       entries() {
         webidl.brandCheck(this, _FormData);
         return makeIterator(
-          () => this[kState].map((pair) => [pair.name, pair.value]),
+          () => this[kState],
           "FormData",
-          "key+value"
+          "key+value",
+          "name",
+          "value"
         );
       }
       keys() {
         webidl.brandCheck(this, _FormData);
         return makeIterator(
-          () => this[kState].map((pair) => [pair.name, pair.value]),
+          () => this[kState],
           "FormData",
-          "key"
+          "key",
+          "name",
+          "value"
         );
       }
       values() {
         webidl.brandCheck(this, _FormData);
         return makeIterator(
-          () => this[kState].map((pair) => [pair.name, pair.value]),
+          () => this[kState],
           "FormData",
+          "value",
+          "name",
           "value"
         );
       }
@@ -7572,12 +7582,23 @@ var require_formdata = __commonJS({
           );
         }
         for (const [key, value] of this) {
-          callbackFn.apply(thisArg, [value, key, this]);
+          callbackFn.call(thisArg, value, key, this);
         }
       }
     };
     FormData.prototype[Symbol.iterator] = FormData.prototype.entries;
     Object.defineProperties(FormData.prototype, {
+      append: kEnumerableProperty,
+      delete: kEnumerableProperty,
+      get: kEnumerableProperty,
+      getAll: kEnumerableProperty,
+      has: kEnumerableProperty,
+      set: kEnumerableProperty,
+      entries: kEnumerableProperty,
+      keys: kEnumerableProperty,
+      values: kEnumerableProperty,
+      forEach: kEnumerableProperty,
+      [Symbol.iterator]: { enumerable: false },
       [Symbol.toStringTag]: {
         value: "FormData",
         configurable: true
@@ -7589,7 +7610,7 @@ var require_formdata = __commonJS({
         value = Buffer.from(value).toString("utf8");
       } else {
         if (!isFileLike(value)) {
-          value = value instanceof Blob2 ? new File([value], "blob", { type: value.type }) : new FileLike(value, "blob", { type: value.type });
+          value = value instanceof Blob ? new File([value], "blob", { type: value.type }) : new FileLike(value, "blob", { type: value.type });
         }
         if (filename !== void 0) {
           const options = {
@@ -14173,50 +14194,32 @@ var require_headers = __commonJS({
       }
       keys() {
         webidl.brandCheck(this, _Headers);
-        if (this[kGuard] === "immutable") {
-          const value = this[kHeadersSortedMap];
-          return makeIterator(
-            () => value,
-            "Headers",
-            "key"
-          );
-        }
         return makeIterator(
-          () => [...this[kHeadersSortedMap].values()],
+          () => this[kHeadersSortedMap],
           "Headers",
-          "key"
+          "key",
+          0,
+          1
         );
       }
       values() {
         webidl.brandCheck(this, _Headers);
-        if (this[kGuard] === "immutable") {
-          const value = this[kHeadersSortedMap];
-          return makeIterator(
-            () => value,
-            "Headers",
-            "value"
-          );
-        }
         return makeIterator(
-          () => [...this[kHeadersSortedMap].values()],
+          () => this[kHeadersSortedMap],
           "Headers",
-          "value"
+          "value",
+          0,
+          1
         );
       }
       entries() {
         webidl.brandCheck(this, _Headers);
-        if (this[kGuard] === "immutable") {
-          const value = this[kHeadersSortedMap];
-          return makeIterator(
-            () => value,
-            "Headers",
-            "key+value"
-          );
-        }
         return makeIterator(
-          () => [...this[kHeadersSortedMap].values()],
+          () => this[kHeadersSortedMap],
           "Headers",
-          "key+value"
+          "key+value",
+          0,
+          1
         );
       }
       /**
@@ -14232,7 +14235,7 @@ var require_headers = __commonJS({
           );
         }
         for (const [key, value] of this) {
-          callbackFn.apply(thisArg, [value, key, this]);
+          callbackFn.call(thisArg, value, key, this);
         }
       }
       [Symbol.for("nodejs.util.inspect.custom")]() {
@@ -15885,9 +15888,9 @@ var require_fetch = __commonJS({
         internalResponse.body.stream.pipeThrough(transformStream);
         const byteStream = new ReadableStream({
           readableStream: transformStream.readable,
-          async start(controller) {
+          async pull(controller) {
             const reader = this.readableStream.getReader();
-            while (true) {
+            while (controller.desiredSize >= 0) {
               const { done, value } = await reader.read();
               if (done) {
                 queueMicrotask(() => readableStreamClose(controller));
@@ -15896,6 +15899,7 @@ var require_fetch = __commonJS({
               controller.enqueue(value);
             }
           },
+          queuingStrategy: new ByteLengthQueuingStrategy({ highWaterMark: 16384 }),
           type: "bytes"
         });
         internalResponse.body.stream = byteStream;
@@ -15987,6 +15991,7 @@ var require_fetch = __commonJS({
       }
       if (!sameOrigin(requestCurrentURL(request2), locationURL)) {
         request2.headersList.delete("authorization", true);
+        request2.headersList.delete("proxy-authorization", true);
         request2.headersList.delete("cookie", true);
         request2.headersList.delete("host", true);
       }
@@ -16212,6 +16217,7 @@ var require_fetch = __commonJS({
       };
       const stream = new ReadableStream(
         {
+          highWaterMark: 16384,
           async start(controller) {
             fetchParams.controller.controller = controller;
           },
@@ -16221,7 +16227,8 @@ var require_fetch = __commonJS({
           async cancel(reason) {
             await cancelAlgorithm(reason);
           },
-          type: "bytes"
+          type: "bytes",
+          queuingStrategy: new ByteLengthQueuingStrategy({ highWaterMark: 16384 })
         }
       );
       response.body = { stream };

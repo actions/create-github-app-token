@@ -9,6 +9,7 @@ await test((mockPool) => {
   const owner = process.env.INPUT_OWNER
   const repo = process.env.INPUT_REPOSITORIES
   const mockInstallationId = "123456";
+  const mockAppSlug = "github-actions";
 
   install({ now: 0, toFake: ["Date"] });
 
@@ -44,7 +45,8 @@ await test((mockPool) => {
       return {
         statusCode: 200,
         data: {
-          id: mockInstallationId
+          id: mockInstallationId,
+          "app_slug": mockAppSlug
         },
         responseOptions: {
           headers: {
