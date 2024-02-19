@@ -192,10 +192,10 @@ jobs:
       id: create_token
       uses: actions/create-github-app-token@v1
       with:
-        app-id: ${{ secrets.GHES_APP_ID }}
+        app-id: ${{ vars.GHES_APP_ID }}
         private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
-        owner: ${{ secrets.GHES_INSTALLATION_ORG }}
-        github-api-url: ${{ secrets.GHES_GITHUB_API_URL }}
+        owner: ${{ vars.GHES_INSTALLATION_ORG }}
+        github-api-url: ${{ vars.GHES_GITHUB_API_URL }}
 
     - name: Create issue
       uses: octokit/request-action@v2.x
