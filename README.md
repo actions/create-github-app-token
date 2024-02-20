@@ -195,7 +195,7 @@ jobs:
         app-id: ${{ vars.GHES_APP_ID }}
         private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
         owner: ${{ vars.GHES_INSTALLATION_ORG }}
-        github-api-url: ${{ vars.GHES_GITHUB_API_URL }}
+        github-api-url: ${{ vars.GITHUB_API_URL }}
 
     - name: Create issue
       uses: octokit/request-action@v2.x
