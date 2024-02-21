@@ -185,7 +185,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Create GitHub App Token
+    - name: Create GitHub App token
       id: create_token
       uses: actions/create-github-app-token@v1
       with:
