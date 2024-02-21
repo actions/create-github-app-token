@@ -185,9 +185,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-
     - name: Create GitHub App Token
       id: create_token
       uses: actions/create-github-app-token@v1
