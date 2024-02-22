@@ -27700,9 +27700,9 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
     privateKey: privateKey2,
     request: request2
   });
-  let authentication, appSlug;
+  let authentication, installationId, appSlug;
   if (parsedRepositoryNames) {
-    ({ authentication, appSlug } = await pRetry(() => getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames), {
+    ({ authentication, installationId, appSlug } = await pRetry(() => getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames), {
       onFailedAttempt: (error) => {
         core3.info(
           `Failed to create token for "${parsedRepositoryNames}" (attempt ${error.attemptNumber}): ${error.message}`
@@ -27711,7 +27711,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
       retries: 3
     }));
   } else {
-    ({ authentication, appSlug } = await pRetry(() => getTokenFromOwner(request2, auth, parsedOwner), {
+    ({ authentication, installationId, appSlug } = await pRetry(() => getTokenFromOwner(request2, auth, parsedOwner), {
       onFailedAttempt: (error) => {
         core3.info(
           `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
@@ -27722,6 +27722,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
   }
   core3.setSecret(authentication.token);
   core3.setOutput("token", authentication.token);
+  core3.setOutput("installation-id", installationId);
   core3.setOutput("app-slug", appSlug);
   if (!skipTokenRevoke2) {
     core3.saveState("token", authentication.token);
@@ -27748,8 +27749,9 @@ async function getTokenFromOwner(request2, auth, parsedOwner) {
     type: "installation",
     installationId: response.data.id
   });
+  const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
-  return { authentication, appSlug };
+  return { authentication, installationId, appSlug };
 }
 async function getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames) {
   const response = await request2("GET /repos/{owner}/{repo}/installation", {
@@ -27764,8 +27766,9 @@ async function getTokenFromRepository(request2, auth, parsedOwner, parsedReposit
     installationId: response.data.id,
     repositoryNames: parsedRepositoryNames.split(",")
   });
+  const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
-  return { authentication, appSlug };
+  return { authentication, installationId, appSlug };
 }
 
 // lib/request.js

@@ -239,6 +239,10 @@ jobs:
 
 GitHub App installation access token.
 
+### `installation-id`
+
+GitHub App's installation Id.
+
 ### `app-slug`
 
 GitHub App's slug.

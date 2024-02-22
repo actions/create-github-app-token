@@ -40,6 +40,8 @@ inputs:
 outputs:
   token:
     description: "GitHub installation access token"
+  installation-id:
+    description: "GitHub App's installation Id"
   app-slug:
     description: "GitHub App's slug"
 runs:
