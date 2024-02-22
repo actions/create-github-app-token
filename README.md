@@ -179,6 +179,29 @@ jobs:
 
 ```yaml
 on: [push]
+
+jobs:
+  create_issue:
+    runs-on: self-hosted
+
+    steps:
+    - name: Create GitHub App token
+      id: create_token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ vars.GHES_APP_ID }}
+        private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
+        owner: ${{ vars.GHES_INSTALLATION_ORG }}
+        github-api-url: ${{ vars.GITHUB_API_URL }}
+
+    - name: Create issue
+      uses: octokit/request-action@v2.x
+      with:
+        route: POST /repos/${{ github.repository }}/issues
+        title: "New issue from workflow"
+        body: "This is a new issue created from a GitHub Action workflow."
+      env:
+        GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
 ```
 
 ## Inputs
