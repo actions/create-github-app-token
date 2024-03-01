@@ -9,15 +9,15 @@ GitHub Action for creating a GitHub App installation access token.
 In order to use this action, you must first create a GitHub App. This is required in order to give create-github-app-token the necessary permissions to be able to generate tokens.
 
 [See this page](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app) for more details on how to register a GitHub App. Here are ways that you can create the app:
-- [Use this link to create the GitHub app in your account](https://github.com/settings/apps/new?url=https://github.com/actions/create-github-app-token&webhook_active=false&public=false&contents=read&metadata=read)
-- [Use this link to create the GitHub app in your organization](https://github.com/organizations/:org/settings/apps/new?url=https://github.com/actions/create-github-app-token&webhook_active=false&public=false&contents=read&metadata=read) (note: link will be dead and you must replace `:org` with your organization name)
-- Here are the requirements if you manually create the app:
-    1. Uncheck `Webhook` > `Active` checkbox
-    2. Mark two permissions under `Repository permissions` as read-only: `Contents` and `Metadata`
+- [Use this link to create the GitHub app in your account](https://github.com/settings/apps/new?url=https://github.com/actions/create-github-app-token&webhook_active=false&public=false&metadata=read)
+- [Use this link to create the GitHub app in your organization](https://github.com/organizations/:org/settings/apps/new?url=https://github.com/actions/create-github-app-token&webhook_active=false&public=false&metadata=read) (note: link will be dead and you must replace `:org` with your organization name)
+
+The permissions that you give to the application depend on your use case:
+- If you will use app tokens with `actions/checkout` to check out a private or internal repository (as described below), you will want to mark at least one permission under `Repository permissions` as read-only: `Contents`
 
 Once you have the GitHub app installed, there are a few manual steps you must follow to finish setup:
 1. In the `Private keys` section of your newly-created app, click `Generate a private key`. This will automatically trigger your web browser to download the private key .pem file, which will be used in step 4.
-2. In the `Install app` section of your newly-created app, choose the organizations that you want to install your application into.
+2. In the `Install app` section of your newly-created app, choose where you want to install the application. If installing into an Enterprise account, you would choose the organization(s) that you want to install your application into.
 3. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
 4. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
 
