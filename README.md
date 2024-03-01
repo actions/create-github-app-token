@@ -239,6 +239,14 @@ jobs:
 
 GitHub App installation access token.
 
+### `installation-id`
+
+GitHub App installation ID.
+
+### `app-slug`
+
+GitHub App slug.
+
 ## How it works
 
 The action creates an installation access token using [the `POST /app/installations/{installation_id}/access_tokens` endpoint](https://docs.github.com/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app). By default,

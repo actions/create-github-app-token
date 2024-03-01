@@ -7,6 +7,7 @@ await test((mockPool) => {
   const owner = process.env.INPUT_OWNER;
   const repo = process.env.INPUT_REPOSITORIES;
   const mockInstallationId = "123456";
+  const mockAppSlug = "github-actions";
 
   mockPool
     .intercept({
@@ -32,7 +33,7 @@ await test((mockPool) => {
     })
     .reply(
       200,
-      { id: mockInstallationId },
+      { id: mockInstallationId, "app_slug": mockAppSlug },
       { headers: { "content-type": "application/json" } }
     );
 });
