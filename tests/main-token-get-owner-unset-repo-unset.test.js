@@ -5,7 +5,7 @@ await test((mockPool) => {
   delete process.env.INPUT_OWNER;
   delete process.env.INPUT_REPOSITORIES;
 
-  // Mock installation id and app slug request
+  // Mock installation ID and app slug request
   const mockInstallationId = "123456";
   const mockAppSlug = "github-actions";
   mockPool

@@ -41,9 +41,9 @@ outputs:
   token:
     description: "GitHub installation access token"
   installation-id:
-    description: "GitHub App's installation Id"
+    description: "GitHub App installation ID"
   app-slug:
-    description: "GitHub App's slug"
+    description: "GitHub App slug"
 runs:
   using: "node20"
   main: "dist/main.cjs"

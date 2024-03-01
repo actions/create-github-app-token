@@ -54,7 +54,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
 
-  // Mock installation id and app slug request
+  // Mock installation ID and app slug request
   const mockInstallationId = "123456";
   const mockAppSlug = "github-actions";
   const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;

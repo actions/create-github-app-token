@@ -241,11 +241,11 @@ GitHub App installation access token.
 
 ### `installation-id`
 
-GitHub App's installation Id.
+GitHub App installation ID.
 
 ### `app-slug`
 
-GitHub App's slug.
+GitHub App slug.
 
 ## How it works
 
