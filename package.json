@@ -2,7 +2,7 @@
   "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20.0.0",
@@ -13,20 +13,20 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "@octokit/auth-app": "^6.0.3",
-    "@octokit/request": "^8.1.6",
+    "@octokit/auth-app": "^6.0.4",
+    "@octokit/request": "^9.0.1",
     "p-retry": "^6.2.0",
-    "undici": "^6.6.1"
+    "undici": "^6.6.2"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "^11.2.2",
-    "ava": "^6.1.1",
+    "ava": "^6.1.2",
     "c8": "^9.1.0",
-    "dotenv": "^16.4.1",
-    "esbuild": "^0.20.0",
+    "dotenv": "^16.4.5",
+    "esbuild": "^0.20.1",
     "execa": "^8.0.1",
     "open-cli": "^8.0.0",
-    "yaml": "^2.3.4"
+    "yaml": "^2.4.0"
   },
   "release": {
     "branches": [
