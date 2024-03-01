@@ -6,7 +6,7 @@ export const DEFAULT_ENV = {
   GITHUB_REPOSITORY_OWNER: "actions",
   GITHUB_REPOSITORY: "actions/create-github-app-token",
   // inputs are set as environment variables with the prefix INPUT_
-  // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
+  // https://docs.github.com/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
   "INPUT_GITHUB-API-URL": "https://api.github.com",
   "INPUT_APP-ID": "123456",
   // This key is invalidated. It’s from https://github.com/octokit/auth-app.js/issues/465#issuecomment-1564998327.
@@ -54,8 +54,9 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
 
-  // Mock installation id request
+  // Mock installation ID and app slug request
   const mockInstallationId = "123456";
+  const mockAppSlug = "github-actions";
   const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;
   const repo = encodeURIComponent(
     (env.INPUT_REPOSITORIES ?? env.GITHUB_REPOSITORY).split(",")[0]
@@ -72,7 +73,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     })
     .reply(
       200,
-      { id: mockInstallationId },
+      { id: mockInstallationId, "app_slug": mockAppSlug },
       { headers: { "content-type": "application/json" } }
     );
 
