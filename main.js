@@ -44,7 +44,7 @@ main(
   createAppAuth,
   request,
   skipTokenRevoke,
-  permissions
+  Object.keys(permissions).length ? permissions : undefined
 ).catch((error) => {
   /* c8 ignore next 3 */
   console.error(error);

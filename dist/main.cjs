@@ -30632,7 +30632,7 @@ main(
   import_auth_app.createAppAuth,
   request_default,
   skipTokenRevoke,
-  permissions
+  Object.keys(permissions).length ? permissions : void 0
 ).catch((error) => {
   console.error(error);
   import_core2.default.setFailed(error.message);
