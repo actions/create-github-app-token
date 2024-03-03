@@ -11863,19 +11863,19 @@ var require_dist_node20 = __commonJS({
         permissionsString,
         singleFileName
       ] = result.split("|");
-      const permissions = options.permissions || permissionsString.split(/,/).reduce((permissions2, string) => {
+      const permissions2 = options.permissions || permissionsString.split(/,/).reduce((permissions22, string) => {
         if (/!$/.test(string)) {
-          permissions2[string.slice(0, -1)] = "write";
+          permissions22[string.slice(0, -1)] = "write";
         } else {
-          permissions2[string] = "read";
+          permissions22[string] = "read";
         }
-        return permissions2;
+        return permissions22;
       }, {});
       return {
         token,
         createdAt,
         expiresAt,
-        permissions,
+        permissions: permissions2,
         repositoryIds: options.repositoryIds,
         repositoryNames: options.repositoryNames,
         singleFileName,
@@ -11899,11 +11899,11 @@ var require_dist_node20 = __commonJS({
     }
     function optionsToCacheKey({
       installationId,
-      permissions = {},
+      permissions: permissions2 = {},
       repositoryIds = [],
       repositoryNames = []
     }) {
-      const permissionsString = Object.keys(permissions).sort().map((name) => permissions[name] === "read" ? name : `${name}!`).join(",");
+      const permissionsString = Object.keys(permissions2).sort().map((name) => permissions2[name] === "read" ? name : `${name}!`).join(",");
       const repositoryIdsString = repositoryIds.sort().join(",");
       const repositoryNamesString = repositoryNames.join(",");
       return [
@@ -11919,7 +11919,7 @@ var require_dist_node20 = __commonJS({
       createdAt,
       expiresAt,
       repositorySelection,
-      permissions,
+      permissions: permissions2,
       repositoryIds,
       repositoryNames,
       singleFileName
@@ -11930,7 +11930,7 @@ var require_dist_node20 = __commonJS({
           tokenType: "installation",
           token,
           installationId,
-          permissions,
+          permissions: permissions2,
           createdAt,
           expiresAt,
           repositorySelection
@@ -11968,7 +11968,7 @@ var require_dist_node20 = __commonJS({
             token: token2,
             createdAt: createdAt2,
             expiresAt: expiresAt2,
-            permissions: permissions2,
+            permissions: permissions22,
             repositoryIds: repositoryIds2,
             repositoryNames: repositoryNames2,
             singleFileName: singleFileName2,
@@ -11979,7 +11979,7 @@ var require_dist_node20 = __commonJS({
             token: token2,
             createdAt: createdAt2,
             expiresAt: expiresAt2,
-            permissions: permissions2,
+            permissions: permissions22,
             repositorySelection: repositorySelection2,
             repositoryIds: repositoryIds2,
             repositoryNames: repositoryNames2,
@@ -12010,7 +12010,7 @@ var require_dist_node20 = __commonJS({
           authorization: `bearer ${appAuthentication.token}`
         }
       });
-      const permissions = permissionsOptional || {};
+      const permissions2 = permissionsOptional || {};
       const repositorySelection = repositorySelectionOptional || "all";
       const repositoryIds = repositories2 ? repositories2.map((r) => r.id) : void 0;
       const repositoryNames = repositories2 ? repositories2.map((repo) => repo.name) : void 0;
@@ -12020,7 +12020,7 @@ var require_dist_node20 = __commonJS({
         createdAt,
         expiresAt,
         repositorySelection,
-        permissions,
+        permissions: permissions2,
         repositoryIds,
         repositoryNames,
         singleFileName
@@ -12031,7 +12031,7 @@ var require_dist_node20 = __commonJS({
         createdAt,
         expiresAt,
         repositorySelection,
-        permissions,
+        permissions: permissions2,
         repositoryIds,
         repositoryNames,
         singleFileName
@@ -29887,7 +29887,7 @@ async function pRetry(input, options) {
 }
 
 // lib/main.js
-async function main(appId2, privateKey2, owner2, repositories2, core3, createAppAuth2, request2, skipTokenRevoke2) {
+async function main(appId2, privateKey2, owner2, repositories2, core3, createAppAuth2, request2, skipTokenRevoke2, permissions2) {
   let parsedOwner = "";
   let parsedRepositoryNames = "";
   if (!owner2 && !repositories2) {
@@ -29925,23 +29925,35 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
   });
   let authentication, installationId, appSlug;
   if (parsedRepositoryNames) {
-    ({ authentication, installationId, appSlug } = await pRetry(() => getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames), {
-      onFailedAttempt: (error) => {
-        core3.info(
-          `Failed to create token for "${parsedRepositoryNames}" (attempt ${error.attemptNumber}): ${error.message}`
-        );
-      },
-      retries: 3
-    }));
+    ({ authentication, installationId, appSlug } = await pRetry(
+      () => getTokenFromRepository(
+        request2,
+        auth,
+        parsedOwner,
+        parsedRepositoryNames,
+        permissions2
+      ),
+      {
+        onFailedAttempt: (error) => {
+          core3.info(
+            `Failed to create token for "${parsedRepositoryNames}" (attempt ${error.attemptNumber}): ${error.message}`
+          );
+        },
+        retries: 3
+      }
+    ));
   } else {
-    ({ authentication, installationId, appSlug } = await pRetry(() => getTokenFromOwner(request2, auth, parsedOwner), {
-      onFailedAttempt: (error) => {
-        core3.info(
-          `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
-        );
-      },
-      retries: 3
-    }));
+    ({ authentication, installationId, appSlug } = await pRetry(
+      () => getTokenFromOwner(request2, auth, parsedOwner, permissions2),
+      {
+        onFailedAttempt: (error) => {
+          core3.info(
+            `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
+          );
+        },
+        retries: 3
+      }
+    ));
   }
   core3.setSecret(authentication.token);
   core3.setOutput("token", authentication.token);
@@ -29952,7 +29964,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
     core3.setOutput("expiresAt", authentication.expiresAt);
   }
 }
-async function getTokenFromOwner(request2, auth, parsedOwner) {
+async function getTokenFromOwner(request2, auth, parsedOwner, permissions2) {
   const response = await request2("GET /orgs/{org}/installation", {
     org: parsedOwner,
     request: {
@@ -29970,13 +29982,14 @@ async function getTokenFromOwner(request2, auth, parsedOwner) {
   });
   const authentication = await auth({
     type: "installation",
-    installationId: response.data.id
+    installationId: response.data.id,
+    permissions: permissions2
   });
   const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
   return { authentication, installationId, appSlug };
 }
-async function getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames) {
+async function getTokenFromRepository(request2, auth, parsedOwner, parsedRepositoryNames, permissions2) {
   const response = await request2("GET /repos/{owner}/{repo}/installation", {
     owner: parsedOwner,
     repo: parsedRepositoryNames.split(",")[0],
@@ -29987,7 +30000,8 @@ async function getTokenFromRepository(request2, auth, parsedOwner, parsedReposit
   const authentication = await auth({
     type: "installation",
     installationId: response.data.id,
-    repositoryNames: parsedRepositoryNames.split(",")
+    repositoryNames: parsedRepositoryNames.split(","),
+    permissions: permissions2
   });
   const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
@@ -30606,6 +30620,9 @@ var repositories = import_core2.default.getInput("repositories");
 var skipTokenRevoke = Boolean(
   import_core2.default.getInput("skip-token-revoke") || import_core2.default.getInput("skip_token_revoke")
 );
+var permissions = Object.fromEntries(
+  import_core2.default.getMultilineInput("permissions").map((l) => l.split(":"))
+);
 main(
   appId,
   privateKey,
@@ -30614,7 +30631,8 @@ main(
   import_core2.default,
   import_auth_app.createAppAuth,
   request_default,
-  skipTokenRevoke
+  skipTokenRevoke,
+  permissions
 ).catch((error) => {
   console.error(error);
   import_core2.default.setFailed(error.message);
