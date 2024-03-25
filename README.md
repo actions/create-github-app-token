@@ -216,7 +216,7 @@ jobs:
 
 ### `owner`
 
-**Optional:** GitHub App installation owner. If empty, defaults to the current repository owner.
+**Optional:** The owner of the GitHub App installation. If empty, defaults to the current repository owner.
 
 ### `repositories`
 

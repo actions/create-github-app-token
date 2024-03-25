@@ -20,7 +20,7 @@ inputs:
     required: false
     deprecationMessage: "'private_key' is deprecated and will be removed in a future version. Use 'private-key' instead."
   owner:
-    description: "GitHub App owner (defaults to current repository owner)"
+    description: "The owner of the GitHub App installation (defaults to current repository owner)"
     required: false
   repositories:
     description: "Repositories to install the GitHub App on (defaults to current repository if owner is unset)"
