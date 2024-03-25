@@ -37,6 +37,26 @@ inputs:
   github-api-url:
     description: The URL of the GitHub REST API.
     default: ${{ github.api_url }}
+  permissions:
+    description: |
+      This option lets you define the specific permissions granted to the access token. Leave this field empty to grant the access token full access to all available permissions on the app.
+
+      For enhanced security, it's recommended to specify only the necessary permissions. This reduces the potential impact if the token is compromised.
+
+      Permissions are listed in a multiline format: <feature>:<access_level>.
+
+        * <feature>: Identifies the specific functionality (e.g., pull_requests, administration).
+        * <access_level>: Defines the level of access (e.g., read, write).
+
+      For a complete list of available permissions, refer to the permissions body parameter documentation: https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/generating-an-installation-access-token-for-a-github-app.
+
+      Example:
+
+      permissions: |
+        pull_requests:write
+        administration:read
+
+      This example grants write access to pull requests and read access to administrative data.
 outputs:
   token:
     description: "GitHub installation access token"
