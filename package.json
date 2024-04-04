@@ -16,7 +16,7 @@
     "@octokit/auth-app": "^6.0.4",
     "@octokit/request": "^9.0.1",
     "p-retry": "^6.2.0",
-    "undici": "^6.10.2"
+    "undici": "^6.11.1"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "^11.2.2",
