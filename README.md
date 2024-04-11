@@ -213,6 +213,20 @@ jobs:
 
 **Required:** GitHub App private key.
 
+### `app-settings`
+
+***Optional:** GitHub App settings.
+
+A JSON object containing the GitHub App ID and private key. If `app-id` and `private-key` are set, this input will be ignored.
+
+```json
+{ "app-id": "", "private-key": "" }
+```
+Command to copy private key to clipboard on a single line:
+```bash
+awk -v ORS='\\n' '1' private-key.pem | pbcopy
+```
+
 ### `owner`
 
 **Optional:** The owner of the GitHub App installation. If empty, defaults to the current repository owner.

@@ -14,15 +14,28 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
 
-const appId = core.getInput("app-id") || core.getInput("app_id");
-if (!appId) {
-  // The 'app_id' input was previously required, but it and 'app-id' are both optional now, until the former is removed. Still, we want to ensure that at least one of them is set.
-  throw new Error("Input required and not supplied: app-id");
-}
-const privateKey = core.getInput("private-key") || core.getInput("private_key");
-if (!privateKey) {
-  // The 'private_key' input was previously required, but it and 'private-key' are both optional now, until the former is removed. Still, we want to ensure that at least one of them is set.
-  throw new Error("Input required and not supplied: private-key");
+let appSettings = core.getInput("app-settings");
+
+let appId;
+let privateKey;
+
+if (appSettings) {
+  appSettings = JSON.parse(appSettings);
+  if (!appSettings['app-id'] || !appSettings['private-key']) {
+    throw new Error("app-settings must contain valid app_id and private_key fields");
+  }
+  appId = appSettings['app-id'];
+  privateKey = appSettings['private-key'];
+} else {
+  appId = core.getInput("app-id") || core.getInput("app_id");
+  if (!appId) {
+    throw new Error("Input required and not supplied: app-id");
+  }
+
+  privateKey = core.getInput("private-key") || core.getInput("private_key");
+  if (!privateKey) {
+    throw new Error("Input required and not supplied: private-key");
+  }
 }
 const owner = core.getInput("owner");
 const repositories = core.getInput("repositories");

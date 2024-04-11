@@ -30052,13 +30052,27 @@ if (!process.env.GITHUB_REPOSITORY) {
 if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
-var appId = import_core2.default.getInput("app-id") || import_core2.default.getInput("app_id");
-if (!appId) {
-  throw new Error("Input required and not supplied: app-id");
-}
-var privateKey = import_core2.default.getInput("private-key") || import_core2.default.getInput("private_key");
-if (!privateKey) {
-  throw new Error("Input required and not supplied: private-key");
+var appSettings = import_core2.default.getInput("app-settings");
+var appId;
+var privateKey;
+
+if (appSettings) {
+  appSettings = JSON.parse(appSettings);
+  if (!appSettings['app-id'] || !appSettings['private-key']) {
+    throw new Error("app-settings must contain valid app_id and private_key fields");
+  }
+  appId = appSettings['app-id'];
+  privateKey = appSettings['private-key'];
+} else {
+  appId = import_core2.default.getInput("app-id") || import_core2.default.getInput("app_id");
+  if (!appId) {
+    throw new Error("Input required and not supplied: app-id");
+  }
+
+  privateKey = import_core2.default.getInput("private-key") || import_core2.default.getInput("private_key");
+  if (!privateKey) {
+    throw new Error("Input required and not supplied: private-key");
+  }
 }
 var owner = import_core2.default.getInput("owner");
 var repositories = import_core2.default.getInput("repositories");

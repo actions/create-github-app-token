@@ -12,6 +12,9 @@ inputs:
     description: "GitHub App ID"
     required: false
     deprecationMessage: "'app_id' is deprecated and will be removed in a future version. Use 'app-id' instead."
+  app-settings:
+    description: "GitHub App settings"
+    required: false
   private-key:
     description: "GitHub App private key"
     required: false # TODO: When 'private_key' is removed, make 'private-key' required
