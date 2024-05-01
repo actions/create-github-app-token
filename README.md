@@ -211,7 +211,7 @@ jobs:
 
 ### `private-key`
 
-**Required:** GitHub App private key.
+**Required:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines.
 
 ### `owner`
 
