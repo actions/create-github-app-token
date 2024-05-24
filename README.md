@@ -109,6 +109,29 @@ jobs:
           persist-credentials: false
 ```
 
+### Use token for all repositories in the current owner's installation, encoded for http basic auth
+
+```yaml
+on: [pull_request]
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+      - env:
+          GIT_CONFIG_COUNT: 1
+          GIT_CONFIG_KEY_0: http.https://github.com/.extraheader
+          GIT_CONFIG_VALUE_0: "AUTHORIZATION: basic ${{ steps.app-token.outputs.basic-auth-credentials }}"
+        # Access allowed to private submodules in the current owner's installation
+        run: git clone --recurse-submodules --shallow-submodules https://github.com/${{ github.repository }}
+```
+
 ### Create a token for multiple repositories in the current owner's installation
 
 ```yaml

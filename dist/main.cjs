@@ -39747,8 +39747,11 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
       retries: 3
     }));
   }
+  let basicAuthCredentials = btoa("x-access-token:" + authentication.token);
   core3.setSecret(authentication.token);
+  core3.setSecret(basicAuthCredentials);
   core3.setOutput("token", authentication.token);
+  core3.setOutput("basic-auth-credentials", basicAuthCredentials);
   core3.setOutput("installation-id", installationId);
   core3.setOutput("app-slug", appSlug);
   if (!skipTokenRevoke2) {
