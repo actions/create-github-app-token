@@ -99,11 +99,14 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: actions/checkout@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
-          issue-number: ${{ github.event.issue.number }}
-          body: "Hello, World!"
+          ref: ${{ github.head_ref }}
+          # Access allowed to private submodules in the current owner's installation
+          submodules: recursive
+          # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
+          persist-credentials: false
 ```
 
 ### Create a token for multiple repositories in the current owner's installation
