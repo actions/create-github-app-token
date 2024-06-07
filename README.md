@@ -61,6 +61,26 @@ jobs:
           github_token: ${{ steps.app-token.outputs.token }}
 ```
 
+### Create a git committer string for an app installation
+
+```yaml
+on: [pull_request]
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          # required
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+      - id: committer
+        run: echo "string=${{steps.app-auth.outputs.app-slug}}[bot] <${{ steps.app-auth.outputs.installation-id }}+${{ steps.app-auth.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
+      - run: echo "committer string is ${{steps.committer.outputs.string}}"
+```
+
 ### Create a token for all repositories in the current owner's installation
 
 ```yaml
