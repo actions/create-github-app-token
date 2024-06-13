@@ -15,7 +15,8 @@
     "@actions/core": "^1.10.1",
     "@octokit/auth-app": "^7.1.0",
     "@octokit/request": "^9.0.1",
-    "p-retry": "^6.2.0"
+    "p-retry": "^6.2.0",
+    "undici": "^6.18.2"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "^11.2.2",
@@ -25,7 +26,6 @@
     "esbuild": "^0.21.4",
     "execa": "^9.1.0",
     "open-cli": "^8.0.0",
-    "undici": "^6.6.2",
     "yaml": "^2.4.2"
   },
   "release": {
