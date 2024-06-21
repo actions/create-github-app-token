@@ -80,7 +80,7 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
       - id: committer
-        run: echo "string=${{steps.app-auth.outputs.app-slug}}[bot] <${{ steps.app-auth.outputs.installation-id }}+${{ steps.app-auth.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
+        run: echo "string=${{steps.app-token.outputs.app-slug}}[bot] <${{ steps.app-token.outputs.installation-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
       - run: echo "committer string is ${{steps.committer.outputs.string}}"
 ```
 
