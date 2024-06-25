@@ -39753,7 +39753,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
   core3.setOutput("app-slug", appSlug);
   if (!skipTokenRevoke2) {
     core3.saveState("token", authentication.token);
-    core3.setOutput("expiresAt", authentication.expiresAt);
+    core3.saveState("expiresAt", authentication.expiresAt);
   }
 }
 async function getTokenFromOwner(request2, auth5, parsedOwner) {
