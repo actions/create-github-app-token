@@ -11381,7 +11381,7 @@ var require_proxy_agent = __commonJS({
     function defaultFactory(origin, opts) {
       return new Pool(origin, opts);
     }
-    var ProxyAgent2 = class extends DispatcherBase {
+    var ProxyAgent = class extends DispatcherBase {
       constructor(opts) {
         super(opts);
         this[kProxy] = buildProxyOptions(opts);
@@ -11494,7 +11494,7 @@ var require_proxy_agent = __commonJS({
         throw new InvalidArgumentError("Proxy-Authorization should be sent in ProxyAgent constructor");
       }
     }
-    module2.exports = ProxyAgent2;
+    module2.exports = ProxyAgent;
   }
 });
 
@@ -17462,7 +17462,7 @@ var require_undici = __commonJS({
     var MockAgent = require_mock_agent();
     var MockPool = require_mock_pool();
     var mockErrors = require_mock_errors();
-    var ProxyAgent2 = require_proxy_agent();
+    var ProxyAgent = require_proxy_agent();
     var RetryHandler = require_RetryHandler();
     var { getGlobalDispatcher, setGlobalDispatcher } = require_global2();
     var DecoratorHandler = require_DecoratorHandler();
@@ -17481,7 +17481,7 @@ var require_undici = __commonJS({
     module2.exports.Pool = Pool;
     module2.exports.BalancedPool = BalancedPool;
     module2.exports.Agent = Agent;
-    module2.exports.ProxyAgent = ProxyAgent2;
+    module2.exports.ProxyAgent = ProxyAgent;
     module2.exports.RetryHandler = RetryHandler;
     module2.exports.DecoratorHandler = DecoratorHandler;
     module2.exports.RedirectHandler = RedirectHandler;
@@ -17688,8 +17688,8 @@ var require_lib = __commonJS({
       MediaTypes2["ApplicationJson"] = "application/json";
     })(MediaTypes || (exports2.MediaTypes = MediaTypes = {}));
     function getProxyUrl(serverUrl) {
-      const proxyUrl2 = pm.getProxyUrl(new URL(serverUrl));
-      return proxyUrl2 ? proxyUrl2.href : "";
+      const proxyUrl = pm.getProxyUrl(new URL(serverUrl));
+      return proxyUrl ? proxyUrl.href : "";
     }
     exports2.getProxyUrl = getProxyUrl;
     var HttpRedirectCodes = [
@@ -18024,12 +18024,12 @@ var require_lib = __commonJS({
       }
       getAgentDispatcher(serverUrl) {
         const parsedUrl = new URL(serverUrl);
-        const proxyUrl2 = pm.getProxyUrl(parsedUrl);
-        const useProxy = proxyUrl2 && proxyUrl2.hostname;
+        const proxyUrl = pm.getProxyUrl(parsedUrl);
+        const useProxy = proxyUrl && proxyUrl.hostname;
         if (!useProxy) {
           return;
         }
-        return this._getProxyAgentDispatcher(parsedUrl, proxyUrl2);
+        return this._getProxyAgentDispatcher(parsedUrl, proxyUrl);
       }
       _prepareRequest(method, requestUrl, headers) {
         const info = {};
@@ -18069,8 +18069,8 @@ var require_lib = __commonJS({
       }
       _getAgent(parsedUrl) {
         let agent;
-        const proxyUrl2 = pm.getProxyUrl(parsedUrl);
-        const useProxy = proxyUrl2 && proxyUrl2.hostname;
+        const proxyUrl = pm.getProxyUrl(parsedUrl);
+        const useProxy = proxyUrl && proxyUrl.hostname;
         if (this._keepAlive && useProxy) {
           agent = this._proxyAgent;
         }
@@ -18085,16 +18085,16 @@ var require_lib = __commonJS({
         if (this.requestOptions) {
           maxSockets = this.requestOptions.maxSockets || http.globalAgent.maxSockets;
         }
-        if (proxyUrl2 && proxyUrl2.hostname) {
+        if (proxyUrl && proxyUrl.hostname) {
           const agentOptions = {
             maxSockets,
             keepAlive: this._keepAlive,
-            proxy: Object.assign(Object.assign({}, (proxyUrl2.username || proxyUrl2.password) && {
-              proxyAuth: `${proxyUrl2.username}:${proxyUrl2.password}`
-            }), { host: proxyUrl2.hostname, port: proxyUrl2.port })
+            proxy: Object.assign(Object.assign({}, (proxyUrl.username || proxyUrl.password) && {
+              proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
+            }), { host: proxyUrl.hostname, port: proxyUrl.port })
           };
           let tunnelAgent;
-          const overHttps = proxyUrl2.protocol === "https:";
+          const overHttps = proxyUrl.protocol === "https:";
           if (usingSsl) {
             tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp;
           } else {
@@ -18115,7 +18115,7 @@ var require_lib = __commonJS({
         }
         return agent;
       }
-      _getProxyAgentDispatcher(parsedUrl, proxyUrl2) {
+      _getProxyAgentDispatcher(parsedUrl, proxyUrl) {
         let proxyAgent;
         if (this._keepAlive) {
           proxyAgent = this._proxyAgentDispatcher;
@@ -18124,8 +18124,8 @@ var require_lib = __commonJS({
           return proxyAgent;
         }
         const usingSsl = parsedUrl.protocol === "https:";
-        proxyAgent = new undici_1.ProxyAgent(Object.assign({ uri: proxyUrl2.href, pipelining: !this._keepAlive ? 0 : 1 }, (proxyUrl2.username || proxyUrl2.password) && {
-          token: `${proxyUrl2.username}:${proxyUrl2.password}`
+        proxyAgent = new undici_1.ProxyAgent(Object.assign({ uri: proxyUrl.href, pipelining: !this._keepAlive ? 0 : 1 }, (proxyUrl.username || proxyUrl.password) && {
+          token: `${proxyUrl.username}:${proxyUrl.password}`
         }));
         this._proxyAgentDispatcher = proxyAgent;
         if (usingSsl && this._ignoreSslError) {
@@ -26940,7 +26940,7 @@ var require_proxy_agent2 = __commonJS({
     function defaultFactory(origin, opts) {
       return new Pool(origin, opts);
     }
-    var ProxyAgent2 = class extends DispatcherBase {
+    var ProxyAgent = class extends DispatcherBase {
       constructor(opts) {
         super();
         if (!opts || typeof opts === "object" && !(opts instanceof URL3) && !opts.uri) {
@@ -27067,7 +27067,7 @@ var require_proxy_agent2 = __commonJS({
         throw new InvalidArgumentError("Proxy-Authorization should be sent in ProxyAgent constructor");
       }
     }
-    module2.exports = ProxyAgent2;
+    module2.exports = ProxyAgent;
   }
 });
 
@@ -27077,7 +27077,7 @@ var require_env_http_proxy_agent = __commonJS({
     "use strict";
     var DispatcherBase = require_dispatcher_base2();
     var { kClose, kDestroy, kClosed, kDestroyed, kDispatch, kNoProxyAgent, kHttpProxyAgent, kHttpsProxyAgent } = require_symbols6();
-    var ProxyAgent2 = require_proxy_agent2();
+    var ProxyAgent = require_proxy_agent2();
     var Agent = require_agent2();
     var DEFAULT_PORTS = {
       "http:": 80,
@@ -27101,13 +27101,13 @@ var require_env_http_proxy_agent = __commonJS({
         this[kNoProxyAgent] = new Agent(agentOpts);
         const HTTP_PROXY = httpProxy ?? process.env.http_proxy ?? process.env.HTTP_PROXY;
         if (HTTP_PROXY) {
-          this[kHttpProxyAgent] = new ProxyAgent2({ ...agentOpts, uri: HTTP_PROXY });
+          this[kHttpProxyAgent] = new ProxyAgent({ ...agentOpts, uri: HTTP_PROXY });
         } else {
           this[kHttpProxyAgent] = this[kNoProxyAgent];
         }
         const HTTPS_PROXY = httpsProxy ?? process.env.https_proxy ?? process.env.HTTPS_PROXY;
         if (HTTPS_PROXY) {
-          this[kHttpsProxyAgent] = new ProxyAgent2({ ...agentOpts, uri: HTTPS_PROXY });
+          this[kHttpsProxyAgent] = new ProxyAgent({ ...agentOpts, uri: HTTPS_PROXY });
         } else {
           this[kHttpsProxyAgent] = this[kHttpProxyAgent];
         }
@@ -36467,7 +36467,7 @@ var require_undici2 = __commonJS({
     var Pool = require_pool2();
     var BalancedPool = require_balanced_pool2();
     var Agent = require_agent2();
-    var ProxyAgent2 = require_proxy_agent2();
+    var ProxyAgent = require_proxy_agent2();
     var EnvHttpProxyAgent = require_env_http_proxy_agent();
     var RetryAgent = require_retry_agent();
     var errors = require_errors2();
@@ -36490,7 +36490,7 @@ var require_undici2 = __commonJS({
     module2.exports.Pool = Pool;
     module2.exports.BalancedPool = BalancedPool;
     module2.exports.Agent = Agent;
-    module2.exports.ProxyAgent = ProxyAgent2;
+    module2.exports.ProxyAgent = ProxyAgent;
     module2.exports.EnvHttpProxyAgent = EnvHttpProxyAgent;
     module2.exports.RetryAgent = RetryAgent;
     module2.exports.RetryHandler = RetryHandler;
@@ -39801,27 +39801,16 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
 var import_core = __toESM(require_core(), 1);
 var import_undici = __toESM(require_undici2(), 1);
 var baseUrl = import_core.default.getInput("github-api-url").replace(/\/$/, "");
-var proxyUrl = process.env.https_proxy || process.env.HTTPS_PROXY || process.env.http_proxy || process.env.HTTP_PROXY;
-var proxyFetch = (url, options) => {
-  const urlHost = new URL(url).hostname;
-  const noProxy = (process.env.no_proxy || process.env.NO_PROXY || "").split(
-    ","
-  );
-  if (!noProxy.includes(urlHost)) {
-    options = {
-      ...options,
-      dispatcher: new import_undici.ProxyAgent(String(proxyUrl))
-    };
-  }
-  return (0, import_undici.fetch)(url, options);
-};
 var request_default = request.defaults({
   headers: {
     "user-agent": "actions/create-github-app-token"
   },
   baseUrl,
-  /* c8 ignore next */
-  request: proxyUrl ? { fetch: proxyFetch } : {}
+  // Use undici as the fetch implementation because we rely on proxy support, which is only available in node22 and later,
+  // which the GitHub Actions runner doesn't support yet.
+  request: {
+    fetch: import_undici.fetch
+  }
 });
 
 // main.js
