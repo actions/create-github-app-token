@@ -79,10 +79,48 @@ jobs:
           # required
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
+      - name: Retrieve GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.generate-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
       - id: committer
-        run: echo "string=${{steps.app-auth.outputs.app-slug}}[bot] <${{ steps.app-auth.outputs.installation-id }}+${{ steps.app-auth.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
+        run: echo "string=${{steps.app-token.outputs.app-slug}}[bot] <${{steps.get-user-id.outputs.user-id}}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
       - run: echo "committer string is ${{steps.committer.outputs.string}}"
 ```
+
+### Configure git CLI for an app's bot user
+
+```yaml
+on: [pull_request]
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          # required
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+      - name: Retrieve GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.generate-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+      - run: |
+          git config --global user.name '${{steps.app-token.outputs.app-slug}}[bot]'
+          git config --global user.email '${{steps.get-user-id.outputs.user-id}}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>'
+      # git commands like commit work using the bot user
+      - run: |
+          git add .
+          git commit -m "Auto-generated changes"
+          git push
+```
+
+The `<BOT USER ID>` is the numeric user ID of the app's bot user, which can be found under `https://api.github.com/users/<app-slug>%5Bbot%5D`.
+For example, we can check at `https://api.github.com/users/dependabot%5Bbot%5D` to see the user ID of dependabot is 49699333.
 
 ### Create a token for all repositories in the current owner's installation
 
