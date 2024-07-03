@@ -122,7 +122,7 @@ jobs:
 > [!TIP]
 > The `<BOT USER ID>` is the numeric user ID of the app's bot user, which can be found under `https://api.github.com/users/<app-slug>%5Bbot%5D`.
 > 
-> For example, we can check at `https://api.github.com/users/dependabot%5Bbot%5D` to see the user ID of dependabot is 49699333.
+> For example, we can check at `https://api.github.com/users/dependabot[bot]` to see the user ID of Dependabot is 49699333.
 >
 > Similarly to get the id, you can also use the [octokit/request-action](https://github.com/octokit/request-action).
 
