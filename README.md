@@ -124,7 +124,7 @@ jobs:
 > 
 > For example, we can check at `https://api.github.com/users/dependabot[bot]` to see the user ID of Dependabot is 49699333.
 >
-> Similarly to get the id, you can also use the [octokit/request-action](https://github.com/octokit/request-action).
+> Alternatively, you can use the [octokit/request-action](https://github.com/octokit/request-action) to get the ID.
 
 ### Create a token for all repositories in the current owner's installation
 
