@@ -278,6 +278,24 @@ jobs:
 
 **Required:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines.
 
+N.B.: Some other action may require the private key to be Base64 encoded. To avoid recreating a new secret, it can be decoded on the fly, but it needs to be managed securely. Here is an example of how this could be achieved:
+
+```yaml
+steps:
+  - name: Decode the GitHub App Private Key
+    id: decode
+    run: |
+      private_key=$(echo "${{ secrets.PRIVATE_KEY }}" | base64 -d | awk 'BEGIN {ORS="\\n"} {print}' | head -c -2) &> /dev/null
+      echo "::add-mask::$private_key"
+      echo "private-key=$private_key" >> "$GITHUB_OUTPUT"
+  - name: Generate GitHub App Token
+    id: app-token
+    uses: actions/create-github-app-token@v1
+    with:
+      app-id: ${{ vars.APP_ID }}
+      private-key: ${{ steps.decode.outputs.private-key }}
+```
+
 ### `owner`
 
 **Optional:** The owner of the GitHub App installation. If empty, defaults to the current repository owner.
