@@ -278,7 +278,7 @@ jobs:
 
 **Required:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines.
 
-N.B.: Some other action may require the private key to be Base64 encoded. To avoid recreating a new secret, it can be decoded on the fly, but it needs to be managed securely. Here is an example of how this could be achieved:
+Some other actions may require the private key to be Base64 encoded. To avoid recreating a new secret, it can be decoded on the fly, but it needs to be managed securely. Here is an example of how this can be achieved:
 
 ```yaml
 steps:
