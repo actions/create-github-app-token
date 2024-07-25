@@ -1,0 +1,11 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        env:
+          test_app_private_key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
