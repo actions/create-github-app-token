@@ -1,11 +1,21 @@
 import { readdirSync } from "node:fs";
 
-import { execa } from "execa";
 import test from "ava";
+import { execa } from "execa";
 
-const tests = readdirSync("tests").filter((file) => file.endsWith(".test.js"));
+// Get all files in tests directory
+const files = readdirSync("tests");
 
-for (const file of tests) {
+// Files to ignore
+const ignore = ["index.js", "main.js", "README.md", "snapshots"];
+
+const testFiles = files.filter((file) => !ignore.includes(file));
+
+// Throw an error if there is a file that does not end with test.js in the tests directory
+for (const file of testFiles) {
+  if (!file.endsWith(".test.js")) {
+    throw new Error(`File ${file} does not end with .test.js`);
+  }
   test(file, async (t) => {
     // Override Actions environment variables that change `core`’s behavior
     const env = {

@@ -46,7 +46,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   // Set up mocking
   const baseUrl = new URL(env["INPUT_GITHUB-API-URL"]);
-  const basePath = baseUrl.pathname === '/' ? '' : baseUrl.pathname;
+  const basePath = baseUrl.pathname === "/" ? "" : baseUrl.pathname;
   const mockAgent = new MockAgent();
   mockAgent.disableNetConnect();
   setGlobalDispatcher(mockAgent);
@@ -58,8 +58,9 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const mockInstallationId = "123456";
   const mockAppSlug = "github-actions";
   const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;
+  const currentRepoName = env.GITHUB_REPOSITORY.split("/")[1];
   const repo = encodeURIComponent(
-    (env.INPUT_REPOSITORIES ?? env.GITHUB_REPOSITORY).split(",")[0]
+    (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0]
   );
   mockPool
     .intercept({
@@ -73,7 +74,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     })
     .reply(
       200,
-      { id: mockInstallationId, "app_slug": mockAppSlug },
+      { id: mockInstallationId, app_slug: mockAppSlug },
       { headers: { "content-type": "application/json" } }
     );
 
