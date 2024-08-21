@@ -37,6 +37,9 @@ inputs:
   github-api-url:
     description: The URL of the GitHub REST API.
     default: ${{ github.api_url }}
+  permissions:
+    description: "A comma or newline seperated list of permissions to scope the token."
+    required: false
 outputs:
   token:
     description: "GitHub installation access token"
