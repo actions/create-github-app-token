@@ -1,6 +1,6 @@
-name: "Create GitHub App Token"
-description: "GitHub Action for creating a GitHub App installation access token"
-author: "Gregor Martynus and Parker Brown"
+name: "Create GitHub App Token using AWS KMS"
+description: "GitHub Action for creating a GitHub App installation access token using AWS KMS"
+author: "Cristian Lepadatu, Gregor Martynus and Parker Brown"
 branding:
   icon: "lock"
   color: "gray-dark"
@@ -12,13 +12,13 @@ inputs:
     description: "GitHub App ID"
     required: false
     deprecationMessage: "'app_id' is deprecated and will be removed in a future version. Use 'app-id' instead."
-  private-key:
-    description: "GitHub App private key"
-    required: false # TODO: When 'private_key' is removed, make 'private-key' required
-  private_key:
-    description: "GitHub App private key"
+  kms-key-id:
+    description: AWS KMS Key ID"
+    required: false # TODO: When 'kms_key_id' is removed, make 'kms-key-id' required
+  kms_key_id:
+    description: "AWS KMS Key ID"
     required: false
-    deprecationMessage: "'private_key' is deprecated and will be removed in a future version. Use 'private-key' instead."
+    deprecationMessage: "'kms_key_id' is deprecated and will be removed in a future version. Use 'kms-key-id' instead."
   owner:
     description: "The owner of the GitHub App installation (defaults to current repository owner)"
     required: false

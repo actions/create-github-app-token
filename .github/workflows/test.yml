@@ -4,8 +4,13 @@ on:
   push:
     branches:
       - main
+      - dev
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -33,6 +38,14 @@ jobs:
     if: github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
     steps:
       - uses: actions/checkout@v4
+      
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: test
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -42,8 +55,8 @@ jobs:
       - uses: ./ # Uses the action in the root directory
         id: test
         with:
-          app-id: ${{ vars.TEST_APP_ID }}
-          private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.APP_ID }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
       - uses: octokit/request-action@v2.x
         id: get-repository
         env:

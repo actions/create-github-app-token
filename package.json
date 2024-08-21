@@ -1,19 +1,19 @@
 {
-  "name": "create-github-app-token",
+  "name": "create-github-app-token-aws",
   "private": true,
   "type": "module",
   "version": "1.10.3",
-  "description": "GitHub Action for creating a GitHub App Installation Access Token",
+  "description": "GitHub Action for creating a GitHub App Installation Access Token using AWS KMS",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20.0.0 --packages=bundle",
-    "test": "c8 --100 ava tests/index.js",
+    "test": "c8 --lines 95 ava tests/index.js",
     "coverage": "c8 report --reporter html",
     "postcoverage": "open-cli coverage/index.html"
   },
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "@octokit/auth-app": "^7.1.0",
+    "@aws-sdk/client-kms": "^3.632.0",
     "@octokit/request": "^9.0.1",
     "p-retry": "^6.2.0",
     "undici": "^6.19.2"

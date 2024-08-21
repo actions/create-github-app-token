@@ -1,8 +1,6 @@
 // @ts-check
 
 import core from "@actions/core";
-import { createAppAuth } from "@octokit/auth-app";
-
 import { main } from "./lib/main.js";
 import request from "./lib/request.js";
 
@@ -19,10 +17,10 @@ if (!appId) {
   // The 'app_id' input was previously required, but it and 'app-id' are both optional now, until the former is removed. Still, we want to ensure that at least one of them is set.
   throw new Error("Input required and not supplied: app-id");
 }
-const privateKey = core.getInput("private-key") || core.getInput("private_key");
-if (!privateKey) {
-  // The 'private_key' input was previously required, but it and 'private-key' are both optional now, until the former is removed. Still, we want to ensure that at least one of them is set.
-  throw new Error("Input required and not supplied: private-key");
+const kmsKeyId = core.getInput("kms-key-id") || core.getInput("kms_key_id");
+if (!kmsKeyId) {
+  //We want to ensure that at least one of kms-key-id or kms_key_id is set.
+  throw new Error("Input required and not supplied: kms-key-id");
 }
 const owner = core.getInput("owner");
 const repositories = core.getInput("repositories");
@@ -33,11 +31,10 @@ const skipTokenRevoke = Boolean(
 
 main(
   appId,
-  privateKey,
+  kmsKeyId,
   owner,
   repositories,
   core,
-  createAppAuth,
   request,
   skipTokenRevoke
 ).catch((error) => {

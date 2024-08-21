@@ -2,15 +2,19 @@
 
 [![test](https://github.com/actions/create-github-app-token/actions/workflows/test.yml/badge.svg)](https://github.com/actions/create-github-app-token/actions/workflows/test.yml)
 
-GitHub Action for creating a GitHub App installation access token.
+GitHub Action for creating a GitHub App installation access token using AWS KMS in order to safely store the GitHub repositry private key.
 
 ## Usage
 
 In order to use this action, you need to:
 
 1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app)
-2. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
-3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
+2. [Store the App's ID in your repository environment variable](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) or [secret](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `APP_ID`)
+3. [Import the App's private key in your AWS Account KMS service, under customer-managed keys of type assymetric, sign-verify](https://docs.aws.amazon.com/kms/latest/developerguide/importing-keys-create-cmk.html)
+4. [Store the above KMS Key ID as a repository secret](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example `KMS_KEY_ID`). Once stored in AWS KMS, the GitHub private key can no longer be retieved from AWS. AWS API can only by asked to sign/verify using the respective key. This substantially improves the security posture, because the key is no longer accessible.
+5. [Store the AWS role to be assumed by the action as a repository secret](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example `ROLE_TO_ASSUME`)
+6. [Store the AWS session name as an environment_variable](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example `ROLE_SESSION_NAME`)
+7. [Store the AWS region name as an environment_variable](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example `AWS_REGION`)
 
 > [!IMPORTANT]  
 > An installation access token expires after 1 hour. Please [see this comment](https://github.com/actions/create-github-app-token/issues/121#issuecomment-2043214796) for alternative approaches if you have long-running processes.
@@ -28,11 +32,17 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
       - uses: ./actions/staging-tests
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -47,12 +57,18 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           # required
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
       - uses: actions/checkout@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -73,12 +89,18 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           # required
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
       - name: Get GitHub App User ID
         id: get-user-id
         run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
@@ -98,12 +120,18 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           # required
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
       - name: Get GitHub App User ID
         id: get-user-id
         run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
@@ -135,11 +163,17 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
           owner: ${{ github.repository_owner }}
       - uses: peter-evans/create-or-update-comment@v3
         with:
@@ -157,11 +191,17 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
           owner: ${{ github.repository_owner }}
           repositories: "repo1,repo2"
       - uses: peter-evans/create-or-update-comment@v3
@@ -180,11 +220,17 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
           owner: another-owner
       - uses: peter-evans/create-or-update-comment@v3
         with:
@@ -221,11 +267,17 @@ jobs:
         owners-and-repos: ${{ fromJson(needs.set-matrix.outputs.matrix) }}
 
     steps:
+      - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
+          kms-key-id: ${{ secrets.KMS_KEY_ID }}
           owner: ${{ matrix.owners-and-repos.owner }}
           repositories: ${{ join(matrix.owners-and-repos.repos) }}
       - uses: octokit/request-action@v2.x
@@ -249,12 +301,18 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    - name: AWS Login
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-session-name: ${{ vars.ROLE_SESSION_NAME }}
     - name: Create GitHub App token
       id: create_token
       uses: actions/create-github-app-token@v1
       with:
         app-id: ${{ vars.GHES_APP_ID }}
-        private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
+        kms-key-id: ${{ secrets.KMS_KEY_ID }}
         owner: ${{ vars.GHES_INSTALLATION_ORG }}
         github-api-url: ${{ vars.GITHUB_API_URL }}
 
@@ -274,27 +332,9 @@ jobs:
 
 **Required:** GitHub App ID.
 
-### `private-key`
+### `kms-key-id`
 
-**Required:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines.
-
-Some other actions may require the private key to be Base64 encoded. To avoid recreating a new secret, it can be decoded on the fly, but it needs to be managed securely. Here is an example of how this can be achieved:
-
-```yaml
-steps:
-  - name: Decode the GitHub App Private Key
-    id: decode
-    run: |
-      private_key=$(echo "${{ secrets.PRIVATE_KEY }}" | base64 -d | awk 'BEGIN {ORS="\\n"} {print}' | head -c -2) &> /dev/null
-      echo "::add-mask::$private_key"
-      echo "private-key=$private_key" >> "$GITHUB_OUTPUT"
-  - name: Generate GitHub App Token
-    id: app-token
-    uses: actions/create-github-app-token@v1
-    with:
-      app-id: ${{ vars.APP_ID }}
-      private-key: ${{ steps.decode.outputs.private-key }}
-```
+**Required:** AWS KMS Key ID that is imported from GitHub.
 
 ### `owner`
 
@@ -331,7 +371,11 @@ GitHub App slug.
 
 ## How it works
 
-The action creates an installation access token using [the `POST /app/installations/{installation_id}/access_tokens` endpoint](https://docs.github.com/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app). By default,
+The action creates an installation access token using [the `POST /app/installations/{installation_id}/access_tokens` endpoint](https://docs.github.com/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app). 
+
+The action uses the GitHub private key stored in AWS KMS so sign a JWT token and uses this token subsequently for autheticating each GitHub API call, including the one above. Once stored in AWS KMS, the GitHub private key can no longer be retieved from AWS. AWS API can only by asked to sign/verify using the respective key.  This substantially improves the security posture, because the action will no longer access the private key anymore, but ask AWS API to sign/verify instead. 
+
+By default,
 
 1. The token is scoped to the current repository or `repositories` if set.
 2. The token inherits all the installation's permissions.
