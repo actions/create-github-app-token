@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20 --packages=bundle",
-    "test": "c8 --100 ava tests/index.js",
+    "test": "c8 --100 ava tests/index.js NODE_OPTIONS=--disable-warning=UNDICI-EHPA",
     "coverage": "c8 report --reporter html",
     "postcoverage": "open-cli coverage/index.html"
   },
