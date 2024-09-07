@@ -39921,7 +39921,6 @@ var request_default = request.defaults({
   },
   baseUrl,
   request: {
-    fetch: import_undici.fetch,
     dispatcher: envHttpProxyAgent
   }
 });
