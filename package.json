@@ -4,9 +4,12 @@
   "type": "module",
   "version": "1.10.4",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
+  "engines": {
+    "node": ">=20.16.0"
+  },
   "scripts": {
-    "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20.0.0 --packages=bundle",
-    "test": "c8 --100 ava tests/index.js",
+    "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20 --packages=bundle",
+    "test": "c8 --100 ava tests/index.js NODE_OPTIONS=--disable-warning=UNDICI-EHPA",
     "coverage": "c8 report --reporter html",
     "postcoverage": "open-cli coverage/index.html"
   },
