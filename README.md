@@ -163,7 +163,9 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: "repo1,repo2"
+          repositories: |
+            repo1
+            repo2
       - uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -302,7 +304,7 @@ steps:
 
 ### `repositories`
 
-**Optional:** Comma-separated list of repositories to grant access to.
+**Optional:** Comma or newline-separated list of repositories to grant access to.
 
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
