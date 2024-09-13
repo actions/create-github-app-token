@@ -268,6 +268,36 @@ jobs:
         GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
 ```
 
+### Creating a scoped token
+
+A GitHub App can [create](https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-a-scoped-access-token) a scoped token, a token with a subset of permissions assigned to the GitHub App.
+
+This allows you to apply the principle of least privilege to the token, but doesn't protect you against malicious code running in your workflow because that can directly access the private key used to generate the token.
+
+```yaml
+name: Run tests on staging
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          permissions: |
+            metadata: read
+            contents: write
+      - uses: ./actions/staging-tests
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+```
+
 ## Inputs
 
 ### `app-id`
@@ -328,6 +358,11 @@ GitHub App installation ID.
 ### `app-slug`
 
 GitHub App slug.
+
+### `permissions`
+
+**Optional:** A comma-separate or newline-separate list of permissions for the scoped token.
+See the `properties` object description in the [create-a-scoped-access-token](https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-a-scoped-access-token) documentation for the supported permissions.
 
 ## How it works
 
