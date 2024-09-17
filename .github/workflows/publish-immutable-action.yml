@@ -1,4 +1,4 @@
-name: 'Publish Immutable Action Version'
+name: 'Publish Immutable Action'
 
 on:
   release:
@@ -11,10 +11,7 @@ jobs:
       contents: read
       id-token: write
       packages: write
-
     steps:
-      - name: Checking out
-        uses: actions/checkout@v4
-      - name: Publish
-        id: publish
+      - uses: actions/checkout@v4
+      - name: Publish Immutable Action
         uses: actions/publish-immutable-action@0.0.3
