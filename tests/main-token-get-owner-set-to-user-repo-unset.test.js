@@ -10,17 +10,6 @@ await test((mockPool) => {
   const mockAppSlug = "github-actions";
   mockPool
     .intercept({
-      path: `/orgs/${process.env.INPUT_OWNER}/installation`,
-      method: "GET",
-      headers: {
-        accept: "application/vnd.github.v3+json",
-        "user-agent": "actions/create-github-app-token",
-        // Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
-      },
-    })
-    .reply(404);
-  mockPool
-    .intercept({
       path: `/users/${process.env.INPUT_OWNER}/installation`,
       method: "GET",
       headers: {

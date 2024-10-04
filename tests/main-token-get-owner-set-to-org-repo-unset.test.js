@@ -10,7 +10,7 @@ await test((mockPool) => {
   const mockAppSlug = "github-actions";
   mockPool
     .intercept({
-      path: `/orgs/${process.env.INPUT_OWNER}/installation`,
+      path: `/users/${process.env.INPUT_OWNER}/installation`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
