@@ -25,7 +25,10 @@ if (!privateKey) {
   throw new Error("Input required and not supplied: private-key");
 }
 const owner = core.getInput("owner");
-const repositories = core.getInput("repositories");
+const repositories = core.getInput("repositories")
+  .split(/[\n,]+/)
+  .map(s => s.trim())
+  .filter(x => x !== '');
 
 const skipTokenRevoke = Boolean(
   core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke")

@@ -39806,33 +39806,37 @@ async function pRetry(input, options) {
 // lib/main.js
 async function main(appId2, privateKey2, owner2, repositories2, core3, createAppAuth2, request2, skipTokenRevoke2) {
   let parsedOwner = "";
-  let parsedRepositoryNames = "";
-  if (!owner2 && !repositories2) {
-    [parsedOwner, parsedRepositoryNames] = String(
-      process.env.GITHUB_REPOSITORY
-    ).split("/");
+  let parsedRepositoryNames = [];
+  if (!owner2 && repositories2.length === 0) {
+    const [owner3, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
+    parsedOwner = owner3;
+    parsedRepositoryNames = [repo];
     core3.info(
-      `owner and repositories not set, creating token for the current repository ("${parsedRepositoryNames}")`
+      `owner and repositories not set, creating token for the current repository ("${repo}")`
     );
   }
-  if (owner2 && !repositories2) {
+  if (owner2 && repositories2.length === 0) {
     parsedOwner = owner2;
     core3.info(
       `repositories not set, creating token for all repositories for given owner "${owner2}"`
     );
   }
-  if (!owner2 && repositories2) {
+  if (!owner2 && repositories2.length > 0) {
     parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
     parsedRepositoryNames = repositories2;
     core3.info(
-      `owner not set, creating owner for given repositories "${repositories2}" in current owner ("${parsedOwner}")`
+      `owner not set, creating owner for given repositories "${repositories2.join(
+        ","
+      )}" in current owner ("${parsedOwner}")`
     );
   }
-  if (owner2 && repositories2) {
+  if (owner2 && repositories2.length > 0) {
     parsedOwner = owner2;
     parsedRepositoryNames = repositories2;
     core3.info(
-      `owner and repositories set, creating token for repositories "${repositories2}" owned by "${owner2}"`
+      `owner and repositories set, creating token for repositories "${repositories2.join(
+        ","
+      )}" owned by "${owner2}"`
     );
   }
   const auth5 = createAppAuth2({
@@ -39841,24 +39845,37 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
     request: request2
   });
   let authentication, installationId, appSlug;
-  if (parsedRepositoryNames) {
-    ({ authentication, installationId, appSlug } = await pRetry(() => getTokenFromRepository(request2, auth5, parsedOwner, parsedRepositoryNames), {
-      onFailedAttempt: (error) => {
-        core3.info(
-          `Failed to create token for "${parsedRepositoryNames}" (attempt ${error.attemptNumber}): ${error.message}`
-        );
-      },
-      retries: 3
-    }));
+  if (parsedRepositoryNames.length > 0) {
+    ({ authentication, installationId, appSlug } = await pRetry(
+      () => getTokenFromRepository(
+        request2,
+        auth5,
+        parsedOwner,
+        parsedRepositoryNames
+      ),
+      {
+        onFailedAttempt: (error) => {
+          core3.info(
+            `Failed to create token for "${parsedRepositoryNames.join(
+              ","
+            )}" (attempt ${error.attemptNumber}): ${error.message}`
+          );
+        },
+        retries: 3
+      }
+    ));
   } else {
-    ({ authentication, installationId, appSlug } = await pRetry(() => getTokenFromOwner(request2, auth5, parsedOwner), {
-      onFailedAttempt: (error) => {
-        core3.info(
-          `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
-        );
-      },
-      retries: 3
-    }));
+    ({ authentication, installationId, appSlug } = await pRetry(
+      () => getTokenFromOwner(request2, auth5, parsedOwner),
+      {
+        onFailedAttempt: (error) => {
+          core3.info(
+            `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
+          );
+        },
+        retries: 3
+      }
+    ));
   }
   core3.setSecret(authentication.token);
   core3.setOutput("token", authentication.token);
@@ -39870,19 +39887,11 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
   }
 }
 async function getTokenFromOwner(request2, auth5, parsedOwner) {
-  const response = await request2("GET /orgs/{org}/installation", {
-    org: parsedOwner,
+  const response = await request2("GET /users/{username}/installation", {
+    username: parsedOwner,
     request: {
       hook: auth5.hook
     }
-  }).catch((error) => {
-    if (error.status !== 404) throw error;
-    return request2("GET /users/{username}/installation", {
-      username: parsedOwner,
-      request: {
-        hook: auth5.hook
-      }
-    });
   });
   const authentication = await auth5({
     type: "installation",
@@ -39895,7 +39904,7 @@ async function getTokenFromOwner(request2, auth5, parsedOwner) {
 async function getTokenFromRepository(request2, auth5, parsedOwner, parsedRepositoryNames) {
   const response = await request2("GET /repos/{owner}/{repo}/installation", {
     owner: parsedOwner,
-    repo: parsedRepositoryNames.split(",")[0],
+    repo: parsedRepositoryNames[0],
     request: {
       hook: auth5.hook
     }
@@ -39903,7 +39912,7 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
   const authentication = await auth5({
     type: "installation",
     installationId: response.data.id,
-    repositoryNames: parsedRepositoryNames.split(",")
+    repositoryNames: parsedRepositoryNames
   });
   const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
@@ -39941,7 +39950,7 @@ if (!privateKey) {
   throw new Error("Input required and not supplied: private-key");
 }
 var owner = import_core2.default.getInput("owner");
-var repositories = import_core2.default.getInput("repositories");
+var repositories = import_core2.default.getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
 var skipTokenRevoke = Boolean(
   import_core2.default.getInput("skip-token-revoke") || import_core2.default.getInput("skip_token_revoke")
 );
