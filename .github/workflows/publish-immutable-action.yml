@@ -14,4 +14,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Publish Immutable Action
-        uses: actions/publish-immutable-action@0.0.3
+        uses: actions/publish-immutable-action@v0.0.4
