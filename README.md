@@ -111,7 +111,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
       - run: |
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
-          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
       # git commands like commit work using the bot user
       - run: |
           git add .
