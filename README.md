@@ -86,7 +86,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
       - id: committer
         run: echo "string=${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
-      - run: echo "committer string is ${ {steps.committer.outputs.string }}"
+      - run: echo "committer string is ${{ steps.committer.outputs.string }}"
 ```
 
 ### Configure git CLI for an app's bot user
