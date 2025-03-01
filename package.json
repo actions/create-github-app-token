@@ -13,10 +13,10 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@octokit/auth-app": "^7.1.4",
+    "@octokit/auth-app": "^7.1.5",
     "@octokit/request": "^9.2.2",
     "p-retry": "^6.2.1",
-    "undici": "^7.3.0"
+    "undici": "^7.4.0"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "^14.0.0",
