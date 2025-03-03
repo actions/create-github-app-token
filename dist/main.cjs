@@ -25550,7 +25550,7 @@ var require_body2 = __commonJS({
       const crypto = require("node:crypto");
       random = (max) => crypto.randomInt(0, max);
     } catch {
-      random = (max) => Math.floor(Math.random(max));
+      random = (max) => Math.floor(Math.random() * max);
     }
     var textEncoder = new TextEncoder();
     function noop() {
@@ -28815,7 +28815,6 @@ var require_env_http_proxy_agent = __commonJS({
       "http:": 80,
       "https:": 443
     };
-    var experimentalWarned = false;
     var EnvHttpProxyAgent = class extends DispatcherBase {
       #noProxyValue = null;
       #noProxyEntries = null;
@@ -28823,12 +28822,6 @@ var require_env_http_proxy_agent = __commonJS({
       constructor(opts = {}) {
         super();
         this.#opts = opts;
-        if (!experimentalWarned) {
-          experimentalWarned = true;
-          process.emitWarning("EnvHttpProxyAgent is experimental, expect them to change at any time.", {
-            code: "UNDICI-EHPA"
-          });
-        }
         const { httpProxy, httpsProxy, noProxy, ...agentOpts } = opts;
         this[kNoProxyAgent] = new Agent(agentOpts);
         const HTTP_PROXY = httpProxy ?? process.env.http_proxy ?? process.env.HTTP_PROXY;
@@ -30579,8 +30572,10 @@ var require_mock_utils2 = __commonJS({
         return data;
       } else if (typeof data === "object") {
         return JSON.stringify(data);
-      } else {
+      } else if (data) {
         return data.toString();
+      } else {
+        return "";
       }
     }
     function getMockDispatch(mockDispatches, key) {
@@ -32043,10 +32038,13 @@ var require_cache2 = __commonJS({
           if (typeof key !== "string" || typeof val !== "string") {
             throw new Error("opts.headers is not a valid header map");
           }
-          headers[key] = val;
+          headers[key.toLowerCase()] = val;
         }
       } else if (typeof opts.headers === "object") {
-        headers = opts.headers;
+        headers = {};
+        for (const key of Object.keys(opts.headers)) {
+          headers[key.toLowerCase()] = opts.headers[key];
+        }
       } else {
         throw new Error("opts.headers is not an object");
       }
@@ -32201,17 +32199,13 @@ var require_cache2 = __commonJS({
         return headers;
       }
       const output = (
-        /** @type {Record<string, string | string[]>} */
+        /** @type {Record<string, string | string[] | null>} */
         {}
       );
       const varyingHeaders = typeof varyHeader === "string" ? varyHeader.split(",") : varyHeader;
       for (const header of varyingHeaders) {
         const trimmedHeader = header.trim().toLowerCase();
-        if (headers[trimmedHeader]) {
-          output[trimmedHeader] = headers[trimmedHeader];
-        } else {
-          return void 0;
-        }
+        output[trimmedHeader] = headers[trimmedHeader] ?? null;
       }
       return output;
     }
@@ -32793,7 +32787,12 @@ var require_memory_cache_store = __commonJS({
         assertCacheKey(key);
         const topLevelKey = `${key.origin}:${key.path}`;
         const now = Date.now();
-        const entry = this.#entries.get(topLevelKey)?.find((entry2) => entry2.deleteAt > now && entry2.method === key.method && (entry2.vary == null || Object.keys(entry2.vary).every((headerName) => entry2.vary[headerName] === key.headers?.[headerName])));
+        const entry = this.#entries.get(topLevelKey)?.find((entry2) => entry2.deleteAt > now && entry2.method === key.method && (entry2.vary == null || Object.keys(entry2.vary).every((headerName) => {
+          if (entry2.vary[headerName] === null) {
+            return key.headers[headerName] === void 0;
+          }
+          return entry2.vary[headerName] === key.headers[headerName];
+        })));
         return entry == null ? void 0 : {
           statusMessage: entry.statusMessage,
           statusCode: entry.statusCode,
@@ -33379,7 +33378,7 @@ var require_sqlite_cache_store = __commonJS({
         assertCacheKey(key);
         const value = this.#findValue(key);
         return value ? {
-          body: value.body ? Buffer.from(value.body.buffer) : void 0,
+          body: value.body ? Buffer.from(value.body.buffer, value.body.byteOffset, value.body.byteLength) : void 0,
           statusCode: value.statusCode,
           statusMessage: value.statusMessage,
           headers: value.headers ? JSON.parse(value.headers) : void 0,
@@ -33524,9 +33523,6 @@ var require_sqlite_cache_store = __commonJS({
           }
           let matches = true;
           if (value.vary) {
-            if (!headers) {
-              return void 0;
-            }
             const vary = JSON.parse(value.vary);
             for (const header in vary) {
               if (!headerValueEquals(headers[header], vary[header])) {
@@ -33543,16 +33539,17 @@ var require_sqlite_cache_store = __commonJS({
       }
     };
     function headerValueEquals(lhs, rhs) {
+      if (lhs == null && rhs == null) {
+        return true;
+      }
+      if (lhs == null && rhs != null || lhs != null && rhs == null) {
+        return false;
+      }
       if (Array.isArray(lhs) && Array.isArray(rhs)) {
         if (lhs.length !== rhs.length) {
           return false;
         }
-        for (let i = 0; i < lhs.length; i++) {
-          if (rhs.includes(lhs[i])) {
-            return false;
-          }
-        }
-        return true;
+        return lhs.every((x, i) => x === rhs[i]);
       }
       return lhs === rhs;
     }
@@ -34518,6 +34515,12 @@ var require_request4 = __commonJS({
       signal.removeEventListener("abort", abort);
     });
     var dependentControllerMap = /* @__PURE__ */ new WeakMap();
+    var abortSignalHasEventHandlerLeakWarning;
+    try {
+      abortSignalHasEventHandlerLeakWarning = getMaxListeners(new AbortController().signal) > 0;
+    } catch {
+      abortSignalHasEventHandlerLeakWarning = false;
+    }
     function buildAbort(acRef) {
       return abort;
       function abort() {
@@ -34745,11 +34748,8 @@ var require_request4 = __commonJS({
             this[kAbortController] = ac;
             const acRef = new WeakRef(ac);
             const abort = buildAbort(acRef);
-            try {
-              if (typeof getMaxListeners === "function" && getMaxListeners(signal) === defaultMaxListeners) {
-                setMaxListeners(1500, signal);
-              }
-            } catch {
+            if (abortSignalHasEventHandlerLeakWarning && getMaxListeners(signal) === defaultMaxListeners) {
+              setMaxListeners(1500, signal);
             }
             util.addAbortListener(signal, abort);
             requestFinalizer.register(ac, { signal, abort }, abort);
@@ -40739,8 +40739,7 @@ async function oauthRequest(request2, route, parameters) {
   return response;
 }
 async function exchangeWebFlowCode(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await oauthRequest(
     request2,
     "POST /login/oauth/access_token",
@@ -40777,8 +40776,7 @@ function toTimestamp(apiTimeInMs, expirationInSeconds) {
   return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
 }
 async function createDeviceCode(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const parameters = {
     client_id: options.clientId
   };
@@ -40788,8 +40786,7 @@ async function createDeviceCode(options) {
   return oauthRequest(request2, "POST /login/device/code", parameters);
 }
 async function exchangeDeviceCode(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await oauthRequest(
     request2,
     "POST /login/oauth/access_token",
@@ -40827,8 +40824,7 @@ function toTimestamp2(apiTimeInMs, expirationInSeconds) {
   return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
 }
 async function checkToken(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await request2("POST /applications/{client_id}/token", {
     headers: {
       authorization: `basic ${btoa(
@@ -40853,8 +40849,7 @@ async function checkToken(options) {
   return { ...response, authentication };
 }
 async function refreshToken(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const response = await oauthRequest(
     request2,
     "POST /login/oauth/access_token",
@@ -40884,8 +40879,7 @@ function toTimestamp3(apiTimeInMs, expirationInSeconds) {
   return new Date(apiTimeInMs + expirationInSeconds * 1e3).toISOString();
 }
 async function resetToken(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const auth5 = btoa(`${options.clientId}:${options.clientSecret}`);
   const response = await request2(
     "PATCH /applications/{client_id}/token",
@@ -40912,8 +40906,7 @@ async function resetToken(options) {
   return { ...response, authentication };
 }
 async function deleteToken(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const auth5 = btoa(`${options.clientId}:${options.clientSecret}`);
   return request2(
     "DELETE /applications/{client_id}/token",
@@ -40927,8 +40920,7 @@ async function deleteToken(options) {
   );
 }
 async function deleteAuthorization(options) {
-  const request2 = options.request || /* istanbul ignore next: we always pass a custom request in tests */
-  request;
+  const request2 = options.request || request;
   const auth5 = btoa(`${options.clientId}:${options.clientSecret}`);
   return request2(
     "DELETE /applications/{client_id}/grant",
@@ -41962,7 +41954,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION6 = "7.1.4";
+var VERSION6 = "7.1.5";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
