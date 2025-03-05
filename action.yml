@@ -37,6 +37,48 @@ inputs:
   github-api-url:
     description: The URL of the GitHub REST API.
     default: ${{ github.api_url }}
+  # <START GENERATED PERMISSIONS INPUTS>
+  permission-metadata:
+    description: "Can be set to 'read'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#metadata"
+  permission-actions:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#actions"
+  permission-administration:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#administration"
+  permission-organization-user-blocking:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#organization-user-blocking"
+  permission-checks:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#checks"
+  permission-security-events:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#code-scanning-alerts"
+  permission-statuses:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#commit-statuses"
+  permission-contents:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#contents"
+  permission-vulnerability-alerts:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#dependabot-alerts"
+  permission-deployments:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#deployments"
+  permission-issues:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#issues"
+  permission-members:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#members"
+  permission-organization-administration:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#organization-administration"
+  permission-organization-projects:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#organization-projects"
+  permission-pages:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#pages"
+  permission-pull-requests:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#pull-requests"
+  permission-repository-projects:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#repository-projects"
+  permission-secrets:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#secrets"
+  permission-single-file:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#single-file"
+  permission-team-discussions:
+    description: "Can be set to 'read' or 'write'. Learn more at https://docs.github.com/en/free-pro-team@latest/rest/reference/permissions-required-for-github-apps/#team-discussions"
+  # <END GENERATED PERMISSIONS INPUTS>
 outputs:
   token:
     description: "GitHub installation access token"
