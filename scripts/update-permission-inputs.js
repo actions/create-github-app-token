@@ -16,9 +16,10 @@ await writeFile(
 const permissionsInputs = Object.entries(appPermissionsSchema.properties)
   .sort((a, b) => a[0].localeCompare(b[0]))
   .reduce((result, [key, value]) => {
-    const description = `Can be set to: ${value.enum
-      .map((permission) => `'${permission}'`)
-      .join(", ")}. ${value.description}`;
+    const formatter = new Intl.ListFormat('en', { style: 'long', type: 'disjunction' });
+    const permissionAccessValues = formatter.format(value.enum.map(p => `'${p}'`));
+
+    const description = `Can be set to ${permissionAccessValues}. ${value.description}`;
     return `${result}
   permission-${key.replace(/_/g, "-")}:
     description: "${description}"`;
