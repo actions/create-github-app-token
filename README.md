@@ -86,7 +86,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
       - id: committer
         run: echo "string=${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
-      - run: echo "committer string is ${ {steps.committer.outputs.string }}"
+      - run: echo "committer string is ${{ steps.committer.outputs.string }}"
 ```
 
 ### Configure git CLI for an app's bot user
@@ -111,7 +111,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
       - run: |
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
-          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
       # git commands like commit work using the bot user
       - run: |
           git add .
@@ -163,7 +163,9 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: "repo1,repo2"
+          repositories: |
+            repo1
+            repo2
       - uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -302,7 +304,7 @@ steps:
 
 ### `repositories`
 
-**Optional:** Comma-separated list of repositories to grant access to.
+**Optional:** Comma or newline-separated list of repositories to grant access to.
 
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
