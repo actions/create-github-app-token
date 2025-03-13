@@ -24,7 +24,7 @@ const permissionsInputs = Object.entries(appPermissionsSchema.properties)
       value.enum.map((p) => `'${p}'`)
     );
 
-    const description = `Can be set to ${permissionAccessValues}. ${value.description}`;
+    const description = `${value.description} Can be set to ${permissionAccessValues}.`;
     return `${result}
   permission-${key.replace(/_/g, "-")}:
     description: "${description}"`;
