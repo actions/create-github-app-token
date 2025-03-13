@@ -9,7 +9,7 @@ const appPermissionsSchema =
 
 await writeFile(
   `scripts/generated/app-permissions.json`,
-  JSON.stringify(appPermissionsSchema, null, 2),
+  JSON.stringify(appPermissionsSchema, null, 2) + "\n",
   "utf8",
 );
 
