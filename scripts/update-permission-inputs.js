@@ -1,36 +1,28 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-import { request } from "@octokit/request";
+import OctokitOpenapi from "@octokit/openapi";
 
-const { data: permissionsSchemaString } = await request(
-  "GET /repos/{owner}/{repo}/contents/{path}",
-  {
-    owner: "octokit",
-    repo: "app-permissions",
-    path: "generated/api.github.com.json",
-    mediaType: {
-      format: "raw",
-    },
-    headers: {
-      authorization: `token ${process.env.GITHUB_TOKEN}`,
-    },
-  },
+const appPermissionsSchema =
+  OctokitOpenapi.schemas["api.github.com"].components.schemas[
+    "app-permissions"
+  ];
+
+await writeFile(
+  `scripts/generated/app-permissions.json`,
+  JSON.stringify(appPermissionsSchema, null, 2),
+  "utf8",
 );
 
-const permissionsSchema = JSON.parse(permissionsSchemaString);
-
-const permissionsInputs = Object.entries(permissionsSchema.permissions).reduce(
-  (result, [key, value]) => {
-    const supportsWrite = value.write.length > 0;
-    const description = supportsWrite
-      ? `Can be set to 'read' or 'write'. Learn more at ${value.url}`
-      : `Can be set to 'read'. Learn more at ${value.url}`;
+const permissionsInputs = Object.entries(appPermissionsSchema.properties)
+  .sort((a, b) => a[0].localeCompare(b[0]))
+  .reduce((result, [key, value]) => {
+    const description = `Can be set to: ${value.enum
+      .map((permission) => `'${permission}'`)
+      .join(", ")}. ${value.description}`;
     return `${result}
   permission-${key.replace(/_/g, "-")}:
     description: "${description}"`;
-  },
-  "",
-);
+  }, "");
 
 const actionsYamlContent = await readFile("action.yml", "utf8");
 
