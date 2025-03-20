@@ -25,14 +25,41 @@ if (!privateKey) {
   throw new Error("Input required and not supplied: private-key");
 }
 const owner = core.getInput("owner");
-const repositories = core.getInput("repositories")
+const repositories = core
+  .getInput("repositories")
   .split(/[\n,]+/)
-  .map(s => s.trim())
-  .filter(x => x !== '');
+  .map((s) => s.trim())
+  .filter((x) => x !== "");
 
 const skipTokenRevoke = Boolean(
-  core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke")
+  core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke"),
 );
+
+// TODO: get all permissions from inputs. Find all environment variables with `INPUT_PERMISSION_` prefix
+//       and parse them into an object: {[permission_name]: [permission_access]}
+//       e.g.
+//
+//         with:
+//           permission-organization-administration: write
+//
+//       will set the environment variable
+//
+//       ` INPUT_PERMISSION_ORGANIZATION_ADMINISTRATION=write`
+//
+// ``    which should be parsed into this permissions object
+//
+//         { "organization-administration": "write" }`
+//
+//        Ideally we verify all permission variables and their values, and log a warning if one is unknown.
+//        This should be a follow up issue though.
+//
+//       Code could look something like this
+//
+//         const permissions = getPermissionsFromInputs(process.env)
+//
+//       Where permissions is either undefined (unlimited) or a `Record<string, string>`. We should pass it after `repositories` to `main()`
+//
+// @see https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions#inputs
 
 main(
   appId,
@@ -42,7 +69,7 @@ main(
   core,
   createAppAuth,
   request,
-  skipTokenRevoke
+  skipTokenRevoke,
 ).catch((error) => {
   /* c8 ignore next 3 */
   console.error(error);
