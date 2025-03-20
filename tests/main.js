@@ -60,11 +60,15 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;
   const currentRepoName = env.GITHUB_REPOSITORY.split("/")[1];
   const repo = encodeURIComponent(
-    (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0]
+    (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0],
   );
+
+  const getInstallationPath = `${basePath}/repos/${owner}/${repo}/installation`;
+  console.log(`\nGET ${getInstallationPath}\n`);
+
   mockPool
     .intercept({
-      path: `${basePath}/repos/${owner}/${repo}/installation`,
+      path: getInstallationPath,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -75,27 +79,39 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     .reply(
       200,
       { id: mockInstallationId, app_slug: mockAppSlug },
-      { headers: { "content-type": "application/json" } }
+      { headers: { "content-type": "application/json" } },
     );
 
   // Mock installation access token request
   const mockInstallationAccessToken =
     "ghs_16C7e42F292c6912E7710c838347Ae178B4a"; // This token is invalidated. It’s from https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app.
   const mockExpiresAt = "2016-07-11T22:14:10Z";
+  const createInstallationAccessTokenPath = `${basePath}/app/installations/${mockInstallationId}/access_tokens`;
   mockPool
     .intercept({
-      path: `${basePath}/app/installations/${mockInstallationId}/access_tokens`,
+      path: createInstallationAccessTokenPath,
       method: "POST",
       headers: {
         accept: "application/vnd.github.v3+json",
         "user-agent": "actions/create-github-app-token",
         // Note: Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
       },
+      // log out payload for output snapshot testing
+      body(payload) {
+        console.log(
+          `\nPOST ${createInstallationAccessTokenPath}\n${JSON.stringify(
+            payload,
+            null,
+            2,
+          )}\n`,
+        );
+        return true;
+      },
     })
     .reply(
       201,
       { token: mockInstallationAccessToken, expires_at: mockExpiresAt },
-      { headers: { "content-type": "application/json" } }
+      { headers: { "content-type": "application/json" } },
     );
 
   // Run the callback
