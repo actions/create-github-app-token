@@ -65,10 +65,13 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   const getInstallationPath = `${basePath}/repos/${owner}/${repo}/installation`;
 
+  const logGetInstallationRequest = once((pathString) =>
+    console.log(`\nGET ${pathString}\n`),
+  );
   mockPool
     .intercept({
       path(pathString) {
-        console.log(`\nGET ${pathString}\n`);
+        logGetInstallationRequest(pathString);
         return pathString === getInstallationPath;
       },
       method: "GET",
@@ -89,6 +92,9 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     "ghs_16C7e42F292c6912E7710c838347Ae178B4a"; // This token is invalidated. It’s from https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app.
   const mockExpiresAt = "2016-07-11T22:14:10Z";
   const createInstallationAccessTokenPath = `${basePath}/app/installations/${mockInstallationId}/access_tokens`;
+  const logCreateInstallationAccessTokenRequest = once((path, payload) => {
+    console.log(`\nPOST ${path}\n${JSON.stringify(payload, null, 2)}\n`);
+  });
   mockPool
     .intercept({
       path: createInstallationAccessTokenPath,
@@ -100,12 +106,9 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
       },
       // log out payload for output snapshot testing
       body(payload) {
-        console.log(
-          `\nPOST ${createInstallationAccessTokenPath}\n${JSON.stringify(
-            payload,
-            null,
-            2,
-          )}\n`,
+        logCreateInstallationAccessTokenRequest(
+          createInstallationAccessTokenPath,
+          payload,
         );
         return true;
       },
@@ -121,4 +124,19 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   // Run the main script
   await import("../main.js");
+}
+
+/**
+ * Undici seems to invoke the `path()` and `body()` callbacks twice,
+ * which results in us logging the requests twice. This helper ensures
+ * we only log the request once.
+ */
+export function once(fn) {
+  let called = false;
+  return (...args) => {
+    if (!called) {
+      called = true;
+      return fn(...args);
+    }
+  };
 }
