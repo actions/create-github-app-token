@@ -5255,6 +5255,13 @@ var require_body = __commonJS({
     var { isUint8Array, isArrayBuffer } = require("util/types");
     var { File: UndiciFile } = require_file();
     var { parseMIMEType, serializeAMimeType } = require_dataURL();
+    var random;
+    try {
+      const crypto = require("node:crypto");
+      random = (max) => crypto.randomInt(0, max);
+    } catch {
+      random = (max) => Math.floor(Math.random(max));
+    }
     var ReadableStream2 = globalThis.ReadableStream;
     var File = NativeFile ?? UndiciFile;
     var textEncoder = new TextEncoder();
@@ -5297,7 +5304,7 @@ var require_body = __commonJS({
       } else if (ArrayBuffer.isView(object)) {
         source = new Uint8Array(object.buffer.slice(object.byteOffset, object.byteOffset + object.byteLength));
       } else if (util.isFormDataLike(object)) {
-        const boundary = `----formdata-undici-0${`${Math.floor(Math.random() * 1e11)}`.padStart(11, "0")}`;
+        const boundary = `----formdata-undici-0${`${random(1e11)}`.padStart(11, "0")}`;
         const prefix = `--${boundary}\r
 Content-Disposition: form-data`;
         const escape = (str) => str.replace(/\n/g, "%0A").replace(/\r/g, "%0D").replace(/"/g, "%22");
@@ -8853,6 +8860,14 @@ var require_pool = __commonJS({
         this[kOptions] = { ...util.deepClone(options), connect, allowH2 };
         this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kFactory] = factory;
+        this.on("connectionError", (origin2, targets, error) => {
+          for (const target of targets) {
+            const idx = this[kClients].indexOf(target);
+            if (idx !== -1) {
+              this[kClients].splice(idx, 1);
+            }
+          }
+        });
       }
       [kGetDispatcher]() {
         let dispatcher = this[kClients].find((dispatcher2) => !dispatcher2[kNeedDrain]);
@@ -11523,6 +11538,7 @@ var require_headers = __commonJS({
       isValidHeaderName,
       isValidHeaderValue
     } = require_util2();
+    var util = require("util");
     var { webidl } = require_webidl();
     var assert = require("assert");
     var kHeadersMap = Symbol("headers map");
@@ -11874,6 +11890,9 @@ var require_headers = __commonJS({
       [Symbol.toStringTag]: {
         value: "Headers",
         configurable: true
+      },
+      [util.inspect.custom]: {
+        enumerable: false
       }
     });
     webidl.converters.HeadersInit = function(V) {
@@ -15463,8 +15482,6 @@ var require_constants4 = __commonJS({
 var require_util6 = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/cookies/util.js"(exports2, module2) {
     "use strict";
-    var assert = require("assert");
-    var { kHeadersList } = require_symbols();
     function isCTLExcludingHtab(value) {
       if (value.length === 0) {
         return false;
@@ -15595,25 +15612,13 @@ var require_util6 = __commonJS({
       }
       return out.join("; ");
     }
-    var kHeadersListNode;
-    function getHeadersList(headers) {
-      if (headers[kHeadersList]) {
-        return headers[kHeadersList];
-      }
-      if (!kHeadersListNode) {
-        kHeadersListNode = Object.getOwnPropertySymbols(headers).find(
-          (symbol) => symbol.description === "headers list"
-        );
-        assert(kHeadersListNode, "Headers cannot be parsed");
-      }
-      const headersList = headers[kHeadersListNode];
-      assert(headersList);
-      return headersList;
-    }
     module2.exports = {
       isCTLExcludingHtab,
-      stringify,
-      getHeadersList
+      validateCookieName,
+      validateCookiePath,
+      validateCookieValue,
+      toIMFDate,
+      stringify
     };
   }
 });
@@ -15763,7 +15768,7 @@ var require_cookies = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/cookies/index.js"(exports2, module2) {
     "use strict";
     var { parseSetCookie } = require_parse();
-    var { stringify, getHeadersList } = require_util6();
+    var { stringify } = require_util6();
     var { webidl } = require_webidl();
     var { Headers } = require_headers();
     function getCookies(headers) {
@@ -15795,11 +15800,11 @@ var require_cookies = __commonJS({
     function getSetCookies(headers) {
       webidl.argumentLengthCheck(arguments, 1, { header: "getSetCookies" });
       webidl.brandCheck(headers, Headers, { strict: false });
-      const cookies = getHeadersList(headers).cookies;
+      const cookies = headers.getSetCookie();
       if (!cookies) {
         return [];
       }
-      return cookies.map((pair) => parseSetCookie(Array.isArray(pair) ? pair[1] : pair));
+      return cookies.map((pair) => parseSetCookie(pair));
     }
     function setCookie(headers, cookie) {
       webidl.argumentLengthCheck(arguments, 2, { header: "setCookie" });
@@ -27521,7 +27526,7 @@ var require_client2 = __commonJS({
             allowH2,
             socketPath,
             timeout: connectTimeout,
-            ...autoSelectFamily ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
+            ...typeof autoSelectFamily === "boolean" ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
             ...connect2
           });
         }
@@ -28157,7 +28162,7 @@ var require_pool2 = __commonJS({
             allowH2,
             socketPath,
             timeout: connectTimeout,
-            ...autoSelectFamily ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
+            ...typeof autoSelectFamily === "boolean" ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
             ...connect
           });
         }
@@ -28166,6 +28171,14 @@ var require_pool2 = __commonJS({
         this[kOptions] = { ...util.deepClone(options), connect, allowH2 };
         this[kOptions].interceptors = options.interceptors ? { ...options.interceptors } : void 0;
         this[kFactory] = factory;
+        this.on("connectionError", (origin2, targets, error) => {
+          for (const target of targets) {
+            const idx = this[kClients].indexOf(target);
+            if (idx !== -1) {
+              this[kClients].splice(idx, 1);
+            }
+          }
+        });
       }
       [kGetDispatcher]() {
         for (const client of this[kClients]) {
@@ -28713,8 +28726,8 @@ var require_retry_handler = __commonJS({
       wrapRequestBody
     } = require_util8();
     function calculateRetryAfterHeader(retryAfter) {
-      const current = Date.now();
-      return new Date(retryAfter).getTime() - current;
+      const retryTime = new Date(retryAfter).getTime();
+      return isNaN(retryTime) ? 0 : retryTime - Date.now();
     }
     var RetryHandler = class _RetryHandler {
       constructor(opts, { dispatch, handler }) {
@@ -28808,7 +28821,7 @@ var require_retry_handler = __commonJS({
         let retryAfterHeader = headers?.["retry-after"];
         if (retryAfterHeader) {
           retryAfterHeader = Number(retryAfterHeader);
-          retryAfterHeader = Number.isNaN(retryAfterHeader) ? calculateRetryAfterHeader(retryAfterHeader) : retryAfterHeader * 1e3;
+          retryAfterHeader = Number.isNaN(retryAfterHeader) ? calculateRetryAfterHeader(headers["retry-after"]) : retryAfterHeader * 1e3;
         }
         const retryTimeout = retryAfterHeader > 0 ? Math.min(retryAfterHeader, maxTimeout) : Math.min(minTimeout * timeoutFactor ** (counter - 1), maxTimeout);
         setTimeout(() => cb(null), retryTimeout);
@@ -30225,7 +30238,12 @@ var require_mock_symbols2 = __commonJS({
       kNetConnect: Symbol("net connect"),
       kGetNetConnect: Symbol("get net connect"),
       kConnected: Symbol("connected"),
-      kIgnoreTrailingSlash: Symbol("ignore trailing slash")
+      kIgnoreTrailingSlash: Symbol("ignore trailing slash"),
+      kMockAgentMockCallHistoryInstance: Symbol("mock agent mock call history name"),
+      kMockAgentRegisterCallHistory: Symbol("mock agent register mock call history"),
+      kMockAgentAddCallHistoryLog: Symbol("mock agent add call history log"),
+      kMockAgentIsCallHistoryEnabled: Symbol("mock agent is call history enabled"),
+      kMockCallHistoryAddLog: Symbol("mock call history add log")
     };
   }
 });
@@ -30249,6 +30267,7 @@ var require_mock_utils2 = __commonJS({
         isPromise
       }
     } = require("node:util");
+    var { InvalidArgumentError } = require_errors2();
     function matchValue(match, value) {
       if (typeof match === "string") {
         return match === value;
@@ -30514,9 +30533,12 @@ var require_mock_utils2 = __commonJS({
       }
       return false;
     }
-    function buildMockOptions(opts) {
+    function buildAndValidateMockOptions(opts) {
       if (opts) {
         const { agent, ...mockOptions } = opts;
+        if ("enableCallHistory" in mockOptions && typeof mockOptions.enableCallHistory !== "boolean") {
+          throw new InvalidArgumentError("options.enableCallHistory must to be a boolean");
+        }
         return mockOptions;
       }
     }
@@ -30533,7 +30555,7 @@ var require_mock_utils2 = __commonJS({
       mockDispatch,
       buildMockDispatch,
       checkNetConnect,
-      buildMockOptions,
+      buildAndValidateMockOptions,
       getHeaderByName,
       buildHeadersFromArray
     };
@@ -30762,6 +30784,206 @@ var require_mock_client2 = __commonJS({
   }
 });
 
+// node_modules/undici/lib/mock/mock-call-history.js
+var require_mock_call_history = __commonJS({
+  "node_modules/undici/lib/mock/mock-call-history.js"(exports2, module2) {
+    "use strict";
+    var { kMockCallHistoryAddLog } = require_mock_symbols2();
+    var { InvalidArgumentError } = require_errors2();
+    function handleFilterCallsWithOptions(criteria, options, handler, store) {
+      switch (options.operator) {
+        case "OR":
+          store.push(...handler(criteria));
+          return store;
+        case "AND":
+          return handler.call({ logs: store }, criteria);
+        default:
+          throw new InvalidArgumentError("options.operator must to be a case insensitive string equal to 'OR' or 'AND'");
+      }
+    }
+    function buildAndValidateFilterCallsOptions(options = {}) {
+      const finalOptions = {};
+      if ("operator" in options) {
+        if (typeof options.operator !== "string" || options.operator.toUpperCase() !== "OR" && options.operator.toUpperCase() !== "AND") {
+          throw new InvalidArgumentError("options.operator must to be a case insensitive string equal to 'OR' or 'AND'");
+        }
+        return {
+          ...finalOptions,
+          operator: options.operator.toUpperCase()
+        };
+      }
+      return finalOptions;
+    }
+    function makeFilterCalls(parameterName) {
+      return (parameterValue) => {
+        if (typeof parameterValue === "string" || parameterValue == null) {
+          return this.logs.filter((log) => {
+            return log[parameterName] === parameterValue;
+          });
+        }
+        if (parameterValue instanceof RegExp) {
+          return this.logs.filter((log) => {
+            return parameterValue.test(log[parameterName]);
+          });
+        }
+        throw new InvalidArgumentError(`${parameterName} parameter should be one of string, regexp, undefined or null`);
+      };
+    }
+    function computeUrlWithMaybeSearchParameters(requestInit) {
+      try {
+        const url = new URL(requestInit.path, requestInit.origin);
+        if (url.search.length !== 0) {
+          return url;
+        }
+        url.search = new URLSearchParams(requestInit.query).toString();
+        return url;
+      } catch (error) {
+        throw new InvalidArgumentError("An error occurred when computing MockCallHistoryLog.url", { cause: error });
+      }
+    }
+    var MockCallHistoryLog = class {
+      constructor(requestInit = {}) {
+        this.body = requestInit.body;
+        this.headers = requestInit.headers;
+        this.method = requestInit.method;
+        const url = computeUrlWithMaybeSearchParameters(requestInit);
+        this.fullUrl = url.toString();
+        this.origin = url.origin;
+        this.path = url.pathname;
+        this.searchParams = Object.fromEntries(url.searchParams);
+        this.protocol = url.protocol;
+        this.host = url.host;
+        this.port = url.port;
+        this.hash = url.hash;
+      }
+      toMap() {
+        return /* @__PURE__ */ new Map(
+          [
+            ["protocol", this.protocol],
+            ["host", this.host],
+            ["port", this.port],
+            ["origin", this.origin],
+            ["path", this.path],
+            ["hash", this.hash],
+            ["searchParams", this.searchParams],
+            ["fullUrl", this.fullUrl],
+            ["method", this.method],
+            ["body", this.body],
+            ["headers", this.headers]
+          ]
+        );
+      }
+      toString() {
+        const options = { betweenKeyValueSeparator: "->", betweenPairSeparator: "|" };
+        let result = "";
+        this.toMap().forEach((value, key) => {
+          if (typeof value === "string" || value === void 0 || value === null) {
+            result = `${result}${key}${options.betweenKeyValueSeparator}${value}${options.betweenPairSeparator}`;
+          }
+          if (typeof value === "object" && value !== null || Array.isArray(value)) {
+            result = `${result}${key}${options.betweenKeyValueSeparator}${JSON.stringify(value)}${options.betweenPairSeparator}`;
+          }
+        });
+        return result.slice(0, -1);
+      }
+    };
+    var MockCallHistory = class {
+      logs = [];
+      calls() {
+        return this.logs;
+      }
+      firstCall() {
+        return this.logs.at(0);
+      }
+      lastCall() {
+        return this.logs.at(-1);
+      }
+      nthCall(number) {
+        if (typeof number !== "number") {
+          throw new InvalidArgumentError("nthCall must be called with a number");
+        }
+        if (!Number.isInteger(number)) {
+          throw new InvalidArgumentError("nthCall must be called with an integer");
+        }
+        if (Math.sign(number) !== 1) {
+          throw new InvalidArgumentError("nthCall must be called with a positive value. use firstCall or lastCall instead");
+        }
+        return this.logs.at(number - 1);
+      }
+      filterCalls(criteria, options) {
+        if (this.logs.length === 0) {
+          return this.logs;
+        }
+        if (typeof criteria === "function") {
+          return this.logs.filter(criteria);
+        }
+        if (criteria instanceof RegExp) {
+          return this.logs.filter((log) => {
+            return criteria.test(log.toString());
+          });
+        }
+        if (typeof criteria === "object" && criteria !== null) {
+          if (Object.keys(criteria).length === 0) {
+            return this.logs;
+          }
+          const finalOptions = { operator: "OR", ...buildAndValidateFilterCallsOptions(options) };
+          let maybeDuplicatedLogsFiltered = [];
+          if ("protocol" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.protocol, finalOptions, this.filterCallsByProtocol, maybeDuplicatedLogsFiltered);
+          }
+          if ("host" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.host, finalOptions, this.filterCallsByHost, maybeDuplicatedLogsFiltered);
+          }
+          if ("port" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.port, finalOptions, this.filterCallsByPort, maybeDuplicatedLogsFiltered);
+          }
+          if ("origin" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.origin, finalOptions, this.filterCallsByOrigin, maybeDuplicatedLogsFiltered);
+          }
+          if ("path" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.path, finalOptions, this.filterCallsByPath, maybeDuplicatedLogsFiltered);
+          }
+          if ("hash" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.hash, finalOptions, this.filterCallsByHash, maybeDuplicatedLogsFiltered);
+          }
+          if ("fullUrl" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.fullUrl, finalOptions, this.filterCallsByFullUrl, maybeDuplicatedLogsFiltered);
+          }
+          if ("method" in criteria) {
+            maybeDuplicatedLogsFiltered = handleFilterCallsWithOptions(criteria.method, finalOptions, this.filterCallsByMethod, maybeDuplicatedLogsFiltered);
+          }
+          const uniqLogsFiltered = [...new Set(maybeDuplicatedLogsFiltered)];
+          return uniqLogsFiltered;
+        }
+        throw new InvalidArgumentError("criteria parameter should be one of function, regexp, or object");
+      }
+      filterCallsByProtocol = makeFilterCalls.call(this, "protocol");
+      filterCallsByHost = makeFilterCalls.call(this, "host");
+      filterCallsByPort = makeFilterCalls.call(this, "port");
+      filterCallsByOrigin = makeFilterCalls.call(this, "origin");
+      filterCallsByPath = makeFilterCalls.call(this, "path");
+      filterCallsByHash = makeFilterCalls.call(this, "hash");
+      filterCallsByFullUrl = makeFilterCalls.call(this, "fullUrl");
+      filterCallsByMethod = makeFilterCalls.call(this, "method");
+      clear() {
+        this.logs = [];
+      }
+      [kMockCallHistoryAddLog](requestInit) {
+        const log = new MockCallHistoryLog(requestInit);
+        this.logs.push(log);
+        return log;
+      }
+      *[Symbol.iterator]() {
+        for (const log of this.calls()) {
+          yield log;
+        }
+      }
+    };
+    module2.exports.MockCallHistory = MockCallHistory;
+    module2.exports.MockCallHistoryLog = MockCallHistoryLog;
+  }
+});
+
 // node_modules/undici/lib/mock/mock-pool.js
 var require_mock_pool2 = __commonJS({
   "node_modules/undici/lib/mock/mock-pool.js"(exports2, module2) {
@@ -30876,26 +31098,37 @@ var require_mock_agent2 = __commonJS({
       kNetConnect,
       kGetNetConnect,
       kOptions,
-      kFactory
+      kFactory,
+      kMockAgentRegisterCallHistory,
+      kMockAgentIsCallHistoryEnabled,
+      kMockAgentAddCallHistoryLog,
+      kMockAgentMockCallHistoryInstance,
+      kMockCallHistoryAddLog
     } = require_mock_symbols2();
     var MockClient = require_mock_client2();
     var MockPool = require_mock_pool2();
-    var { matchValue, buildMockOptions } = require_mock_utils2();
+    var { matchValue, buildAndValidateMockOptions } = require_mock_utils2();
     var { InvalidArgumentError, UndiciError } = require_errors2();
     var Dispatcher = require_dispatcher2();
     var PendingInterceptorsFormatter = require_pending_interceptors_formatter2();
+    var { MockCallHistory } = require_mock_call_history();
     var MockAgent = class extends Dispatcher {
       constructor(opts) {
         super(opts);
+        const mockOptions = buildAndValidateMockOptions(opts);
         this[kNetConnect] = true;
         this[kIsMockActive] = true;
+        this[kMockAgentIsCallHistoryEnabled] = mockOptions?.enableCallHistory ?? false;
         if (opts?.agent && typeof opts.agent.dispatch !== "function") {
           throw new InvalidArgumentError("Argument opts.agent must implement Agent");
         }
         const agent = opts?.agent ? opts.agent : new Agent(opts);
         this[kAgent] = agent;
         this[kClients] = agent[kClients];
-        this[kOptions] = buildMockOptions(opts);
+        this[kOptions] = mockOptions;
+        if (this[kMockAgentIsCallHistoryEnabled]) {
+          this[kMockAgentRegisterCallHistory]();
+        }
       }
       get(origin) {
         let dispatcher = this[kMockAgentGet](origin);
@@ -30907,9 +31140,11 @@ var require_mock_agent2 = __commonJS({
       }
       dispatch(opts, handler) {
         this.get(opts.origin);
+        this[kMockAgentAddCallHistoryLog](opts);
         return this[kAgent].dispatch(opts, handler);
       }
       async close() {
+        this.clearCallHistory();
         await this[kAgent].close();
         this[kClients].clear();
       }
@@ -30935,10 +31170,37 @@ var require_mock_agent2 = __commonJS({
       disableNetConnect() {
         this[kNetConnect] = false;
       }
+      enableCallHistory() {
+        this[kMockAgentIsCallHistoryEnabled] = true;
+        return this;
+      }
+      disableCallHistory() {
+        this[kMockAgentIsCallHistoryEnabled] = false;
+        return this;
+      }
+      getCallHistory() {
+        return this[kMockAgentMockCallHistoryInstance];
+      }
+      clearCallHistory() {
+        if (this[kMockAgentMockCallHistoryInstance] !== void 0) {
+          this[kMockAgentMockCallHistoryInstance].clear();
+        }
+      }
       // This is required to bypass issues caused by using global symbols - see:
       // https://github.com/nodejs/undici/issues/1447
       get isMockActive() {
         return this[kIsMockActive];
+      }
+      [kMockAgentRegisterCallHistory]() {
+        if (this[kMockAgentMockCallHistoryInstance] === void 0) {
+          this[kMockAgentMockCallHistoryInstance] = new MockCallHistory();
+        }
+      }
+      [kMockAgentAddCallHistoryLog](opts) {
+        if (this[kMockAgentIsCallHistoryEnabled]) {
+          this[kMockAgentRegisterCallHistory]();
+          this[kMockAgentMockCallHistoryInstance][kMockCallHistoryAddLog](opts);
+        }
       }
       [kMockAgentSet](origin, dispatcher) {
         this[kClients].set(origin, dispatcher);
@@ -39802,6 +40064,7 @@ var require_undici2 = __commonJS({
     var api = require_api2();
     var buildConnector = require_connect2();
     var MockClient = require_mock_client2();
+    var { MockCallHistory, MockCallHistoryLog } = require_mock_call_history();
     var MockAgent = require_mock_agent2();
     var MockPool = require_mock_pool2();
     var mockErrors = require_mock_errors2();
@@ -39924,6 +40187,8 @@ var require_undici2 = __commonJS({
     module2.exports.connect = makeDispatcher(api.connect);
     module2.exports.upgrade = makeDispatcher(api.upgrade);
     module2.exports.MockClient = MockClient;
+    module2.exports.MockCallHistory = MockCallHistory;
+    module2.exports.MockCallHistoryLog = MockCallHistoryLog;
     module2.exports.MockPool = MockPool;
     module2.exports.MockAgent = MockAgent;
     module2.exports.mockErrors = mockErrors;
