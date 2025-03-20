@@ -337,7 +337,7 @@ steps:
 
 ### `permission-<permission name>`
 
-**Optional:** The permission level to grant to the token. By default, the token inherits all the installation's permissions. We recommend to explicitly list the permissions that are required for a use case. This follow's GitHub's own recommendation to [control permissions of `GITHUB_TOKEN` in workflows](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token). The documentation also lists all available permissions, just replace e.g. `pull-requests` with `permission-pull-requests`.
+**Optional:** The permissions to grant to the token. By default, the token inherits all of the installation's permissions. We recommend to explicitly list the permissions that are required for a use case. This follows GitHub's own recommendation to [control permissions of `GITHUB_TOKEN` in workflows](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token). The documentation also lists all available permissions, just replace e.g. `pull-requests` with `permission-pull-requests`.
 
 The reason we define one `permision-<permission name>` input per permission is to benefit from type intelligence and input validation built into GitHub's action runner.
 
