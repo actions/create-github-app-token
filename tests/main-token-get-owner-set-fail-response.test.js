@@ -1,4 +1,4 @@
-import { test } from "./main.js";
+import { test, getLogOnceOnPath } from "./main.js";
 
 // Verify retries work when getting a token for a user or organization fails on the first attempt.
 await test((mockPool) => {
@@ -10,7 +10,7 @@ await test((mockPool) => {
   const mockAppSlug = "github-actions";
   mockPool
     .intercept({
-      path: `/users/${process.env.INPUT_OWNER}/installation`,
+      path: getLogOnceOnPath(`/users/smockle/installation`),
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -21,7 +21,7 @@ await test((mockPool) => {
     .reply(500, "GitHub API not available");
   mockPool
     .intercept({
-      path: `/users/${process.env.INPUT_OWNER}/installation`,
+      path: getLogOnceOnPath(`/users/smockle/installation`),
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -32,6 +32,6 @@ await test((mockPool) => {
     .reply(
       200,
       { id: mockInstallationId, app_slug: mockAppSlug },
-      { headers: { "content-type": "application/json" } }
+      { headers: { "content-type": "application/json" } },
     );
 });

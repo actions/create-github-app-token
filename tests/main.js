@@ -63,17 +63,9 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0],
   );
 
-  const getInstallationPath = `${basePath}/repos/${owner}/${repo}/installation`;
-
-  const logGetInstallationRequest = once((pathString) =>
-    console.log(`\nGET ${pathString}\n`),
-  );
   mockPool
     .intercept({
-      path(pathString) {
-        logGetInstallationRequest(pathString);
-        return pathString === getInstallationPath;
-      },
+      path: getLogOnceOnPath(`${basePath}/repos/${owner}/${repo}/installation`),
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -93,7 +85,11 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const mockExpiresAt = "2016-07-11T22:14:10Z";
   const createInstallationAccessTokenPath = `${basePath}/app/installations/${mockInstallationId}/access_tokens`;
   const logCreateInstallationAccessTokenRequest = once((path, payload) => {
-    console.log(`\nPOST ${path}\n${JSON.stringify(payload, null, 2)}\n`);
+    console.log(
+      `\nPOST ${path}\n${
+        payload ? JSON.stringify(payload, null, 2) : "<no payload>"
+      }\n`,
+    );
   });
   mockPool
     .intercept({
@@ -138,5 +134,16 @@ export function once(fn) {
       called = true;
       return fn(...args);
     }
+  };
+}
+
+export function getLogOnceOnPath(expectedPath) {
+  const logOnce = once((path) => {
+    console.log(`\nGET ${path}\n`);
+  });
+
+  return (path) => {
+    logOnce(path);
+    return path === expectedPath;
   };
 }

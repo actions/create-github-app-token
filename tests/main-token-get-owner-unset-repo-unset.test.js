@@ -1,4 +1,4 @@
-import { test } from "./main.js";
+import { test, getLogOnceOnPath } from "./main.js";
 
 // Verify `main` successfully obtains a token when neither the `owner` nor `repositories` input is set.
 await test((mockPool) => {
@@ -10,7 +10,9 @@ await test((mockPool) => {
   const mockAppSlug = "github-actions";
   mockPool
     .intercept({
-      path: `/repos/${process.env.GITHUB_REPOSITORY}/installation`,
+      path: getLogOnceOnPath(
+        `/repos/${process.env.GITHUB_REPOSITORY}/installation`,
+      ),
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -20,7 +22,7 @@ await test((mockPool) => {
     })
     .reply(
       200,
-      { id: mockInstallationId, "app_slug": mockAppSlug },
-      { headers: { "content-type": "application/json" } }
+      { id: mockInstallationId, app_slug: mockAppSlug },
+      { headers: { "content-type": "application/json" } },
     );
 });
