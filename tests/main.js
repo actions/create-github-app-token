@@ -64,11 +64,13 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   );
 
   const getInstallationPath = `${basePath}/repos/${owner}/${repo}/installation`;
-  console.log(`\nGET ${getInstallationPath}\n`);
 
   mockPool
     .intercept({
-      path: getInstallationPath,
+      path(pathString) {
+        console.log(`\nGET ${pathString}\n`);
+        return pathString === getInstallationPath;
+      },
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
