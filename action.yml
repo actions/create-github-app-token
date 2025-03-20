@@ -7,11 +7,7 @@ branding:
 inputs:
   app-id:
     description: "GitHub App ID"
-    required: false # TODO: When 'app_id' is removed, make 'app-id' required
-  app_id:
-    description: "GitHub App ID"
-    required: false
-    deprecationMessage: "'app_id' is deprecated and will be removed in a future version. Use 'app-id' instead."
+    required: true
   private-key:
     description: "GitHub App private key"
     required: false # TODO: When 'private_key' is removed, make 'private-key' required
