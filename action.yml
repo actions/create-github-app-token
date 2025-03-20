@@ -10,11 +10,7 @@ inputs:
     required: true
   private-key:
     description: "GitHub App private key"
-    required: false # TODO: When 'private_key' is removed, make 'private-key' required
-  private_key:
-    description: "GitHub App private key"
-    required: false
-    deprecationMessage: "'private_key' is deprecated and will be removed in a future version. Use 'private-key' instead."
+    required: true
   owner:
     description: "The owner of the GitHub App installation (defaults to current repository owner)"
     required: false

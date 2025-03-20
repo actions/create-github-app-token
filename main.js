@@ -15,11 +15,7 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 }
 
 const appId = core.getInput("app-id");
-const privateKey = core.getInput("private-key") || core.getInput("private_key");
-if (!privateKey) {
-  // The 'private_key' input was previously required, but it and 'private-key' are both optional now, until the former is removed. Still, we want to ensure that at least one of them is set.
-  throw new Error("Input required and not supplied: private-key");
-}
+const privateKey = core.getInput("private-key")
 const owner = core.getInput("owner");
 const repositories = core.getInput("repositories")
   .split(/[\n,]+/)
