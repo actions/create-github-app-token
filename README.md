@@ -376,6 +376,10 @@ The action creates an installation access token using [the `POST /app/installati
 > [!NOTE]
 > Installation permissions can differ from the app's permissions they belong to. Installation permissions are set when an app is installed on an account. When the app adds more permissions after the installation, an account administrator will have to approve the new permissions before they are set on the installation.
 
+## Contributing
+
+[CONTRIBUTING.md](CONTRIBUTING.md)
+
 ## License
 
 [MIT](LICENSE)

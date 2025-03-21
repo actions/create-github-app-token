@@ -55,7 +55,7 @@ function getPermissionsFromInputs(env) {
 
 const permissions = getPermissionsFromInputs(process.env);
 
-main(
+export default main(
   appId,
   privateKey,
   owner,

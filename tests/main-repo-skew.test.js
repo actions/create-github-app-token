@@ -1,4 +1,4 @@
-import { test, getLogOnceOnPath } from "./main.js";
+import { test } from "./main.js";
 
 import { install } from "@sinonjs/fake-timers";
 
@@ -15,7 +15,7 @@ await test((mockPool) => {
 
   mockPool
     .intercept({
-      path: getLogOnceOnPath(`/repos/${owner}/${repo}/installation`),
+      path: `/repos/${owner}/${repo}/installation`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",

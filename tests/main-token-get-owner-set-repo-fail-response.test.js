@@ -1,4 +1,4 @@
-import { test, getLogOnceOnPath } from "./main.js";
+import { test } from "./main.js";
 
 // Verify `main` retry when  the GitHub API returns a 500 error.
 await test((mockPool) => {
@@ -11,7 +11,7 @@ await test((mockPool) => {
 
   mockPool
     .intercept({
-      path: getLogOnceOnPath(`/repos/${owner}/${repo}/installation`),
+      path: `/repos/${owner}/${repo}/installation`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -23,7 +23,7 @@ await test((mockPool) => {
 
   mockPool
     .intercept({
-      path: getLogOnceOnPath(`/repos/${owner}/${repo}/installation`),
+      path: `/repos/${owner}/${repo}/installation`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
