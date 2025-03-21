@@ -5,6 +5,7 @@ import { createAppAuth } from "@octokit/auth-app";
 
 import { main } from "./lib/main.js";
 import request from "./lib/request.js";
+import { getPermissionsFromInputs } from "./lib/get-permissions-from-inputs.js";
 
 if (!process.env.GITHUB_REPOSITORY) {
   throw new Error("GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'");
@@ -34,24 +35,6 @@ const repositories = core
 const skipTokenRevoke = Boolean(
   core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke"),
 );
-
-// @see https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions#inputs
-function getPermissionsFromInputs(env) {
-  return Object.entries(env).reduce((permissions, [key, value]) => {
-    if (!key.startsWith("INPUT_PERMISSION_")) return permissions;
-
-    const permission = key.slice("INPUT_PERMISSION_".length).toLowerCase();
-    if (permissions === undefined) {
-      return { [permission]: value };
-    }
-
-    return {
-      // @ts-expect-error - needs to be typed correctly
-      ...permissions,
-      [permission]: value,
-    };
-  }, undefined);
-}
 
 const permissions = getPermissionsFromInputs(process.env);
 
