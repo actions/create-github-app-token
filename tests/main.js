@@ -105,11 +105,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   // Run the main script
   const { default: promise } = await import("../main.js");
-  try {
-    await promise;
-  } catch (errer) {
-    throw error;
-  }
+  await promise;
 
   console.log("--- REQUESTS ---");
   const calls = mockAgent
