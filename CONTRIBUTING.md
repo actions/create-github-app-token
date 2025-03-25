@@ -2,7 +2,7 @@
 
 Initial setup
 
-```
+```console
 npm install
 ```
 
