@@ -8,7 +8,7 @@ npm install
 
 Run tests locally
 
-```
+```console
 npm test
 ```
 
