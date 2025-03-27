@@ -28,6 +28,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS({
@@ -40431,6 +40432,11 @@ var require_undici2 = __commonJS({
 });
 
 // main.js
+var main_exports = {};
+__export(main_exports, {
+  default: () => main_default
+});
+module.exports = __toCommonJS(main_exports);
 var import_core2 = __toESM(require_core(), 1);
 
 // node_modules/universal-user-agent/index.js
@@ -41890,19 +41896,19 @@ async function get(cache, options) {
     permissionsString,
     singleFileName
   ] = result.split("|");
-  const permissions = options.permissions || permissionsString.split(/,/).reduce((permissions2, string) => {
+  const permissions2 = options.permissions || permissionsString.split(/,/).reduce((permissions22, string) => {
     if (/!$/.test(string)) {
-      permissions2[string.slice(0, -1)] = "write";
+      permissions22[string.slice(0, -1)] = "write";
     } else {
-      permissions2[string] = "read";
+      permissions22[string] = "read";
     }
-    return permissions2;
+    return permissions22;
   }, {});
   return {
     token,
     createdAt,
     expiresAt,
-    permissions,
+    permissions: permissions2,
     repositoryIds: options.repositoryIds,
     repositoryNames: options.repositoryNames,
     singleFileName,
@@ -41926,11 +41932,11 @@ async function set(cache, options, data) {
 }
 function optionsToCacheKey({
   installationId,
-  permissions = {},
+  permissions: permissions2 = {},
   repositoryIds = [],
   repositoryNames = []
 }) {
-  const permissionsString = Object.keys(permissions).sort().map((name) => permissions[name] === "read" ? name : `${name}!`).join(",");
+  const permissionsString = Object.keys(permissions2).sort().map((name) => permissions2[name] === "read" ? name : `${name}!`).join(",");
   const repositoryIdsString = repositoryIds.sort().join(",");
   const repositoryNamesString = repositoryNames.join(",");
   return [
@@ -41946,7 +41952,7 @@ function toTokenAuthentication({
   createdAt,
   expiresAt,
   repositorySelection,
-  permissions,
+  permissions: permissions2,
   repositoryIds,
   repositoryNames,
   singleFileName
@@ -41957,7 +41963,7 @@ function toTokenAuthentication({
       tokenType: "installation",
       token,
       installationId,
-      permissions,
+      permissions: permissions2,
       createdAt,
       expiresAt,
       repositorySelection
@@ -41995,7 +42001,7 @@ async function getInstallationAuthentication(state, options, customRequest) {
         token: token2,
         createdAt: createdAt2,
         expiresAt: expiresAt2,
-        permissions: permissions2,
+        permissions: permissions22,
         repositoryIds: repositoryIds2,
         repositoryNames: repositoryNames2,
         singleFileName: singleFileName2,
@@ -42006,7 +42012,7 @@ async function getInstallationAuthentication(state, options, customRequest) {
         token: token2,
         createdAt: createdAt2,
         expiresAt: expiresAt2,
-        permissions: permissions2,
+        permissions: permissions22,
         repositorySelection: repositorySelection2,
         repositoryIds: repositoryIds2,
         repositoryNames: repositoryNames2,
@@ -42049,7 +42055,7 @@ async function getInstallationAuthentication(state, options, customRequest) {
     "POST /app/installations/{installation_id}/access_tokens",
     payload
   );
-  const permissions = permissionsOptional || {};
+  const permissions2 = permissionsOptional || {};
   const repositorySelection = repositorySelectionOptional || "all";
   const repositoryIds = repositories2 ? repositories2.map((r) => r.id) : void 0;
   const repositoryNames = repositories2 ? repositories2.map((repo) => repo.name) : void 0;
@@ -42059,7 +42065,7 @@ async function getInstallationAuthentication(state, options, customRequest) {
     createdAt,
     expiresAt,
     repositorySelection,
-    permissions,
+    permissions: permissions2,
     repositoryIds,
     repositoryNames
   };
@@ -42073,7 +42079,7 @@ async function getInstallationAuthentication(state, options, customRequest) {
     createdAt,
     expiresAt,
     repositorySelection,
-    permissions,
+    permissions: permissions2,
     repositoryIds,
     repositoryNames
   };
@@ -42376,7 +42382,7 @@ async function pRetry(input, options) {
 }
 
 // lib/main.js
-async function main(appId2, privateKey2, owner2, repositories2, core3, createAppAuth2, request2, skipTokenRevoke2) {
+async function main(appId2, privateKey2, owner2, repositories2, permissions2, core3, createAppAuth2, request2, skipTokenRevoke2) {
   let parsedOwner = "";
   let parsedRepositoryNames = [];
   if (!owner2 && repositories2.length === 0) {
@@ -42423,7 +42429,8 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
         request2,
         auth5,
         parsedOwner,
-        parsedRepositoryNames
+        parsedRepositoryNames,
+        permissions2
       ),
       {
         onFailedAttempt: (error) => {
@@ -42438,7 +42445,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
     ));
   } else {
     ({ authentication, installationId, appSlug } = await pRetry(
-      () => getTokenFromOwner(request2, auth5, parsedOwner),
+      () => getTokenFromOwner(request2, auth5, parsedOwner, permissions2),
       {
         onFailedAttempt: (error) => {
           core3.info(
@@ -42458,7 +42465,7 @@ async function main(appId2, privateKey2, owner2, repositories2, core3, createApp
     core3.saveState("expiresAt", authentication.expiresAt);
   }
 }
-async function getTokenFromOwner(request2, auth5, parsedOwner) {
+async function getTokenFromOwner(request2, auth5, parsedOwner, permissions2) {
   const response = await request2("GET /users/{username}/installation", {
     username: parsedOwner,
     request: {
@@ -42467,13 +42474,14 @@ async function getTokenFromOwner(request2, auth5, parsedOwner) {
   });
   const authentication = await auth5({
     type: "installation",
-    installationId: response.data.id
+    installationId: response.data.id,
+    permissions: permissions2
   });
   const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
   return { authentication, installationId, appSlug };
 }
-async function getTokenFromRepository(request2, auth5, parsedOwner, parsedRepositoryNames) {
+async function getTokenFromRepository(request2, auth5, parsedOwner, parsedRepositoryNames, permissions2) {
   const response = await request2("GET /repos/{owner}/{repo}/installation", {
     owner: parsedOwner,
     repo: parsedRepositoryNames[0],
@@ -42484,7 +42492,8 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
   const authentication = await auth5({
     type: "installation",
     installationId: response.data.id,
-    repositoryNames: parsedRepositoryNames
+    repositoryNames: parsedRepositoryNames,
+    permissions: permissions2
   });
   const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
@@ -42518,6 +42527,22 @@ var request_default = request.defaults({
   request: proxyUrl ? { fetch: proxyFetch } : {}
 });
 
+// lib/get-permissions-from-inputs.js
+function getPermissionsFromInputs(env) {
+  return Object.entries(env).reduce((permissions2, [key, value]) => {
+    if (!key.startsWith("INPUT_PERMISSION_")) return permissions2;
+    const permission = key.slice("INPUT_PERMISSION_".length).toLowerCase();
+    if (permissions2 === void 0) {
+      return { [permission]: value };
+    }
+    return {
+      // @ts-expect-error - needs to be typed correctly
+      ...permissions2,
+      [permission]: value
+    };
+  }, void 0);
+}
+
 // main.js
 if (!process.env.GITHUB_REPOSITORY) {
   throw new Error("GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'");
@@ -42538,11 +42563,13 @@ var repositories = import_core2.default.getInput("repositories").split(/[\n,]+/)
 var skipTokenRevoke = Boolean(
   import_core2.default.getInput("skip-token-revoke") || import_core2.default.getInput("skip_token_revoke")
 );
-main(
+var permissions = getPermissionsFromInputs(process.env);
+var main_default = main(
   appId,
   privateKey,
   owner,
   repositories,
+  permissions,
   import_core2.default,
   createAppAuth,
   request_default,
