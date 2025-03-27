@@ -38,6 +38,7 @@ const skipTokenRevoke = Boolean(
 
 const permissions = getPermissionsFromInputs(process.env);
 
+// Export promise for testing
 export default main(
   appId,
   privateKey,
