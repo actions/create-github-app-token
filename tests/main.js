@@ -8,6 +8,8 @@ export const DEFAULT_ENV = {
   // inputs are set as environment variables with the prefix INPUT_
   // https://docs.github.com/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
   "INPUT_GITHUB-API-URL": "https://api.github.com",
+  "INPUT_SKIP-TOKEN-REVOKE": "false",
+  "INPUT_SKIP_TOKEN_REVOKE": "false",
   "INPUT_APP-ID": "123456",
   // This key is invalidated. It’s from https://github.com/octokit/auth-app.js/issues/465#issuecomment-1564998327.
   "INPUT_PRIVATE-KEY": `-----BEGIN RSA PRIVATE KEY-----
