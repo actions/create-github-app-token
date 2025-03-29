@@ -32,9 +32,7 @@ const repositories = core
   .map((s) => s.trim())
   .filter((x) => x !== "");
 
-const skipTokenRevoke = Boolean(
-  core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke"),
-);
+const skipTokenRevoke = core.getBooleanInput("skip-token-revoke") || core.getBooleanInput("skip_token_revoke");
 
 const permissions = getPermissionsFromInputs(process.env);
 
