@@ -37,7 +37,7 @@ inputs:
   permission-contents:
     description: "The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges. Can be set to 'read' or 'write'."
   permission-dependabot-secrets:
-    description: "The leve of permission to grant the access token to manage Dependabot secrets. Can be set to 'read' or 'write'."
+    description: "The level of permission to grant the access token to manage Dependabot secrets. Can be set to 'read' or 'write'."
   permission-deployments:
     description: "The level of permission to grant the access token for deployments and deployment statuses. Can be set to 'read' or 'write'."
   permission-email-addresses:
