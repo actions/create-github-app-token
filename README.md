@@ -21,6 +21,9 @@ Once you have the GitHub app installed, there are a few manual steps you must fo
 3. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
 4. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
 
+> [!IMPORTANT]  
+> An installation access token expires after 1 hour. Please [see this comment](https://github.com/actions/create-github-app-token/issues/121#issuecomment-2043214796) for alternative approaches if you have long-running processes.
+
 ### Create a token for the current repository
 
 ```yaml
@@ -39,7 +42,6 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
-          github-api-url: "https://github.acme-inc.com/api/v3"
       - uses: ./actions/staging-tests
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -70,6 +72,68 @@ jobs:
         with:
           github_token: ${{ steps.app-token.outputs.token }}
 ```
+
+### Create a git committer string for an app installation
+
+```yaml
+on: [pull_request]
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          # required
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+      - id: committer
+        run: echo "string=${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
+      - run: echo "committer string is ${{ steps.committer.outputs.string }}"
+```
+
+### Configure git CLI for an app's bot user
+
+```yaml
+on: [pull_request]
+
+jobs:
+  auto-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          # required
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+      - name: Get GitHub App User ID
+        id: get-user-id
+        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+      - run: |
+          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+      # git commands like commit work using the bot user
+      - run: |
+          git add .
+          git commit -m "Auto-generated changes"
+          git push
+```
+
+> [!TIP]
+> The `<BOT USER ID>` is the numeric user ID of the app's bot user, which can be found under `https://api.github.com/users/<app-slug>%5Bbot%5D`.
+>
+> For example, we can check at `https://api.github.com/users/dependabot[bot]` to see the user ID of Dependabot is 49699333.
+>
+> Alternatively, you can use the [octokit/request-action](https://github.com/octokit/request-action) to get the ID.
 
 ### Create a token for all repositories in the current owner's installation
 
@@ -108,7 +172,9 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: "repo1,repo2"
+          repositories: |
+            repo1
+            repo2
       - uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -138,6 +204,32 @@ jobs:
           body: "Hello, World!"
 ```
 
+### Create a token with specific permissions
+
+> [!NOTE]
+> Selected permissions must be granted to the installation of the specified app and repository owner. Setting a permission that the installation does not have will result in an error.
+
+```yaml
+on: [issues]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          permission-issues: write
+      - uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: "Hello, World!"
+```
+
 ### Create tokens for multiple user or organization accounts
 
 You can use a matrix strategy to create tokens for multiple user or organization accounts.
@@ -152,7 +244,7 @@ jobs:
   set-matrix:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{steps.set.outputs.matrix }}
+      matrix: ${{ steps.set.outputs.matrix }}
     steps:
       - id: set
         run: echo 'matrix=[{"owner":"owner1"},{"owner":"owner2","repos":["repo1"]}]' >>"$GITHUB_OUTPUT"
@@ -194,23 +286,23 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Create GitHub App token
-      id: create_token
-      uses: actions/create-github-app-token@v1
-      with:
-        app-id: ${{ vars.GHES_APP_ID }}
-        private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
-        owner: ${{ vars.GHES_INSTALLATION_ORG }}
-        github-api-url: ${{ vars.GITHUB_API_URL }}
+      - name: Create GitHub App token
+        id: create_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.GHES_APP_ID }}
+          private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
+          owner: ${{ vars.GHES_INSTALLATION_ORG }}
+          github-api-url: ${{ vars.GITHUB_API_URL }}
 
-    - name: Create issue
-      uses: octokit/request-action@v2.x
-      with:
-        route: POST /repos/${{ github.repository }}/issues
-        title: "New issue from workflow"
-        body: "This is a new issue created from a GitHub Action workflow."
-      env:
-        GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
+      - name: Create issue
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/${{ github.repository }}/issues
+          title: "New issue from workflow"
+          body: "This is a new issue created from a GitHub Action workflow."
+        env:
+          GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
 ```
 
 ## Inputs
@@ -221,18 +313,42 @@ jobs:
 
 ### `private-key`
 
-**Required:** GitHub App private key.
+**Required:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines.
+
+Some other actions may require the private key to be Base64 encoded. To avoid recreating a new secret, it can be decoded on the fly, but it needs to be managed securely. Here is an example of how this can be achieved:
+
+```yaml
+steps:
+  - name: Decode the GitHub App Private Key
+    id: decode
+    run: |
+      private_key=$(echo "${{ secrets.PRIVATE_KEY }}" | base64 -d | awk 'BEGIN {ORS="\\n"} {print}' | head -c -2) &> /dev/null
+      echo "::add-mask::$private_key"
+      echo "private-key=$private_key" >> "$GITHUB_OUTPUT"
+  - name: Generate GitHub App Token
+    id: app-token
+    uses: actions/create-github-app-token@v1
+    with:
+      app-id: ${{ vars.APP_ID }}
+      private-key: ${{ steps.decode.outputs.private-key }}
+```
 
 ### `owner`
 
-**Optional:** GitHub App installation owner. If empty, defaults to the current repository owner.
+**Optional:** The owner of the GitHub App installation. If empty, defaults to the current repository owner.
 
 ### `repositories`
 
-**Optional:** Comma-separated list of repositories to grant access to.
+**Optional:** Comma or newline-separated list of repositories to grant access to.
 
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
+
+### `permission-<permission name>`
+
+**Optional:** The permissions to grant to the token. By default, the token inherits all of the installation's permissions. We recommend to explicitly list the permissions that are required for a use case. This follows GitHub's own recommendation to [control permissions of `GITHUB_TOKEN` in workflows](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token). The documentation also lists all available permissions, just prefix the permission key with `permission-` (e.g., `pull-requests` → `permission-pull-requests`).
+
+The reason we define one `permision-<permission name>` input per permission is to benefit from type intelligence and input validation built into GitHub's action runner.
 
 ### `skip-token-revoke`
 
@@ -268,6 +384,10 @@ The action creates an installation access token using [the `POST /app/installati
 
 > [!NOTE]
 > Installation permissions can differ from the app's permissions they belong to. Installation permissions are set when an app is installed on an account. When the app adds more permissions after the installation, an account administrator will have to approve the new permissions before they are set on the installation.
+
+## Contributing
+
+[CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 

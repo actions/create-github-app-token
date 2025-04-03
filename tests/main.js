@@ -46,8 +46,8 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   // Set up mocking
   const baseUrl = new URL(env["INPUT_GITHUB-API-URL"]);
-  const basePath = baseUrl.pathname === '/' ? '' : baseUrl.pathname;
-  const mockAgent = new MockAgent();
+  const basePath = baseUrl.pathname === "/" ? "" : baseUrl.pathname;
+  const mockAgent = new MockAgent({ enableCallHistory: true });
   mockAgent.disableNetConnect();
   setGlobalDispatcher(mockAgent);
   const mockPool = mockAgent.get(baseUrl.origin);
@@ -58,9 +58,11 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const mockInstallationId = "123456";
   const mockAppSlug = "github-actions";
   const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;
+  const currentRepoName = env.GITHUB_REPOSITORY.split("/")[1];
   const repo = encodeURIComponent(
-    (env.INPUT_REPOSITORIES ?? env.GITHUB_REPOSITORY).split(",")[0]
+    (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0],
   );
+
   mockPool
     .intercept({
       path: `${basePath}/repos/${owner}/${repo}/installation`,
@@ -73,14 +75,15 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     })
     .reply(
       200,
-      { id: mockInstallationId, "app_slug": mockAppSlug },
-      { headers: { "content-type": "application/json" } }
+      { id: mockInstallationId, app_slug: mockAppSlug },
+      { headers: { "content-type": "application/json" } },
     );
 
   // Mock installation access token request
   const mockInstallationAccessToken =
     "ghs_16C7e42F292c6912E7710c838347Ae178B4a"; // This token is invalidated. It’s from https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app.
   const mockExpiresAt = "2016-07-11T22:14:10Z";
+
   mockPool
     .intercept({
       path: `${basePath}/app/installations/${mockInstallationId}/access_tokens`,
@@ -94,12 +97,26 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     .reply(
       201,
       { token: mockInstallationAccessToken, expires_at: mockExpiresAt },
-      { headers: { "content-type": "application/json" } }
+      { headers: { "content-type": "application/json" } },
     );
 
   // Run the callback
   cb(mockPool);
 
   // Run the main script
-  await import("../main.js");
+  const { default: promise } = await import("../main.js");
+  await promise;
+
+  console.log("--- REQUESTS ---");
+  const calls = mockAgent
+    .getCallHistory()
+    .calls()
+    .map((call) => {
+      const route = `${call.method} ${call.path}`;
+      if (call.method === "GET") return route;
+
+      return `${route}\n${call.body}`;
+    });
+
+  console.log(calls.join("\n"));
 }

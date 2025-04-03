@@ -1,10 +1,11 @@
-import { test, DEFAULT_ENV } from "./main.js";
+import { DEFAULT_ENV, test } from "./main.js";
 
 // Verify that main works with a custom GitHub API URL passed as `github-api-url` input
 await test(
   () => {
     process.env.INPUT_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
-    process.env.INPUT_REPOSITORIES = process.env.GITHUB_REPOSITORY;
+    const currentRepoName = process.env.GITHUB_REPOSITORY.split("/")[1];
+    process.env.INPUT_REPOSITORIES = currentRepoName;
   },
   {
     ...DEFAULT_ENV,
