@@ -13,10 +13,10 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@octokit/auth-app": "^7.1.5",
+    "@octokit/auth-app": "^7.2.0",
     "@octokit/request": "^9.2.2",
     "p-retry": "^6.2.1",
-    "undici": "^7.5.0"
+    "undici": "^7.7.0"
   },
   "devDependencies": {
     "@octokit/openapi": "^18.0.0",
