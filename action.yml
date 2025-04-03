@@ -20,10 +20,6 @@ inputs:
   skip-token-revoke:
     description: "If truthy, the token will not be revoked when the current job is complete"
     required: false
-  skip_token_revoke:
-    description: "If truthy, the token will not be revoked when the current job is complete"
-    required: false
-    deprecationMessage: "'skip_token_revoke' is deprecated and will be removed in a future version. Use 'skip-token-revoke' instead."
   # Make GitHub API configurable to support non-GitHub Cloud use cases
   # see https://github.com/actions/create-github-app-token/issues/77
   github-api-url:

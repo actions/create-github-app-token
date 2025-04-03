@@ -15,16 +15,15 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 }
 
 const appId = core.getInput("app-id");
-const privateKey = core.getInput("private-key")
+const privateKey = core.getInput("private-key");
 const owner = core.getInput("owner");
-const repositories = core.getInput("repositories")
+const repositories = core
+  .getInput("repositories")
   .split(/[\n,]+/)
-  .map(s => s.trim())
-  .filter(x => x !== '');
+  .map((s) => s.trim())
+  .filter((x) => x !== "");
 
-const skipTokenRevoke = Boolean(
-  core.getInput("skip-token-revoke") || core.getInput("skip_token_revoke")
-);
+const skipTokenRevoke = Boolean(core.getInput("skip-token-revoke"));
 
 main(
   appId,
