@@ -42271,6 +42271,22 @@ function createAppAuth(options) {
   });
 }
 
+// lib/get-permissions-from-inputs.js
+function getPermissionsFromInputs(env) {
+  return Object.entries(env).reduce((permissions2, [key, value]) => {
+    if (!key.startsWith("INPUT_PERMISSION_")) return permissions2;
+    const permission = key.slice("INPUT_PERMISSION_".length).toLowerCase();
+    if (permissions2 === void 0) {
+      return { [permission]: value };
+    }
+    return {
+      // @ts-expect-error - needs to be typed correctly
+      ...permissions2,
+      [permission]: value
+    };
+  }, void 0);
+}
+
 // node_modules/p-retry/index.js
 var import_retry = __toESM(require_retry2(), 1);
 
@@ -42527,22 +42543,6 @@ var request_default = request.defaults({
   request: proxyUrl ? { fetch: proxyFetch } : {}
 });
 
-// lib/get-permissions-from-inputs.js
-function getPermissionsFromInputs(env) {
-  return Object.entries(env).reduce((permissions2, [key, value]) => {
-    if (!key.startsWith("INPUT_PERMISSION_")) return permissions2;
-    const permission = key.slice("INPUT_PERMISSION_".length).toLowerCase();
-    if (permissions2 === void 0) {
-      return { [permission]: value };
-    }
-    return {
-      // @ts-expect-error - needs to be typed correctly
-      ...permissions2,
-      [permission]: value
-    };
-  }, void 0);
-}
-
 // main.js
 if (!process.env.GITHUB_REPOSITORY) {
   throw new Error("GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'");
@@ -42550,19 +42550,11 @@ if (!process.env.GITHUB_REPOSITORY) {
 if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
-var appId = import_core2.default.getInput("app-id") || import_core2.default.getInput("app_id");
-if (!appId) {
-  throw new Error("Input required and not supplied: app-id");
-}
-var privateKey = import_core2.default.getInput("private-key") || import_core2.default.getInput("private_key");
-if (!privateKey) {
-  throw new Error("Input required and not supplied: private-key");
-}
+var appId = import_core2.default.getInput("app-id");
+var privateKey = import_core2.default.getInput("private-key");
 var owner = import_core2.default.getInput("owner");
 var repositories = import_core2.default.getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
-var skipTokenRevoke = Boolean(
-  import_core2.default.getInput("skip-token-revoke") || import_core2.default.getInput("skip_token_revoke")
-);
+var skipTokenRevoke = Boolean(import_core2.default.getInput("skip-token-revoke"));
 var permissions = getPermissionsFromInputs(process.env);
 var main_default = main(
   appId,
