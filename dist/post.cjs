@@ -40202,9 +40202,7 @@ var import_core2 = __toESM(require_core(), 1);
 
 // lib/post.js
 async function post(core3, request2) {
-  const skipTokenRevoke = Boolean(
-    core3.getInput("skip-token-revoke") || core3.getInput("skip_token_revoke")
-  );
+  const skipTokenRevoke = Boolean(core3.getInput("skip-token-revoke"));
   if (skipTokenRevoke) {
     core3.info("Token revocation was skipped");
     return;
@@ -40227,9 +40225,7 @@ async function post(core3, request2) {
     });
     core3.info("Token revoked");
   } catch (error) {
-    core3.warning(
-      `Token revocation failed: ${error.message}`
-    );
+    core3.warning(`Token revocation failed: ${error.message}`);
   }
 }
 function tokenExpiresIn(expiresAt) {
