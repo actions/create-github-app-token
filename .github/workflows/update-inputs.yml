@@ -1,4 +1,4 @@
-name: Update Inputs
+name: Update Permission Inputs
 
 on:
   pull_request:
@@ -12,8 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  update-inputs:
-    name: Update Inputs
+  update-permission-inputs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,6 +20,11 @@ jobs:
         with:
           node-version-file: .node-version
           cache: 'npm'
-      - run: npm ci
-      - run: node scripts/update-inputs.js
-      - uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5.1.0
+      - name: Install dependencies
+        run: npm ci
+      - name: Run permission inputs update script
+        run: node scripts/update-permission-inputs.js
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@e348103e9026cc0eee72ae06630dbe30c8bf7a79 # v5.1.0
+        with:
+          commit_message: 'feat: update permission inputs'
