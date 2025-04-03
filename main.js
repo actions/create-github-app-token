@@ -3,6 +3,7 @@
 import core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
 
+import { getPermissionsFromInputs } from "./lib/get-permissions-from-inputs.js";
 import { main } from "./lib/main.js";
 import request from "./lib/request.js";
 
@@ -25,15 +26,19 @@ const repositories = core
 
 const skipTokenRevoke = Boolean(core.getInput("skip-token-revoke"));
 
-main(
+const permissions = getPermissionsFromInputs(process.env);
+
+// Export promise for testing
+export default main(
   appId,
   privateKey,
   owner,
   repositories,
+  permissions,
   core,
   createAppAuth,
   request,
-  skipTokenRevoke
+  skipTokenRevoke,
 ).catch((error) => {
   /* c8 ignore next 3 */
   console.error(error);

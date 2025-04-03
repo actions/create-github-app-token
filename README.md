@@ -121,7 +121,7 @@ jobs:
 
 > [!TIP]
 > The `<BOT USER ID>` is the numeric user ID of the app's bot user, which can be found under `https://api.github.com/users/<app-slug>%5Bbot%5D`.
-> 
+>
 > For example, we can check at `https://api.github.com/users/dependabot[bot]` to see the user ID of Dependabot is 49699333.
 >
 > Alternatively, you can use the [octokit/request-action](https://github.com/octokit/request-action) to get the ID.
@@ -195,6 +195,32 @@ jobs:
           body: "Hello, World!"
 ```
 
+### Create a token with specific permissions
+
+> [!NOTE]
+> Selected permissions must be granted to the installation of the specified app and repository owner. Setting a permission that the installation does not have will result in an error.
+
+```yaml
+on: [issues]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          permission-issues: write
+      - uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: "Hello, World!"
+```
+
 ### Create tokens for multiple user or organization accounts
 
 You can use a matrix strategy to create tokens for multiple user or organization accounts.
@@ -251,23 +277,23 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Create GitHub App token
-      id: create_token
-      uses: actions/create-github-app-token@v1
-      with:
-        app-id: ${{ vars.GHES_APP_ID }}
-        private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
-        owner: ${{ vars.GHES_INSTALLATION_ORG }}
-        github-api-url: ${{ vars.GITHUB_API_URL }}
+      - name: Create GitHub App token
+        id: create_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.GHES_APP_ID }}
+          private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
+          owner: ${{ vars.GHES_INSTALLATION_ORG }}
+          github-api-url: ${{ vars.GITHUB_API_URL }}
 
-    - name: Create issue
-      uses: octokit/request-action@v2.x
-      with:
-        route: POST /repos/${{ github.repository }}/issues
-        title: "New issue from workflow"
-        body: "This is a new issue created from a GitHub Action workflow."
-      env:
-        GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
+      - name: Create issue
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/${{ github.repository }}/issues
+          title: "New issue from workflow"
+          body: "This is a new issue created from a GitHub Action workflow."
+        env:
+          GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
 ```
 
 ## Inputs
@@ -309,6 +335,12 @@ steps:
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
 
+### `permission-<permission name>`
+
+**Optional:** The permissions to grant to the token. By default, the token inherits all of the installation's permissions. We recommend to explicitly list the permissions that are required for a use case. This follows GitHub's own recommendation to [control permissions of `GITHUB_TOKEN` in workflows](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token). The documentation also lists all available permissions, just prefix the permission key with `permission-` (e.g., `pull-requests` → `permission-pull-requests`).
+
+The reason we define one `permision-<permission name>` input per permission is to benefit from type intelligence and input validation built into GitHub's action runner.
+
 ### `skip-token-revoke`
 
 **Optional:** If truthy, the token will not be revoked when the current job is complete.
@@ -343,6 +375,10 @@ The action creates an installation access token using [the `POST /app/installati
 
 > [!NOTE]
 > Installation permissions can differ from the app's permissions they belong to. Installation permissions are set when an app is installed on an account. When the app adds more permissions after the installation, an account administrator will have to approve the new permissions before they are set on the installation.
+
+## Contributing
+
+[CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 
