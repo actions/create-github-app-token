@@ -42526,31 +42526,30 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
     parsedOwner = owner3;
     parsedRepositoryNames = [repo];
     core3.info(
-      `owner and repositories not set, creating token for the current repository ("${repo}")`
+      `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${owner3}/${repo}).`
     );
   }
   if (owner2 && repositories2.length === 0) {
     parsedOwner = owner2;
     core3.info(
-      `repositories not set, creating token for all repositories for given owner "${owner2}"`
+      `Input 'repositories' is not set. Creating token for all repositories owned by ${owner2}.`
     );
   }
   if (!owner2 && repositories2.length > 0) {
     parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
     parsedRepositoryNames = repositories2;
     core3.info(
-      `owner not set, creating owner for given repositories "${repositories2.join(
-        ","
-      )}" in current owner ("${parsedOwner}")`
+      `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories2.map((repo) => `
+- ${parsedOwner}/${repo}`).join("")}`
     );
   }
   if (owner2 && repositories2.length > 0) {
     parsedOwner = owner2;
     parsedRepositoryNames = repositories2;
     core3.info(
-      `owner and repositories set, creating token for repositories "${repositories2.join(
-        ","
-      )}" owned by "${owner2}"`
+      `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
+      ${repositories2.map((repo) => `
+- ${parsedOwner}/${repo}`).join("")}`
     );
   }
   const auth5 = createAppAuth2({
