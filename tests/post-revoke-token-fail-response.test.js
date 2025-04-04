@@ -8,7 +8,6 @@ process.env.STATE_token = "secret123";
 // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
 process.env["INPUT_GITHUB-API-URL"] = "https://api.github.com";
 process.env["INPUT_SKIP-TOKEN-REVOKE"] = "false";
-process.env["INPUT_SKIP_TOKEN_REVOKE"] = "false";
 
 // 1 hour in the future, not expired
 process.env.STATE_expiresAt = new Date(
