@@ -7,18 +7,10 @@ branding:
 inputs:
   app-id:
     description: "GitHub App ID"
-    required: false # TODO: When 'app_id' is removed, make 'app-id' required
-  app_id:
-    description: "GitHub App ID"
-    required: false
-    deprecationMessage: "'app_id' is deprecated and will be removed in a future version. Use 'app-id' instead."
+    required: true
   private-key:
     description: "GitHub App private key"
-    required: false # TODO: When 'private_key' is removed, make 'private-key' required
-  private_key:
-    description: "GitHub App private key"
-    required: false
-    deprecationMessage: "'private_key' is deprecated and will be removed in a future version. Use 'private-key' instead."
+    required: true
   owner:
     description: "The owner of the GitHub App installation (defaults to current repository owner)"
     required: false
@@ -29,11 +21,6 @@ inputs:
     description: "If true, the token will not be revoked when the current job is complete"
     required: false
     default: "false"
-  skip_token_revoke:
-    description: "If true, the token will not be revoked when the current job is complete"
-    required: false
-    default: "false"
-    deprecationMessage: "'skip_token_revoke' is deprecated and will be removed in a future version. Use 'skip-token-revoke' instead."
   # Make GitHub API configurable to support non-GitHub Cloud use cases
   # see https://github.com/actions/create-github-app-token/issues/77
   github-api-url:
@@ -51,7 +38,7 @@ inputs:
   permission-contents:
     description: "The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges. Can be set to 'read' or 'write'."
   permission-dependabot-secrets:
-    description: "The leve of permission to grant the access token to manage Dependabot secrets. Can be set to 'read' or 'write'."
+    description: "The level of permission to grant the access token to manage Dependabot secrets. Can be set to 'read' or 'write'."
   permission-deployments:
     description: "The level of permission to grant the access token for deployments and deployment statuses. Can be set to 'read' or 'write'."
   permission-email-addresses:

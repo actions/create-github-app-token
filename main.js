@@ -3,9 +3,9 @@
 import core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
 
+import { getPermissionsFromInputs } from "./lib/get-permissions-from-inputs.js";
 import { main } from "./lib/main.js";
 import request from "./lib/request.js";
-import { getPermissionsFromInputs } from "./lib/get-permissions-from-inputs.js";
 
 if (!process.env.GITHUB_REPOSITORY) {
   throw new Error("GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'");
@@ -15,16 +15,8 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
 
-const appId = core.getInput("app-id") || core.getInput("app_id");
-if (!appId) {
-  // The 'app_id' input was previously required, but it and 'app-id' are both optional now, until the former is removed. Still, we want to ensure that at least one of them is set.
-  throw new Error("Input required and not supplied: app-id");
-}
-const privateKey = core.getInput("private-key") || core.getInput("private_key");
-if (!privateKey) {
-  // The 'private_key' input was previously required, but it and 'private-key' are both optional now, until the former is removed. Still, we want to ensure that at least one of them is set.
-  throw new Error("Input required and not supplied: private-key");
-}
+const appId = core.getInput("app-id");
+const privateKey = core.getInput("private-key");
 const owner = core.getInput("owner");
 const repositories = core
   .getInput("repositories")
@@ -32,7 +24,7 @@ const repositories = core
   .map((s) => s.trim())
   .filter((x) => x !== "");
 
-const skipTokenRevoke = core.getBooleanInput("skip-token-revoke") || core.getBooleanInput("skip_token_revoke");
+const skipTokenRevoke = core.getBooleanInput("skip-token-revoke");
 
 const permissions = getPermissionsFromInputs(process.env);
 

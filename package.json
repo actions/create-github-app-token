@@ -2,7 +2,7 @@
   "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "1.12.0",
+  "version": "2.0.2",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20.0.0 --packages=bundle",
@@ -13,21 +13,21 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@octokit/auth-app": "^7.1.5",
+    "@octokit/auth-app": "^7.2.0",
     "@octokit/request": "^9.2.2",
     "p-retry": "^6.2.1",
-    "undici": "^7.5.0"
+    "undici": "^7.7.0"
   },
   "devDependencies": {
-    "@octokit/openapi": "^18.0.0",
+    "@octokit/openapi": "^18.2.0",
     "@sinonjs/fake-timers": "^14.0.0",
     "ava": "^6.2.0",
     "c8": "^10.1.3",
     "dotenv": "^16.4.7",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.25.2",
     "execa": "^9.5.2",
     "open-cli": "^8.0.0",
-    "yaml": "^2.7.0"
+    "yaml": "^2.7.1"
   },
   "release": {
     "branches": [
@@ -45,6 +45,7 @@
         {
           "assets": [
             "package.json",
+            "package-lock.json",
             "dist/*"
           ],
           "message": "build(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
