@@ -343,7 +343,7 @@ The reason we define one `permision-<permission name>` input per permission is t
 
 ### `skip-token-revoke`
 
-**Optional:** If truthy, the token will not be revoked when the current job is complete.
+**Optional:** If true, the token will not be revoked when the current job is complete.
 
 ### `github-api-url`
 
@@ -370,7 +370,7 @@ The action creates an installation access token using [the `POST /app/installati
 1. The token is scoped to the current repository or `repositories` if set.
 2. The token inherits all the installation's permissions.
 3. The token is set as output `token` which can be used in subsequent steps.
-4. Unless the `skip-token-revoke` input is set to a truthy value, the token is revoked in the `post` step of the action, which means it cannot be passed to another job.
+4. Unless the `skip-token-revoke` input is set to true, the token is revoked in the `post` step of the action, which means it cannot be passed to another job.
 5. The token is masked, it cannot be logged accidentally.
 
 > [!NOTE]
