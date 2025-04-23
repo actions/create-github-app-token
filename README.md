@@ -341,6 +341,10 @@ steps:
 
 The reason we define one `permision-<permission name>` input per permission is to benefit from type intelligence and input validation built into GitHub's action runner.
 
+### `skip-token-revoke`
+
+**Optional:** If truthy, the token will not be revoked when the current job is complete.
+
 ### `github-api-url`
 
 **Optional:** The URL of the GitHub REST API. Defaults to the URL of the GitHub Rest API where the workflow is run from.
