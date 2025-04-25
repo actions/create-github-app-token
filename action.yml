@@ -18,8 +18,9 @@ inputs:
     description: "Comma or newline-separated list of repositories to install the GitHub App on (defaults to current repository if owner is unset)"
     required: false
   skip-token-revoke:
-    description: "If truthy, the token will not be revoked when the current job is complete"
+    description: "If true, the token will not be revoked when the current job is complete"
     required: false
+    default: "false"
   # Make GitHub API configurable to support non-GitHub Cloud use cases
   # see https://github.com/actions/create-github-app-token/issues/77
   github-api-url:
