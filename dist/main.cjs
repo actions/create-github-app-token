@@ -42673,7 +42673,7 @@ var appId = import_core2.default.getInput("app-id");
 var privateKey = import_core2.default.getInput("private-key");
 var owner = import_core2.default.getInput("owner");
 var repositories = import_core2.default.getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
-var skipTokenRevoke = Boolean(import_core2.default.getInput("skip-token-revoke"));
+var skipTokenRevoke = import_core2.default.getBooleanInput("skip-token-revoke");
 var permissions = getPermissionsFromInputs(process.env);
 var main_default = main(
   appId,

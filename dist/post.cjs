@@ -40308,7 +40308,7 @@ var import_core2 = __toESM(require_core(), 1);
 
 // lib/post.js
 async function post(core3, request2) {
-  const skipTokenRevoke = Boolean(core3.getInput("skip-token-revoke"));
+  const skipTokenRevoke = core3.getBooleanInput("skip-token-revoke");
   if (skipTokenRevoke) {
     core3.info("Token revocation was skipped");
     return;
