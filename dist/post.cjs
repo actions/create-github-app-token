@@ -33404,6 +33404,11 @@ var require_sqlite_cache_store = __commonJS({
         }
         this.#db = new DatabaseSync(opts?.location ?? ":memory:");
         this.#db.exec(`
+      PRAGMA journal_mode = WAL;
+      PRAGMA synchronous = NORMAL;
+      PRAGMA temp_store = memory;
+      PRAGMA optimize;
+
       CREATE TABLE IF NOT EXISTS cacheInterceptorV${VERSION3} (
         -- Data specific to us
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33423,9 +33428,8 @@ var require_sqlite_cache_store = __commonJS({
         staleAt INTEGER NOT NULL
       );
 
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION3}_url ON cacheInterceptorV${VERSION3}(url);
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION3}_method ON cacheInterceptorV${VERSION3}(method);
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION3}_deleteAt ON cacheInterceptorV${VERSION3}(deleteAt);
+      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION3}_getValuesQuery ON cacheInterceptorV${VERSION3}(url, method, deleteAt);
+      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION3}_deleteByUrlQuery ON cacheInterceptorV${VERSION3}(deleteAt);
     `);
         this.#getValuesQuery = this.#db.prepare(`
       SELECT
@@ -33602,7 +33606,7 @@ var require_sqlite_cache_store = __commonJS({
         this.#deleteByUrlQuery.run(this.#makeValueUrl(key));
       }
       #prune() {
-        if (this.size <= this.#maxCount) {
+        if (Number.isFinite(this.#maxCount) && this.size <= this.#maxCount) {
           return 0;
         }
         {
@@ -40917,14 +40921,10 @@ post(import_core2.default, request_default).catch((error) => {
 /*! Bundled license information:
 
 undici/lib/fetch/body.js:
-  (*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> *)
-
-undici/lib/websocket/frame.js:
-  (*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> *)
-
 undici/lib/web/fetch/body.js:
   (*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> *)
 
+undici/lib/websocket/frame.js:
 undici/lib/web/websocket/frame.js:
   (*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> *)
 */

@@ -33638,6 +33638,11 @@ var require_sqlite_cache_store = __commonJS({
         }
         this.#db = new DatabaseSync(opts?.location ?? ":memory:");
         this.#db.exec(`
+      PRAGMA journal_mode = WAL;
+      PRAGMA synchronous = NORMAL;
+      PRAGMA temp_store = memory;
+      PRAGMA optimize;
+
       CREATE TABLE IF NOT EXISTS cacheInterceptorV${VERSION7} (
         -- Data specific to us
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33657,9 +33662,8 @@ var require_sqlite_cache_store = __commonJS({
         staleAt INTEGER NOT NULL
       );
 
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION7}_url ON cacheInterceptorV${VERSION7}(url);
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION7}_method ON cacheInterceptorV${VERSION7}(method);
-      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION7}_deleteAt ON cacheInterceptorV${VERSION7}(deleteAt);
+      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION7}_getValuesQuery ON cacheInterceptorV${VERSION7}(url, method, deleteAt);
+      CREATE INDEX IF NOT EXISTS idx_cacheInterceptorV${VERSION7}_deleteByUrlQuery ON cacheInterceptorV${VERSION7}(deleteAt);
     `);
         this.#getValuesQuery = this.#db.prepare(`
       SELECT
@@ -33836,7 +33840,7 @@ var require_sqlite_cache_store = __commonJS({
         this.#deleteByUrlQuery.run(this.#makeValueUrl(key));
       }
       #prune() {
-        if (this.size <= this.#maxCount) {
+        if (Number.isFinite(this.#maxCount) && this.size <= this.#maxCount) {
           return 0;
         }
         {
@@ -41375,7 +41379,7 @@ async function waitForAccessToken(request2, clientId, clientType, verification) 
       return waitForAccessToken(request2, clientId, clientType, verification);
     }
     if (errorType === "slow_down") {
-      await wait(verification.interval + 5);
+      await wait(verification.interval + 7);
       return waitForAccessToken(request2, clientId, clientType, verification);
     }
     throw error;
@@ -42345,7 +42349,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION6 = "7.2.0";
+var VERSION6 = "7.2.1";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
@@ -42694,14 +42698,10 @@ var main_default = main(
 /*! Bundled license information:
 
 undici/lib/fetch/body.js:
-  (*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> *)
-
-undici/lib/websocket/frame.js:
-  (*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> *)
-
 undici/lib/web/fetch/body.js:
   (*! formdata-polyfill. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> *)
 
+undici/lib/websocket/frame.js:
 undici/lib/web/websocket/frame.js:
   (*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> *)
 
