@@ -38,6 +38,8 @@ so0tiQKBgGQXZaxaXhYUcxYHuCkQ3V4Vsj3ezlM92xXlP32SGFm3KgFhYy9kATxw
 Cax1ytZzvlrKLQyQFVK1COs2rHt7W4cJ7op7C8zXfsigXCiejnS664oAuX8sQZID
 x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
 -----END RSA PRIVATE KEY-----`,
+  // The Actions runner sets all inputs to empty strings if not set.
+  "INPUT_PERMISSION-ADMINISTRATION": "",
 };
 
 export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
@@ -61,7 +63,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;
   const currentRepoName = env.GITHUB_REPOSITORY.split("/")[1];
   const repo = encodeURIComponent(
-    (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0],
+    (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0]
   );
 
   mockPool
@@ -77,7 +79,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     .reply(
       200,
       { id: mockInstallationId, app_slug: mockAppSlug },
-      { headers: { "content-type": "application/json" } },
+      { headers: { "content-type": "application/json" } }
     );
 
   // Mock installation access token request
@@ -98,7 +100,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
     .reply(
       201,
       { token: mockInstallationAccessToken, expires_at: mockExpiresAt },
-      { headers: { "content-type": "application/json" } },
+      { headers: { "content-type": "application/json" } }
     );
 
   // Run the callback
