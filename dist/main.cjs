@@ -42394,8 +42394,9 @@ function createAppAuth(options) {
 // lib/get-permissions-from-inputs.js
 function getPermissionsFromInputs(env) {
   return Object.entries(env).reduce((permissions2, [key, value]) => {
-    if (!key.startsWith("INPUT_PERMISSION_")) return permissions2;
-    const permission = key.slice("INPUT_PERMISSION_".length).toLowerCase();
+    if (!key.startsWith("INPUT_PERMISSION-")) return permissions2;
+    if (!value) return permissions2;
+    const permission = key.slice("INPUT_PERMISSION-".length).toLowerCase();
     if (permissions2 === void 0) {
       return { [permission]: value };
     }
@@ -42568,6 +42569,7 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
         permissions2
       ),
       {
+        shouldRetry: (error) => error.status >= 500,
         onFailedAttempt: (error) => {
           core3.info(
             `Failed to create token for "${parsedRepositoryNames.join(
