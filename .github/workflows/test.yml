@@ -44,10 +44,12 @@ jobs:
         with:
           app-id: ${{ vars.TEST_APP_ID }}
           private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
+          permission-issues: read
+          permission-pull-requests: read
       - uses: octokit/request-action@v2.x
         id: get-repository
         env:
           GITHUB_TOKEN: ${{ steps.test.outputs.token }}
         with:
-          route: GET /installation/repositories
+          route: GET /repos/${{ github.repository }}
       - run: echo '${{ steps.get-repository.outputs.data }}'

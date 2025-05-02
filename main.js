@@ -27,6 +27,7 @@ const repositories = core
 const skipTokenRevoke = core.getBooleanInput("skip-token-revoke");
 
 const permissions = getPermissionsFromInputs(process.env);
+console.log("Permissions: ", permissions);
 
 // Export promise for testing
 export default main(
