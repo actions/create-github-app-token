@@ -42400,7 +42400,7 @@ function getPermissionsFromInputs(env) {
   return Object.entries(env).reduce((permissions2, [key, value]) => {
     if (!key.startsWith("INPUT_PERMISSION-")) return permissions2;
     if (!value) return permissions2;
-    const permission = key.slice("INPUT_PERMISSION-".length).toLowerCase();
+    const permission = key.slice("INPUT_PERMISSION-".length).toLowerCase().replaceAll(/-/g, "_");
     if (permissions2 === void 0) {
       return { [permission]: value };
     }
