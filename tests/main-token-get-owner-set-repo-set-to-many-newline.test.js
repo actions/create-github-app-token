@@ -5,5 +5,5 @@ await test(() => {
   process.env.INPUT_OWNER = process.env.GITHUB_REPOSITORY_OWNER;
   const currentRepoName = process.env.GITHUB_REPOSITORY.split("/")[1];
   // Intentional unnecessary whitespace to test parsing to array
-  process.env.INPUT_REPOSITORIES = ` ${currentRepoName}, toolkit  ,checkout`;
+  process.env.INPUT_REPOSITORIES = `\n ${currentRepoName}\ntoolkit \n\n checkout \n`;
 });

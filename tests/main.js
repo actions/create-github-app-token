@@ -2,14 +2,16 @@
 // @ts-check
 import { MockAgent, setGlobalDispatcher } from "undici";
 
-export async function test(cb = (_mockPool) => {}) {
-  // Set required environment variables and inputs
-  process.env.GITHUB_REPOSITORY_OWNER = "actions";
-  process.env.GITHUB_REPOSITORY = "actions/create-github-app-token";
+export const DEFAULT_ENV = {
+  GITHUB_REPOSITORY_OWNER: "actions",
+  GITHUB_REPOSITORY: "actions/create-github-app-token",
   // inputs are set as environment variables with the prefix INPUT_
-  // https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
-  process.env["INPUT_APP-ID"] = "123456";
-  process.env["INPUT_PRIVATE-KEY"] = `-----BEGIN RSA PRIVATE KEY-----
+  // https://docs.github.com/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
+  "INPUT_GITHUB-API-URL": "https://api.github.com",
+  "INPUT_SKIP-TOKEN-REVOKE": "false",
+  "INPUT_APP-ID": "123456",
+  // This key is invalidated. It’s from https://github.com/octokit/auth-app.js/issues/465#issuecomment-1564998327.
+  "INPUT_PRIVATE-KEY": `-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA280nfuUM9w00Ib9E2rvZJ6Qu3Ua3IqR34ZlK53vn/Iobn2EL
 Z9puc5Q/nFBU15NKwHyQNb+OG2hTCkjd1Xi9XPzEOH1r42YQmTGq8YCkUSkk6KZA
 5dnhLwN9pFquT9fQgrf4r1D5GJj3rqvj8JDr1sBmunArqY5u4gziSrIohcjLIZV0
@@ -35,27 +37,38 @@ r4J2gqb0xTDfq7gLMNrIXc2QQM4gKbnJp60JQM3p9NmH8huavBZGvSvNzTwXyGG3
 so0tiQKBgGQXZaxaXhYUcxYHuCkQ3V4Vsj3ezlM92xXlP32SGFm3KgFhYy9kATxw
 Cax1ytZzvlrKLQyQFVK1COs2rHt7W4cJ7op7C8zXfsigXCiejnS664oAuX8sQZID
 x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
------END RSA PRIVATE KEY-----`; // This key is invalidated. It’s from https://github.com/octokit/auth-app.js/issues/465#issuecomment-1564998327.
+-----END RSA PRIVATE KEY-----`,
+  // The Actions runner sets all inputs to empty strings if not set.
+  "INPUT_PERMISSION-ADMINISTRATION": "",
+};
+
+export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
+  for (const [key, value] of Object.entries(env)) {
+    process.env[key] = value;
+  }
 
   // Set up mocking
-  const mockAgent = new MockAgent();
+  const baseUrl = new URL(env["INPUT_GITHUB-API-URL"]);
+  const basePath = baseUrl.pathname === "/" ? "" : baseUrl.pathname;
+  const mockAgent = new MockAgent({ enableCallHistory: true });
   mockAgent.disableNetConnect();
   setGlobalDispatcher(mockAgent);
-  const mockPool = mockAgent.get("https://api.github.com");
+  const mockPool = mockAgent.get(baseUrl.origin);
 
   // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
 
-  // Mock installation id request
+  // Mock installation ID and app slug request
   const mockInstallationId = "123456";
-  const owner = process.env.INPUT_OWNER ?? process.env.GITHUB_REPOSITORY_OWNER;
+  const mockAppSlug = "github-actions";
+  const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;
+  const currentRepoName = env.GITHUB_REPOSITORY.split("/")[1];
   const repo = encodeURIComponent(
-    (process.env.INPUT_REPOSITORIES ?? process.env.GITHUB_REPOSITORY).split(
-      ","
-    )[0]
+    (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0]
   );
+
   mockPool
     .intercept({
-      path: `/repos/${owner}/${repo}/installation`,
+      path: `${basePath}/repos/${owner}/${repo}/installation`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -65,16 +78,18 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
     })
     .reply(
       200,
-      { id: mockInstallationId },
+      { id: mockInstallationId, app_slug: mockAppSlug },
       { headers: { "content-type": "application/json" } }
     );
 
   // Mock installation access token request
   const mockInstallationAccessToken =
     "ghs_16C7e42F292c6912E7710c838347Ae178B4a"; // This token is invalidated. It’s from https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app.
+  const mockExpiresAt = "2016-07-11T22:14:10Z";
+
   mockPool
     .intercept({
-      path: `/app/installations/${mockInstallationId}/access_tokens`,
+      path: `${basePath}/app/installations/${mockInstallationId}/access_tokens`,
       method: "POST",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -84,7 +99,7 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
     })
     .reply(
       201,
-      { token: mockInstallationAccessToken },
+      { token: mockInstallationAccessToken, expires_at: mockExpiresAt },
       { headers: { "content-type": "application/json" } }
     );
 
@@ -92,5 +107,19 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
   cb(mockPool);
 
   // Run the main script
-  await import("../main.js");
+  const { default: promise } = await import("../main.js");
+  await promise;
+
+  console.log("--- REQUESTS ---");
+  const calls = mockAgent
+    .getCallHistory()
+    .calls()
+    .map((call) => {
+      const route = `${call.method} ${call.path}`;
+      if (call.method === "GET") return route;
+
+      return `${route}\n${call.body}`;
+    });
+
+  console.log(calls.join("\n"));
 }

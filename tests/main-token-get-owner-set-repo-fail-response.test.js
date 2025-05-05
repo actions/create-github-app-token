@@ -2,11 +2,12 @@ import { test } from "./main.js";
 
 // Verify `main` retry when  the GitHub API returns a 500 error.
 await test((mockPool) => {
-  process.env.INPUT_OWNER = 'actions'
-  process.env.INPUT_REPOSITORIES = 'failed-repo';
-  const owner = process.env.INPUT_OWNER
-  const repo = process.env.INPUT_REPOSITORIES
+  process.env.INPUT_OWNER = "actions";
+  process.env.INPUT_REPOSITORIES = "failed-repo";
+  const owner = process.env.INPUT_OWNER;
+  const repo = process.env.INPUT_REPOSITORIES;
   const mockInstallationId = "123456";
+  const mockAppSlug = "github-actions";
 
   mockPool
     .intercept({
@@ -18,9 +19,9 @@ await test((mockPool) => {
         // Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
       },
     })
-    .reply(500, 'GitHub API not available')
-    
-    mockPool
+    .reply(500, "GitHub API not available");
+
+  mockPool
     .intercept({
       path: `/repos/${owner}/${repo}/installation`,
       method: "GET",
@@ -32,8 +33,7 @@ await test((mockPool) => {
     })
     .reply(
       200,
-      { id: mockInstallationId },
-      { headers: { "content-type": "application/json" } }
+      { id: mockInstallationId, app_slug: mockAppSlug },
+      { headers: { "content-type": "application/json" } },
     );
-
 });
