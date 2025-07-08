@@ -1,9 +1,10 @@
 import { test } from "./main.js";
-delete process.env.INPUT_OWNER;
-delete process.env.INPUT_REPOSITORIES;
+
 
 // Verify `main` handles when no enterprise installation is found.
 await test((mockPool) => {
+  delete process.env.INPUT_OWNER;
+  delete process.env.INPUT_REPOSITORIES;  
   process.env.INPUT_ENTERPRISE = "test-enterprise";
   
 

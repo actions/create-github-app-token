@@ -42667,12 +42667,11 @@ async function getTokenFromEnterprise(request2, auth5, enterprise2, permissions2
     }
   });
   const enterpriseInstallation = response.data.find(
-    (installation) => installation.target_type === "Enterprise"
+    (installation) => installation.target_type === "Enterprise" && installation.account?.slug === enterprise2
   );
   if (!enterpriseInstallation) {
-    throw new Error(`No enterprise installation found. Available installations: ${response.data.map((i) => `${i.target_type}:${i.account?.login || "N/A"}`).join(", ")}`);
+    throw new Error(`No enterprise installation found matching the name ${enterprise2}. Available installations: ${response.data.map((i) => `${i.target_type}:${i.account?.login || "N/A"}`).join(", ")}`);
   }
-  console.info(`### Found enterprise installation: ${JSON.stringify(enterpriseInstallation, null, 2)}`);
   const authentication = await auth5({
     type: "installation",
     installationId: enterpriseInstallation.id,
