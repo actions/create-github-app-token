@@ -195,6 +195,28 @@ jobs:
           body: "Hello, World!"
 ```
 
+### Create a token for an enterprise installation
+
+```yaml
+on: [workflow_dispatch]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          enterprise: my-enterprise-slug
+      - name: Call enterprise management REST API with gh
+        run: |
+          gh api /enterprises/my-enterprise-slug/apps/installable_organizations
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+```
+
 ### Create a token with specific permissions
 
 > [!NOTE]
@@ -334,6 +356,13 @@ steps:
 
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
+
+### `enterprise`
+
+**Optional:** The slug of the enterprise to generate a token for enterprise-level app installations.
+
+> [!NOTE]
+> The `enterprise` input is mutually exclusive with `owner` and `repositories`. GitHub Apps can be installed on enterprise accounts with permissions that let them call enterprise management APIs. Enterprise installations do not grant access to organization or repository resources.
 
 ### `permission-<permission name>`
 
