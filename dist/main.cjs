@@ -42523,39 +42523,46 @@ async function pRetry(input, options) {
 }
 
 // lib/main.js
-async function main(appId2, privateKey2, owner2, repositories2, permissions2, core3, createAppAuth2, request2, skipTokenRevoke2) {
+async function main(appId2, privateKey2, enterprise2, owner2, repositories2, permissions2, core3, createAppAuth2, request2, skipTokenRevoke2) {
+  if (enterprise2 && (owner2 || repositories2.length > 0)) {
+    throw new Error("Cannot use 'enterprise' input with 'owner' or 'repositories' inputs");
+  }
   let parsedOwner = "";
   let parsedRepositoryNames = [];
-  if (!owner2 && repositories2.length === 0) {
-    const [owner3, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
-    parsedOwner = owner3;
-    parsedRepositoryNames = [repo];
-    core3.info(
-      `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${owner3}/${repo}).`
-    );
-  }
-  if (owner2 && repositories2.length === 0) {
-    parsedOwner = owner2;
-    core3.info(
-      `Input 'repositories' is not set. Creating token for all repositories owned by ${owner2}.`
-    );
-  }
-  if (!owner2 && repositories2.length > 0) {
-    parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
-    parsedRepositoryNames = repositories2;
-    core3.info(
-      `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories2.map((repo) => `
+  if (!enterprise2) {
+    if (!owner2 && repositories2.length === 0) {
+      const [owner3, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
+      parsedOwner = owner3;
+      parsedRepositoryNames = [repo];
+      core3.info(
+        `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${owner3}/${repo}).`
+      );
+    }
+    if (owner2 && repositories2.length === 0) {
+      parsedOwner = owner2;
+      core3.info(
+        `Input 'repositories' is not set. Creating token for all repositories owned by ${owner2}.`
+      );
+    }
+    if (!owner2 && repositories2.length > 0) {
+      parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
+      parsedRepositoryNames = repositories2;
+      core3.info(
+        `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories2.map((repo) => `
 - ${parsedOwner}/${repo}`).join("")}`
-    );
-  }
-  if (owner2 && repositories2.length > 0) {
-    parsedOwner = owner2;
-    parsedRepositoryNames = repositories2;
-    core3.info(
-      `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
-      ${repositories2.map((repo) => `
+      );
+    }
+    if (owner2 && repositories2.length > 0) {
+      parsedOwner = owner2;
+      parsedRepositoryNames = repositories2;
+      core3.info(
+        `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
+        ${repositories2.map((repo) => `
 - ${parsedOwner}/${repo}`).join("")}`
-    );
+      );
+    }
+  } else {
+    core3.info(`Creating enterprise installation token for enterprise "${enterprise2}".`);
   }
   const auth5 = createAppAuth2({
     appId: appId2,
@@ -42563,7 +42570,20 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
     request: request2
   });
   let authentication, installationId, appSlug;
-  if (parsedRepositoryNames.length > 0) {
+  if (enterprise2) {
+    ({ authentication, installationId, appSlug } = await pRetry(
+      () => getTokenFromEnterprise(request2, auth5, enterprise2, permissions2),
+      {
+        shouldRetry: (error) => error.status >= 500,
+        onFailedAttempt: (error) => {
+          core3.info(
+            `Failed to create token for enterprise "${enterprise2}" (attempt ${error.attemptNumber}): ${error.message}`
+          );
+        },
+        retries: 3
+      }
+    ));
+  } else if (parsedRepositoryNames.length > 0) {
     ({ authentication, installationId, appSlug } = await pRetry(
       () => getTokenFromRepository(
         request2,
@@ -42640,6 +42660,27 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
   const appSlug = response.data["app_slug"];
   return { authentication, installationId, appSlug };
 }
+async function getTokenFromEnterprise(request2, auth5, enterprise2, permissions2) {
+  const response = await request2("GET /app/installations", {
+    request: {
+      hook: auth5.hook
+    }
+  });
+  const enterpriseInstallation = response.data.find(
+    (installation) => installation.target_type === "Enterprise" && installation.account?.slug === enterprise2
+  );
+  if (!enterpriseInstallation) {
+    throw new Error(`No enterprise installation found matching the name ${enterprise2}. Available installations: ${response.data.map((i) => `${i.target_type}:${i.account?.login || "N/A"}`).join(", ")}`);
+  }
+  const authentication = await auth5({
+    type: "installation",
+    installationId: enterpriseInstallation.id,
+    permissions: permissions2
+  });
+  const installationId = enterpriseInstallation.id;
+  const appSlug = enterpriseInstallation["app_slug"];
+  return { authentication, installationId, appSlug };
+}
 
 // lib/request.js
 var import_core = __toESM(require_core(), 1);
@@ -42677,6 +42718,7 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 }
 var appId = import_core2.default.getInput("app-id");
 var privateKey = import_core2.default.getInput("private-key");
+var enterprise = import_core2.default.getInput("enterprise");
 var owner = import_core2.default.getInput("owner");
 var repositories = import_core2.default.getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
 var skipTokenRevoke = import_core2.default.getBooleanInput("skip-token-revoke");
@@ -42684,6 +42726,7 @@ var permissions = getPermissionsFromInputs(process.env);
 var main_default = main(
   appId,
   privateKey,
+  enterprise,
   owner,
   repositories,
   permissions,

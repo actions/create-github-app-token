@@ -17,6 +17,7 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 
 const appId = core.getInput("app-id");
 const privateKey = core.getInput("private-key");
+const enterprise = core.getInput("enterprise");
 const owner = core.getInput("owner");
 const repositories = core
   .getInput("repositories")
@@ -32,6 +33,7 @@ const permissions = getPermissionsFromInputs(process.env);
 export default main(
   appId,
   privateKey,
+  enterprise,
   owner,
   repositories,
   permissions,
