@@ -1,16 +1,22 @@
 version: 2
+
+multi-ecosystem-groups:
+  minor-and-patch:
+    schedule:
+      interval: 'quarterly'
+
 updates:
   - package-ecosystem: 'npm'
     directory: '/'
-    schedule:
-      interval: 'monthly'
+    patterns: ['*']
+    multi-ecosystem-group: 'minor-and-patch'
     groups:
-      production-dependencies:
+      production:
         dependency-type: 'production'
         update-types:
           - minor
           - patch
-      development-dependencies:
+      development:
         dependency-type: 'development'
         update-types:
           - minor
@@ -21,8 +27,8 @@ updates:
       include: 'scope'
   - package-ecosystem: 'github-actions'
     directory: '/'
-    schedule:
-      interval: 'monthly'
+    patterns: ['*']
+    multi-ecosystem-groups: 'minor-and-patch'
     groups:
       github-actions:
         update-types:
