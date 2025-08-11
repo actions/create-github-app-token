@@ -296,6 +296,42 @@ jobs:
           GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
 ```
 
+### Tell git to use the app token to authenticate 
+
+Certain tools use `git` to access repositories, but have no facility to accept a GitHub API token.
+In this scenario it's easier to configure `git` itself to use the token.
+For example, this is important if you have a Python project with a `git+https` or a `git+ssh` dependency on a private repository.
+
+```yaml
+on: [pull_request]
+
+jobs:
+  python-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          # required
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+      - name: Configure git to use the app token
+        run: git config --global url."https://USERNAME:${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+      - uses: actions/setup-python@v5
+      - name: Install dependencies
+        run: pip install .
+```
+
+Refer to [`git`'s configuration docs](https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlbaseinsteadOf) for more information on this syntax.
+
+The above example will use the same token for all `git` operations on GitHub via `https`, but you can configure it on a per repository or per-organisation basis by changing the prefix:
+
+```bash
+git config --global url."https://USERNAME:${GITHUB_TOKEN}@github.com/MyOrg/MyRepo".insteadOf "https://github.com/MyOrg/MyRepo"
+```
+
 ## Inputs
 
 ### `app-id`
