@@ -326,6 +326,8 @@ jobs:
 
 Refer to [`git`'s configuration docs](https://git-scm.com/docs/git-config#Documentation/git-config.txt-urlbaseinsteadOf) for more information on this syntax.
 
+In this example, `USERNAME` is ignored by GitHub since the token contains the full authentication information. For this reason, you can leave it in the configuration as is.
+
 The above example will use the same token for all `git` operations on GitHub via `https`, but you can configure it on a per repository or per-organisation basis by changing the prefix:
 
 ```bash
