@@ -132,6 +132,6 @@ outputs:
   app-slug:
     description: "GitHub App slug"
 runs:
-  using: "node24"
+  using: "node20"
   main: "dist/main.cjs"
   post: "dist/post.cjs"
