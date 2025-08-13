@@ -4,6 +4,13 @@
 
 GitHub Action for creating a GitHub App installation access token.
 
+## V3
+
+What's new:
+
+- Updated to the node24 runtime by default as well as updating checkout to use v5, which uses node24.
+- This requires a minimum Actions Runner version of v2.327.1 to run.
+
 ## Usage
 
 In order to use this action, you need to:
@@ -28,7 +35,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -47,7 +54,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           # required
@@ -73,7 +80,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           # required
@@ -98,7 +105,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           # required
@@ -135,7 +142,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -157,7 +164,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -182,7 +189,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -207,7 +214,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -249,7 +256,7 @@ jobs:
         owners-and-repos: ${{ fromJson(needs.set-matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -279,7 +286,7 @@ jobs:
     steps:
       - name: Create GitHub App token
         id: create_token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ vars.GHES_APP_ID }}
           private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
@@ -318,7 +325,7 @@ steps:
       echo "private-key=$private_key" >> "$GITHUB_OUTPUT"
   - name: Generate GitHub App Token
     id: app-token
-    uses: actions/create-github-app-token@v2
+    uses: actions/create-github-app-token@v3
     with:
       app-id: ${{ vars.APP_ID }}
       private-key: ${{ steps.decode.outputs.private-key }}
