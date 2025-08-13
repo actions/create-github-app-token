@@ -4,6 +4,10 @@ multi-ecosystem-groups:
   minor-and-patch:
     schedule:
       interval: 'quarterly'
+    commit-message:
+        prefix: 'fix'
+        prefix-development: 'build'
+        include: 'scope'
 
 updates:
   - package-ecosystem: 'npm'
@@ -21,10 +25,6 @@ updates:
         update-types:
           - minor
           - patch
-    commit-message:
-      prefix: 'fix'
-      prefix-development: 'build'
-      include: 'scope'
   - package-ecosystem: 'github-actions'
     directory: '/'
     patterns: ['*']
