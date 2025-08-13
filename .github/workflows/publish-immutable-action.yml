@@ -1,4 +1,4 @@
-name: "Publish Immutable Action"
+name: 'Publish Immutable Action'
 
 on:
   release:
