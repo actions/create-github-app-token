@@ -9,7 +9,7 @@ GitHub Action for creating a GitHub App installation access token.
 What's new:
 
 - Updated to the node24 runtime by default as well as updating checkout to use v5, which uses node24.
-- This requires a minimum Actions Runner version of v2.327.1 to run.
+- This requires a minimum Actions Runner version of [v2.327.1](https://github.com/actions/runner/releases/tag/v2.327.1) to run.
 
 ## Usage
 
