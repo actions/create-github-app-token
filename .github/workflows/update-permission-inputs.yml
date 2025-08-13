@@ -3,8 +3,8 @@ name: Update Permission Inputs
 on:
   pull_request:
     paths:
-      - 'package.json'
-      - 'package-lock.json'
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 concurrency:
@@ -18,11 +18,11 @@ jobs:
   update-permission-inputs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version-file: .node-version
-          cache: 'npm'
+          cache: "npm"
       - name: Install dependencies
         run: npm ci
       - name: Run permission inputs update script
@@ -30,4 +30,4 @@ jobs:
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5.2.0
         with:
-          commit_message: 'feat: update permission inputs'
+          commit_message: "feat: update permission inputs"
