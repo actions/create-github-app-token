@@ -29,8 +29,6 @@ updates:
     directory: '/'
     patterns: ['*']
     multi-ecosystem-groups: 'minor-and-patch'
-    groups:
-      github-actions:
-        update-types:
-          - minor
-          - patch
+    update-types:
+      - minor
+      - patch
