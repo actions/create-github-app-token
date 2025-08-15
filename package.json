@@ -2,7 +2,7 @@
   "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "1.11.0",
+  "version": "2.1.1",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "engines": {
     "node": ">=20.16.0"
@@ -15,26 +15,31 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.10.1",
-    "@octokit/auth-app": "^7.1.1",
-    "@octokit/request": "^9.1.3",
-    "p-retry": "^6.2.0",
-    "undici": "^v7.0.0-alpha.3"
+    "@actions/core": "^1.11.1",
+    "@octokit/auth-app": "^7.2.1",
+    "@octokit/request": "^9.2.2",
+    "p-retry": "^6.2.1",
+    "undici": "^7.8.0"
   },
   "devDependencies": {
-    "@sinonjs/fake-timers": "^13.0.2",
-    "ava": "^6.1.3",
-    "c8": "^10.1.2",
-    "dotenv": "^16.4.5",
-    "esbuild": "^0.24.0",
-    "execa": "^9.4.0",
+    "@octokit/openapi": "^19.1.0",
+    "@sinonjs/fake-timers": "^14.0.0",
+    "ava": "^6.4.1",
+    "c8": "^10.1.3",
+    "dotenv": "^17.2.1",
+    "esbuild": "^0.25.8",
+    "execa": "^9.6.0",
     "open-cli": "^8.0.0",
-    "yaml": "^2.5.1"
+    "yaml": "^2.8.1"
   },
   "release": {
     "branches": [
       "+([0-9]).x",
-      "main"
+      "main",
+      {
+        "name": "beta",
+        "prerelease": true
+      }
     ],
     "plugins": [
       "@semantic-release/commit-analyzer",
@@ -47,6 +52,7 @@
         {
           "assets": [
             "package.json",
+            "package-lock.json",
             "dist/*"
           ],
           "message": "build(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
