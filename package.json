@@ -2,14 +2,14 @@
   "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "2.1.1",
+  "version": "3.0.0-beta.1",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "engines": {
-    "node": ">=20.16.0"
+    "node": ">=24.4.0"
   },
   "scripts": {
-    "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20 --packages=bundle",
-    "test": "c8 --100 ava tests/index.js NODE_OPTIONS=--disable-warning=UNDICI-EHPA",
+    "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --packages=bundle",
+    "test": "c8 --100 ava tests/index.js",
     "coverage": "c8 report --reporter html",
     "postcoverage": "open-cli coverage/index.html"
   },
@@ -46,7 +46,6 @@
       "@semantic-release/release-notes-generator",
       "@semantic-release/github",
       "@semantic-release/npm",
-      "semantic-release-plugin-github-breaking-version-tag",
       [
         "@semantic-release/git",
         {
