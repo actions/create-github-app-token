@@ -3,7 +3,9 @@ name: release
 on:
   push:
     branches:
+      - "*.x"
       - main
+      - beta
 
 permissions:
   contents: write
