@@ -1,6 +1,4 @@
 // @ts-check
-process.env.NODE_USE_ENV_PROXY = "1";
-
 import core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
 
