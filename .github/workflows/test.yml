@@ -45,7 +45,6 @@ jobs:
       - uses: ./ # Uses the action in the root directory
         id: test
         env:
-          NODE_USE_ENV_PROXY: 1
           https_proxy: https://example.com
         with:
           app-id: ${{ vars.TEST_APP_ID }}
