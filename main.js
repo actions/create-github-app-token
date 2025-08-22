@@ -1,4 +1,5 @@
 // @ts-check
+process.env.NODE_USE_ENV_PROXY = "1";
 
 import core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
@@ -14,8 +15,6 @@ if (!process.env.GITHUB_REPOSITORY) {
 if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
-
-process.env.NODE_USE_ENV_PROXY = "1";
 
 const appId = core.getInput("app-id");
 const privateKey = core.getInput("private-key");
