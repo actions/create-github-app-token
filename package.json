@@ -19,8 +19,7 @@
     "@actions/core": "^3.0.0",
     "@octokit/auth-app": "^8.2.0",
     "@octokit/request": "^10.0.8",
-    "p-retry": "^7.1.1",
-    "undici": "^7.24.1"
+    "p-retry": "^7.1.1"
   },
   "devDependencies": {
     "@octokit/openapi": "^21.0.0",
@@ -31,6 +30,7 @@
     "esbuild": "^0.27.3",
     "execa": "^9.6.1",
     "open-cli": "^8.0.0",
+    "undici": "^7.24.1",
     "yaml": "^2.8.2"
   },
   "release": {
