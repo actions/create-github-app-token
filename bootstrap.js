@@ -1,4 +1,4 @@
-// Enable env-based proxy support (honors explicit opt-out if caller set NODE_USE_ENV_PROXY)
+// Enable env-based proxy support before loading the main bundle (unless caller explicitly set NODE_USE_ENV_PROXY)
 if (process.env.NODE_USE_ENV_PROXY == null) {
   process.env.NODE_USE_ENV_PROXY = "1";
 }

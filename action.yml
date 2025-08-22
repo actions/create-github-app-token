@@ -133,5 +133,5 @@ outputs:
     description: "GitHub App slug"
 runs:
   using: "node24"
-  main: "dist/bootstrap.cjs"
-  post: "dist/post.cjs"
+  main: "dist/bootstrap.js"
+  post: "dist/post.js"
