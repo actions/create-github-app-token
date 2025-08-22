@@ -8,7 +8,7 @@
     "node": ">=24.4.0"
   },
   "scripts": {
-  "build": "esbuild bootstrap.js main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --packages=bundle",
+  "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --packages=bundle",
     "test": "c8 --100 ava tests/index.js",
     "coverage": "c8 report --reporter html",
     "postcoverage": "open-cli coverage/index.html"
