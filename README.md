@@ -357,12 +357,12 @@ steps:
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
 
-### `enterprise`
+### `enterprise-slug`
 
 **Optional:** The slug of the enterprise to generate a token for enterprise-level app installations.
 
 > [!NOTE]
-> The `enterprise` input is mutually exclusive with `owner` and `repositories`. GitHub Apps can be installed on enterprise accounts with permissions that let them call enterprise management APIs. Enterprise installations do not grant access to organization or repository resources.
+> The `enterprise-slug` input is mutually exclusive with `owner` and `repositories`. GitHub Apps can be installed on enterprise accounts with permissions that let them call enterprise management APIs. Enterprise installations do not grant access to organization or repository resources.
 
 ### `permission-<permission name>`
 
