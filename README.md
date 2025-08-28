@@ -209,7 +209,7 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
-          enterprise: my-enterprise-slug
+          enterprise-slug: my-enterprise-slug
       - name: Call enterprise management REST API with gh
         run: |
           gh api /enterprises/my-enterprise-slug/apps/installable_organizations
