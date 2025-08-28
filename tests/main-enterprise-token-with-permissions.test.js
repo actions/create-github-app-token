@@ -2,7 +2,7 @@ import { test } from "./main.js";
 
 // Verify `main` successfully generates enterprise token with specific permissions.
 await test((mockPool) => {
-  process.env.INPUT_ENTERPRISE = "test-enterprise";
+  process.env["INPUT_ENTERPRISE-SLUG"] = "test-enterprise";
   delete process.env.INPUT_OWNER;
   delete process.env.INPUT_REPOSITORIES;
   process.env["INPUT_PERMISSION-ENTERPRISE-ORGANIZATIONS"] = "read";
@@ -28,7 +28,7 @@ await test((mockPool) => {
           id: mockInstallationId,
           app_slug: mockAppSlug,
           target_type: "Enterprise",
-          account: { login: "test-enterprise" }
+          account: { login: "test-enterprise", slug: "test-enterprise" }
         }
       ],
       { headers: { "content-type": "application/json" } }

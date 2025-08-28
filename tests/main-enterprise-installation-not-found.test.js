@@ -5,7 +5,7 @@ import { test } from "./main.js";
 await test((mockPool) => {
   delete process.env.INPUT_OWNER;
   delete process.env.INPUT_REPOSITORIES;  
-  process.env.INPUT_ENTERPRISE = "test-enterprise";
+  process.env["INPUT_ENTERPRISE-SLUG"] = "test-enterprise";
   
 
   // Mock the /app/installations endpoint to return only non-enterprise installations

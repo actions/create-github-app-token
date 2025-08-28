@@ -17,7 +17,7 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 
 const appId = core.getInput("app-id");
 const privateKey = core.getInput("private-key");
-const enterprise = core.getInput("enterprise");
+const enterpriseSlug = core.getInput("enterprise-slug");
 const owner = core.getInput("owner");
 const repositories = core
   .getInput("repositories")
@@ -33,7 +33,7 @@ const permissions = getPermissionsFromInputs(process.env);
 export default main(
   appId,
   privateKey,
-  enterprise,
+  enterpriseSlug,
   owner,
   repositories,
   permissions,
@@ -44,5 +44,8 @@ export default main(
 ).catch((error) => {
   /* c8 ignore next 3 */
   console.error(error);
-  core.setFailed(error.message);
+  // Don't set failed in test mode (when GITHUB_OUTPUT is undefined)
+  if (process.env.GITHUB_OUTPUT !== undefined) {
+    core.setFailed(error.message);
+  }
 });
