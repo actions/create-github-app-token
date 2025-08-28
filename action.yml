@@ -17,7 +17,7 @@ inputs:
   repositories:
     description: "Comma or newline-separated list of repositories to install the GitHub App on (defaults to current repository if owner is unset)"
     required: false
-  enterprise:
+  enterprise-slug:
     description: "Enterprise slug for enterprise-level app installations (cannot be used with 'owner' or 'repositories')"
     required: false
   skip-token-revoke:
