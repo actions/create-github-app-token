@@ -15,10 +15,6 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
 
-import { spawn } from "node:child_process";
-// export for testing
-export { spawn } from "node:child_process";
-
 async function run() {
   // spawn a child process if proxy is set
   const httpProxyEnvVars = [
@@ -31,12 +27,14 @@ async function run() {
   const shouldUseProxy = httpProxyEnvVars.some((v) => process.env[v]);
 
   if (!nodeHasProxySupportEnabled && shouldUseProxy) {
+    const { spawn } = await import("node:child_process");
     // spawn itself with NODE_USE_ENV_PROXY=1
     const child = spawn(process.execPath, process.argv.slice(1), {
       env: { ...process.env, NODE_USE_ENV_PROXY: "1" },
       stdio: "inherit",
     });
     child.on("exit", (code) => process.exit(code));
+    // TODO: return promise that resolves once sub process exits (for testing)
     return;
   }
 
