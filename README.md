@@ -98,6 +98,11 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Prevent implicit use of default GITHUB_TOKEN
+          persist-credentials: false
       - uses: actions/create-github-app-token@v2
         id: app-token
         with:
