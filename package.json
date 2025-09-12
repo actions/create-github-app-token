@@ -14,7 +14,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "@octokit/auth-app": "^7.2.1",
-    "@octokit/request": "^9.2.2",
+    "@octokit/request": "^10.0.3",
     "p-retry": "^6.2.1",
     "undici": "^7.8.0"
   },
