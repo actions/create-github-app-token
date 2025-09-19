@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
-          cache: 'npm'
+          cache: "npm"
 
       - run: npm ci
       - run: npm test
@@ -39,11 +39,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
-          cache: 'npm'
+          cache: "npm"
       - run: npm ci
       - run: npm run build
       - uses: ./ # Uses the action in the root directory
         id: test
+        env:
+          https_proxy: https://example.com
         with:
           app-id: ${{ vars.TEST_APP_ID }}
           private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
@@ -54,3 +56,30 @@ jobs:
         with:
           route: GET /installation/repositories
       - run: echo '${{ steps.get-repository.outputs.data }}'
+
+  end-to-end-proxy:
+    name: End-to-End test using proxy
+    runs-on: ubuntu-latest
+    # do not run from forks, as forks don’t have access to repository secrets
+    if: github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: "npm"
+      - run: npm ci
+      - run: npm run build
+      - uses: ./ # Uses the action in the root directory
+        id: test
+        env:
+          https_proxy: https://example.com
+        with:
+          app-id: ${{ vars.TEST_APP_ID }}
+          private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
+
+      # fail CI if prior step succeeds and vice versa
+      - if: ${{ success() }}
+        run: exit 1
+      - if: ${{ failure() }}
+        run: echo "action failed as expected"
