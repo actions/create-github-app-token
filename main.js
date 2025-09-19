@@ -29,15 +29,22 @@ async function run() {
   // There is no other way to enable proxy support in Node.js as of 2025-09-19
   // https://github.com/nodejs/node/blob/4612c793cb9007a91cb3fd82afe518440473826e/lib/internal/process/pre_execution.js#L168-L187
   if (!nodeHasProxySupportEnabled && shouldUseProxy) {
-    const { spawn } = await import("node:child_process");
-    // spawn itself with NODE_USE_ENV_PROXY=1
-    const child = spawn(process.execPath, process.argv.slice(1), {
-      env: { ...process.env, NODE_USE_ENV_PROXY: "1" },
-      stdio: "inherit",
+    return new Promise(async (resolve, reject) => {
+      const { spawn } = await import("node:child_process");
+      // spawn itself with NODE_USE_ENV_PROXY=1
+      const child = spawn(process.execPath, process.argv.slice(1), {
+        env: { ...process.env, NODE_USE_ENV_PROXY: "1" },
+        stdio: "inherit",
+      });
+      child.on("exit", (code) => {
+        process.exitCode = code;
+        if (code !== 0) {
+          reject(new Error(`Child process exited with code ${code}`));
+        } else {
+          resolve();
+        }
+      });
     });
-    child.on("exit", (code) => process.exit(code));
-    // TODO: return promise that resolves once sub process exits (for testing)
-    return;
   }
 
   const appId = core.getInput("app-id");
