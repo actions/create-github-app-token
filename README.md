@@ -6,22 +6,24 @@ GitHub Action for creating a GitHub App installation access token.
 
 ## Usage
 
-In order to use this action, you must first create a GitHub App. This is required in order to give create-github-app-token the necessary permissions to be able to generate tokens.
+In order to use this action, you need to:
 
-[See this page](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app) for more details on how to register a GitHub App. Here are ways that you can create the app:
-- [Use this link to create the GitHub app in your account](https://github.com/settings/apps/new?url=https://github.com/actions/create-github-app-token&webhook_active=false&public=false&metadata=read)
-- [Use this link to create the GitHub app in your organization](https://github.com/organizations/:org/settings/apps/new?url=https://github.com/actions/create-github-app-token&webhook_active=false&public=false&metadata=read) (note: link will be dead and you must replace `:org` with your organization name)
+1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app)
 
-The permissions that you give to the application depend on your use case:
-- If you will use app tokens with `actions/checkout` to check out a private or internal repository (as described below), you will want to mark at least one permission under `Repository permissions` as read-only: `Contents`
+   - [Use this link to create the GitHub app in your account](https://github.com/settings/apps/new?url=https://github.com/actions/create-github-app-token&webhook_active=false&public=false&metadata=read)
+   - [Use this link to create the GitHub app in your organization](https://github.com/organizations/:org/settings/apps/new?url=https://github.com/actions/create-github-app-token&webhook_active=false&public=false&metadata=read) (note: link will be dead and you must replace `:org` with your organization name)
 
-Once you have the GitHub app installed, there are a few manual steps you must follow to finish setup:
-1. In the `Private keys` section of your newly-created app, click `Generate a private key`. This will automatically trigger your web browser to download the private key .pem file, which will be used in step 4.
-2. In the `Install app` section of your newly-created app, choose where you want to install the application. If installing into an Enterprise account, you would choose the organization(s) that you want to install your application into.
-3. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
-4. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
+   The permissions that you give to the application depend on your use case:
+   - If you will use app tokens with `actions/checkout` to check out a private or internal repository (as described below), you will want to mark at least one permission under `Repository permissions` as read-only: `Contents`
 
-> [!IMPORTANT]  
+   Once you have the GitHub app installed, there are a few manual steps you must follow to finish setup:
+   1. In the `Private keys` section of your newly-created app, click `Generate a private key`. This will automatically trigger your web browser to download the private key .pem file, which will be used in step 3.
+   2. In the `Install app` section of your newly-created app, choose where you want to install the application. If installing into an Enterprise account, you would choose the organization(s) that you want to install your application into.
+
+2. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
+3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
+
+> [!IMPORTANT]
 > An installation access token expires after 1 hour. Please [see this comment](https://github.com/actions/create-github-app-token/issues/121#issuecomment-2043214796) for alternative approaches if you have long-running processes.
 
 ### Create a token for the current repository
@@ -37,7 +39,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -56,7 +58,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           # required
@@ -82,7 +84,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           # required
@@ -107,7 +109,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           # required
@@ -144,7 +146,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -166,7 +168,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -191,7 +193,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -216,7 +218,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -258,7 +260,7 @@ jobs:
         owners-and-repos: ${{ fromJson(needs.set-matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -288,7 +290,7 @@ jobs:
     steps:
       - name: Create GitHub App token
         id: create_token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2
         with:
           app-id: ${{ vars.GHES_APP_ID }}
           private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
@@ -327,7 +329,7 @@ steps:
       echo "private-key=$private_key" >> "$GITHUB_OUTPUT"
   - name: Generate GitHub App Token
     id: app-token
-    uses: actions/create-github-app-token@v1
+    uses: actions/create-github-app-token@v2
     with:
       app-id: ${{ vars.APP_ID }}
       private-key: ${{ steps.decode.outputs.private-key }}
@@ -352,7 +354,7 @@ The reason we define one `permision-<permission name>` input per permission is t
 
 ### `skip-token-revoke`
 
-**Optional:** If truthy, the token will not be revoked when the current job is complete.
+**Optional:** If true, the token will not be revoked when the current job is complete.
 
 ### `github-api-url`
 
@@ -379,7 +381,7 @@ The action creates an installation access token using [the `POST /app/installati
 1. The token is scoped to the current repository or `repositories` if set.
 2. The token inherits all the installation's permissions.
 3. The token is set as output `token` which can be used in subsequent steps.
-4. Unless the `skip-token-revoke` input is set to a truthy value, the token is revoked in the `post` step of the action, which means it cannot be passed to another job.
+4. Unless the `skip-token-revoke` input is set to true, the token is revoked in the `post` step of the action, which means it cannot be passed to another job.
 5. The token is masked, it cannot be logged accidentally.
 
 > [!NOTE]
