@@ -26,6 +26,8 @@ async function run() {
   const nodeHasProxySupportEnabled = process.env.NODE_USE_ENV_PROXY === "1";
   const shouldUseProxy = httpProxyEnvVars.some((v) => process.env[v]);
 
+  // There is no other way to enable proxy support in Node.js as of 2025-09-19
+  // https://github.com/nodejs/node/blob/4612c793cb9007a91cb3fd82afe518440473826e/lib/internal/process/pre_execution.js#L168-L187
   if (!nodeHasProxySupportEnabled && shouldUseProxy) {
     const { spawn } = await import("node:child_process");
     // spawn itself with NODE_USE_ENV_PROXY=1
