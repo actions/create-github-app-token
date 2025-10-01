@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@octokit/auth-app": "^8.1.0",
+    "@octokit/auth-app": "^8.1.1",
     "@octokit/request": "^10.0.3",
     "p-retry": "^6.2.1",
     "undici": "^7.16.0"
