@@ -8,6 +8,7 @@ export const DEFAULT_ENV = {
   // inputs are set as environment variables with the prefix INPUT_
   // https://docs.github.com/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
   "INPUT_GITHUB-API-URL": "https://api.github.com",
+  "INPUT_SKIP-TOKEN-REVOKE": "false",
   "INPUT_APP-ID": "123456",
   // This key is invalidated. It’s from https://github.com/octokit/auth-app.js/issues/465#issuecomment-1564998327.
   "INPUT_PRIVATE-KEY": `-----BEGIN RSA PRIVATE KEY-----
@@ -37,6 +38,8 @@ so0tiQKBgGQXZaxaXhYUcxYHuCkQ3V4Vsj3ezlM92xXlP32SGFm3KgFhYy9kATxw
 Cax1ytZzvlrKLQyQFVK1COs2rHt7W4cJ7op7C8zXfsigXCiejnS664oAuX8sQZID
 x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
 -----END RSA PRIVATE KEY-----`,
+  // The Actions runner sets all inputs to empty strings if not set.
+  "INPUT_PERMISSION-ADMINISTRATION": "",
 };
 
 export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
@@ -47,7 +50,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   // Set up mocking
   const baseUrl = new URL(env["INPUT_GITHUB-API-URL"]);
   const basePath = baseUrl.pathname === "/" ? "" : baseUrl.pathname;
-  const mockAgent = new MockAgent();
+  const mockAgent = new MockAgent({ enableCallHistory: true });
   mockAgent.disableNetConnect();
   setGlobalDispatcher(mockAgent);
   const mockPool = mockAgent.get(baseUrl.origin);
@@ -62,6 +65,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const repo = encodeURIComponent(
     (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0]
   );
+
   mockPool
     .intercept({
       path: `${basePath}/repos/${owner}/${repo}/installation`,
@@ -82,6 +86,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const mockInstallationAccessToken =
     "ghs_16C7e42F292c6912E7710c838347Ae178B4a"; // This token is invalidated. It’s from https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app.
   const mockExpiresAt = "2016-07-11T22:14:10Z";
+
   mockPool
     .intercept({
       path: `${basePath}/app/installations/${mockInstallationId}/access_tokens`,
@@ -102,5 +107,19 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   cb(mockPool);
 
   // Run the main script
-  await import("../main.js");
+  const { default: promise } = await import("../main.js");
+  await promise;
+
+  console.log("--- REQUESTS ---");
+  const calls = mockAgent
+    .getCallHistory()
+    .calls()
+    .map((call) => {
+      const route = `${call.method} ${call.path}`;
+      if (call.method === "GET") return route;
+
+      return `${route}\n${call.body}`;
+    });
+
+  console.log(calls.join("\n"));
 }

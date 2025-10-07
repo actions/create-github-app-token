@@ -20,7 +20,7 @@ await test((mockPool) => {
     })
     .reply(
       200,
-      { id: mockInstallationId, "app_slug": mockAppSlug },
-      { headers: { "content-type": "application/json" } }
+      { id: mockInstallationId, app_slug: mockAppSlug },
+      { headers: { "content-type": "application/json" } },
     );
 });

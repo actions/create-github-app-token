@@ -8,9 +8,9 @@ GitHub Action for creating a GitHub App installation access token.
 
 In order to use this action, you need to:
 
-1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app)
-2. [Store the App's ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`)
-3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`)
+1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app).
+2. [Store the App's ID or Client ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`).
+3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`).
 
 > [!IMPORTANT]  
 > An installation access token expires after 1 hour. Please [see this comment](https://github.com/actions/create-github-app-token/issues/121#issuecomment-2043214796) for alternative approaches if you have long-running processes.
@@ -28,7 +28,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -47,7 +47,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           # required
@@ -73,7 +73,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           # required
@@ -86,7 +86,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
       - id: committer
         run: echo "string=${{ steps.app-token.outputs.app-slug }}[bot] <${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>"  >> "$GITHUB_OUTPUT"
-      - run: echo "committer string is ${ {steps.committer.outputs.string }}"
+      - run: echo "committer string is ${{ steps.committer.outputs.string }}"
 ```
 
 ### Configure git CLI for an app's bot user
@@ -98,7 +98,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           # required
@@ -111,7 +111,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
       - run: |
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
-          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com>'
+          git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
       # git commands like commit work using the bot user
       - run: |
           git add .
@@ -121,7 +121,7 @@ jobs:
 
 > [!TIP]
 > The `<BOT USER ID>` is the numeric user ID of the app's bot user, which can be found under `https://api.github.com/users/<app-slug>%5Bbot%5D`.
-> 
+>
 > For example, we can check at `https://api.github.com/users/dependabot[bot]` to see the user ID of Dependabot is 49699333.
 >
 > Alternatively, you can use the [octokit/request-action](https://github.com/octokit/request-action) to get the ID.
@@ -135,7 +135,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -157,7 +157,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -182,12 +182,38 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: another-owner
+      - uses: peter-evans/create-or-update-comment@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          issue-number: ${{ github.event.issue.number }}
+          body: "Hello, World!"
+```
+
+### Create a token with specific permissions
+
+> [!NOTE]
+> Selected permissions must be granted to the installation of the specified app and repository owner. Setting a permission that the installation does not have will result in an error.
+
+```yaml
+on: [issues]
+
+jobs:
+  hello-world:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          permission-issues: write
       - uses: peter-evans/create-or-update-comment@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -223,7 +249,7 @@ jobs:
         owners-and-repos: ${{ fromJson(needs.set-matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -251,23 +277,23 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: Create GitHub App token
-      id: create_token
-      uses: actions/create-github-app-token@v1
-      with:
-        app-id: ${{ vars.GHES_APP_ID }}
-        private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
-        owner: ${{ vars.GHES_INSTALLATION_ORG }}
-        github-api-url: ${{ vars.GITHUB_API_URL }}
+      - name: Create GitHub App token
+        id: create_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.GHES_APP_ID }}
+          private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
+          owner: ${{ vars.GHES_INSTALLATION_ORG }}
+          github-api-url: ${{ vars.GITHUB_API_URL }}
 
-    - name: Create issue
-      uses: octokit/request-action@v2.x
-      with:
-        route: POST /repos/${{ github.repository }}/issues
-        title: "New issue from workflow"
-        body: "This is a new issue created from a GitHub Action workflow."
-      env:
-        GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
+      - name: Create issue
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/${{ github.repository }}/issues
+          title: "New issue from workflow"
+          body: "This is a new issue created from a GitHub Action workflow."
+        env:
+          GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
 ```
 
 ## Inputs
@@ -292,7 +318,7 @@ steps:
       echo "private-key=$private_key" >> "$GITHUB_OUTPUT"
   - name: Generate GitHub App Token
     id: app-token
-    uses: actions/create-github-app-token@v1
+    uses: actions/create-github-app-token@v2
     with:
       app-id: ${{ vars.APP_ID }}
       private-key: ${{ steps.decode.outputs.private-key }}
@@ -309,9 +335,15 @@ steps:
 > [!NOTE]
 > If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
 
+### `permission-<permission name>`
+
+**Optional:** The permissions to grant to the token. By default, the token inherits all of the installation's permissions. We recommend to explicitly list the permissions that are required for a use case. This follows GitHub's own recommendation to [control permissions of `GITHUB_TOKEN` in workflows](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token). The documentation also lists all available permissions, just prefix the permission key with `permission-` (e.g., `pull-requests` → `permission-pull-requests`).
+
+The reason we define one `permision-<permission name>` input per permission is to benefit from type intelligence and input validation built into GitHub's action runner.
+
 ### `skip-token-revoke`
 
-**Optional:** If truthy, the token will not be revoked when the current job is complete.
+**Optional:** If true, the token will not be revoked when the current job is complete.
 
 ### `github-api-url`
 
@@ -338,11 +370,15 @@ The action creates an installation access token using [the `POST /app/installati
 1. The token is scoped to the current repository or `repositories` if set.
 2. The token inherits all the installation's permissions.
 3. The token is set as output `token` which can be used in subsequent steps.
-4. Unless the `skip-token-revoke` input is set to a truthy value, the token is revoked in the `post` step of the action, which means it cannot be passed to another job.
+4. Unless the `skip-token-revoke` input is set to true, the token is revoked in the `post` step of the action, which means it cannot be passed to another job.
 5. The token is masked, it cannot be logged accidentally.
 
 > [!NOTE]
 > Installation permissions can differ from the app's permissions they belong to. Installation permissions are set when an app is installed on an account. When the app adds more permissions after the installation, an account administrator will have to approve the new permissions before they are set on the installation.
+
+## Contributing
+
+[CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## License
 
