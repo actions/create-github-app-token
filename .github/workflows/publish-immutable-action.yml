@@ -7,11 +7,18 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-      packages: write
     steps:
       - uses: actions/checkout@v5
+      - name: Create SYNC_BOT_TOKEN
+        id: sync-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.SYNC_BOT_APP_ID }}
+          private-key: ${{ secrets.SYNC_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-packages: write
+
       - name: Publish Immutable Action
         uses: actions/publish-immutable-action@v0.0.4
+        with:
+          token: ${{ steps.sync-token.outputs.token }}
