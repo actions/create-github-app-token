@@ -187,6 +187,14 @@
         "write"
       ]
     },
+    "custom_properties_for_organizations": {
+      "type": "string",
+      "description": "The level of permission to grant the access token to view and edit custom properties for an organization, when allowed by the property.",
+      "enum": [
+        "read",
+        "write"
+      ]
+    },
     "members": {
       "type": "string",
       "description": "The level of permission to grant the access token for organization teams and members.",
@@ -221,7 +229,7 @@
     },
     "organization_custom_properties": {
       "type": "string",
-      "description": "The level of permission to grant the access token for custom property management.",
+      "description": "The level of permission to grant the access token for repository custom properties management at the organization level.",
       "enum": [
         "read",
         "write",
@@ -383,6 +391,15 @@
       "enum": [
         "read",
         "write"
+      ]
+    },
+    "enterprise_custom_properties_for_organizations": {
+      "type": "string",
+      "description": "The level of permission to grant the access token for organization custom properties management at the enterprise level.",
+      "enum": [
+        "read",
+        "write",
+        "admin"
       ]
     }
   },
