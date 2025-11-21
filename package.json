@@ -2,7 +2,7 @@
   "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "engines": {
     "node": ">=20"
