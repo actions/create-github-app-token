@@ -5,6 +5,7 @@ on:
     branches:
       - main
   pull_request:
+  merge_group:
   workflow_dispatch:
 
 concurrency:
@@ -16,7 +17,7 @@ permissions:
 
 jobs:
   integration:
-    name: Integration
+    name: integration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -29,7 +30,7 @@ jobs:
       - run: npm test
 
   end-to-end:
-    name: End-to-End
+    name: end-to-end
     runs-on: ubuntu-latest
     # do not run from forks, as forks don’t have access to repository secrets
     if: github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
