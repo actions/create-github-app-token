@@ -4,6 +4,10 @@
   "type": "module",
   "version": "2.1.4",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "npm@10.9.4",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20.0.0 --packages=bundle",
     "test": "c8 --100 ava tests/index.js",
@@ -20,11 +24,11 @@
   },
   "devDependencies": {
     "@octokit/openapi": "^19.1.0",
-    "@sinonjs/fake-timers": "^14.0.0",
+    "@sinonjs/fake-timers": "^15.0.0",
     "ava": "^6.4.1",
     "c8": "^10.1.3",
-    "dotenv": "^17.2.2",
-    "esbuild": "^0.25.9",
+    "dotenv": "^17.2.3",
+    "esbuild": "^0.25.10",
     "execa": "^9.6.0",
     "open-cli": "^8.0.0",
     "yaml": "^2.8.1"
