@@ -13,10 +13,13 @@ concurrency:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   update-permission-inputs:
     runs-on: ubuntu-latest
+    env:
+      COMMIT_MESSAGE: 'feat: update permission inputs'
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -27,6 +30,13 @@ jobs:
       - name: Run permission inputs update script
         run: node scripts/update-permission-inputs.js
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 # v7.0.0
+        id: auto-commit
+        uses: stefanzweifel/git-auto-commit-action@778341af668090896ca464160c2def5d1d1a3eb0 # v6.0.1
         with:
-          commit_message: 'feat: update permission inputs'
+          commit_message: ${{ env.COMMIT_MESSAGE }}
+      - name: Update PR title
+        if: github.event_name == 'pull_request' && steps.auto-commit.outputs.changes_detected == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} --title "${{ env.COMMIT_MESSAGE }}"
