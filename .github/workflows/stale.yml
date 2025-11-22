@@ -1,0 +1,34 @@
+# This workflow warns and then closes issues that have had no activity for a specified amount of time.
+# https://github.com/actions/stale
+
+name: Manage stale issues
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 00:00 UTC on Mondays
+    - cron: '0 0 * * 1'
+
+permissions:
+  issues: write
+  pull-requests: write
+
+env:
+  DAYS_BEFORE_STALE: 180
+  DAYS_BEFORE_CLOSE: 60
+  STALE_LABEL: 'stale'
+  STALE_LABEL_URL: ${{github.server_url}}/${{github.repository}}/labels/stale
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v10
+        with:
+          operations-per-run: 100
+          days-before-stale: ${{ env.DAYS_BEFORE_STALE }}
+          days-before-close: ${{ env.DAYS_BEFORE_CLOSE }}
+          stale-issue-label: ${{ env.STALE_LABEL }}
+          stale-pr-label: ${{ env.STALE_LABEL }}
+          stale-issue-message: 'This issue has been marked ${{ env.STALE_LABEL_URL }} because it has been open for ${{ env.DAYS_BEFORE_STALE }} days with no activity. Please close this issue if it is no longer needed. If this issue is still relevant and you would like it to remain open, simply update it within the next ${{ env.DAYS_BEFORE_CLOSE }} days.'
+          stale-pr-message: 'This pull request has been marked ${{ env.STALE_LABEL_URL }} because it has been open for ${{ env.DAYS_BEFORE_STALE }} days with no activity. Please close this pull request if it is no longer needed. If this pull request is still relevant and you would like it to remain open, simply update it within the next ${{ env.DAYS_BEFORE_CLOSE }} days.'
