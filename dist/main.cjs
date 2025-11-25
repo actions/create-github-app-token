@@ -66,7 +66,7 @@ var require_utils = __commonJS({
 var require_command = __commonJS({
   "node_modules/@actions/core/lib/command.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -75,13 +75,13 @@ var require_command = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -152,7 +152,7 @@ var require_command = __commonJS({
 var require_file_command = __commonJS({
   "node_modules/@actions/core/lib/file-command.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -161,13 +161,13 @@ var require_file_command = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -13720,7 +13720,7 @@ var require_fetch = __commonJS({
             fetchParams.controller.terminate(e);
           }
         };
-        requestBody = async function* () {
+        requestBody = (async function* () {
           try {
             for await (const bytes of request2.body.stream) {
               yield* processBodyChunk(bytes);
@@ -13729,7 +13729,7 @@ var require_fetch = __commonJS({
           } catch (err) {
             processBodyError(err);
           }
-        }();
+        })();
       }
       try {
         const { body, status, statusText, headersList, socket } = await dispatch({ body: requestBody });
@@ -17280,7 +17280,7 @@ var require_undici = __commonJS({
 var require_lib = __commonJS({
   "node_modules/@actions/http-client/lib/index.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -17289,13 +17289,13 @@ var require_lib = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -18395,7 +18395,7 @@ var require_summary = __commonJS({
 var require_path_utils = __commonJS({
   "node_modules/@actions/core/lib/path-utils.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -18404,13 +18404,13 @@ var require_path_utils = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -18444,18 +18444,18 @@ var require_path_utils = __commonJS({
 var require_io_util = __commonJS({
   "node_modules/@actions/io/lib/io-util.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       Object.defineProperty(o, k2, { enumerable: true, get: function() {
         return m[k];
       } });
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -18617,18 +18617,18 @@ var require_io_util = __commonJS({
 var require_io = __commonJS({
   "node_modules/@actions/io/lib/io.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       Object.defineProperty(o, k2, { enumerable: true, get: function() {
         return m[k];
       } });
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -18865,18 +18865,18 @@ var require_io = __commonJS({
 var require_toolrunner = __commonJS({
   "node_modules/@actions/exec/lib/toolrunner.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       Object.defineProperty(o, k2, { enumerable: true, get: function() {
         return m[k];
       } });
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -19349,18 +19349,18 @@ var require_toolrunner = __commonJS({
 var require_exec = __commonJS({
   "node_modules/@actions/exec/lib/exec.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       Object.defineProperty(o, k2, { enumerable: true, get: function() {
         return m[k];
       } });
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -19456,7 +19456,7 @@ var require_exec = __commonJS({
 var require_platform = __commonJS({
   "node_modules/@actions/core/lib/platform.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -19465,13 +19465,13 @@ var require_platform = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -19575,7 +19575,7 @@ var require_platform = __commonJS({
 var require_core = __commonJS({
   "node_modules/@actions/core/lib/core.js"(exports2) {
     "use strict";
-    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? function(o, m, k, k2) {
+    var __createBinding = exports2 && exports2.__createBinding || (Object.create ? (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
       if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
@@ -19584,13 +19584,13 @@ var require_core = __commonJS({
         } };
       }
       Object.defineProperty(o, k2, desc);
-    } : function(o, m, k, k2) {
+    }) : (function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       o[k2] = m[k];
-    });
-    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? function(o, v) {
+    }));
+    var __setModuleDefault = exports2 && exports2.__setModuleDefault || (Object.create ? (function(o, v) {
       Object.defineProperty(o, "default", { enumerable: true, value: v });
-    } : function(o, v) {
+    }) : function(o, v) {
       o["default"] = v;
     });
     var __importStar = exports2 && exports2.__importStar || function(mod) {
@@ -19893,234 +19893,6 @@ var require_fast_content_type_parse = __commonJS({
     module2.exports.parse = parse2;
     module2.exports.safeParse = safeParse2;
     module2.exports.defaultContentType = defaultContentType;
-  }
-});
-
-// node_modules/retry/lib/retry_operation.js
-var require_retry_operation = __commonJS({
-  "node_modules/retry/lib/retry_operation.js"(exports2, module2) {
-    function RetryOperation(timeouts, options) {
-      if (typeof options === "boolean") {
-        options = { forever: options };
-      }
-      this._originalTimeouts = JSON.parse(JSON.stringify(timeouts));
-      this._timeouts = timeouts;
-      this._options = options || {};
-      this._maxRetryTime = options && options.maxRetryTime || Infinity;
-      this._fn = null;
-      this._errors = [];
-      this._attempts = 1;
-      this._operationTimeout = null;
-      this._operationTimeoutCb = null;
-      this._timeout = null;
-      this._operationStart = null;
-      this._timer = null;
-      if (this._options.forever) {
-        this._cachedTimeouts = this._timeouts.slice(0);
-      }
-    }
-    module2.exports = RetryOperation;
-    RetryOperation.prototype.reset = function() {
-      this._attempts = 1;
-      this._timeouts = this._originalTimeouts.slice(0);
-    };
-    RetryOperation.prototype.stop = function() {
-      if (this._timeout) {
-        clearTimeout(this._timeout);
-      }
-      if (this._timer) {
-        clearTimeout(this._timer);
-      }
-      this._timeouts = [];
-      this._cachedTimeouts = null;
-    };
-    RetryOperation.prototype.retry = function(err) {
-      if (this._timeout) {
-        clearTimeout(this._timeout);
-      }
-      if (!err) {
-        return false;
-      }
-      var currentTime = (/* @__PURE__ */ new Date()).getTime();
-      if (err && currentTime - this._operationStart >= this._maxRetryTime) {
-        this._errors.push(err);
-        this._errors.unshift(new Error("RetryOperation timeout occurred"));
-        return false;
-      }
-      this._errors.push(err);
-      var timeout = this._timeouts.shift();
-      if (timeout === void 0) {
-        if (this._cachedTimeouts) {
-          this._errors.splice(0, this._errors.length - 1);
-          timeout = this._cachedTimeouts.slice(-1);
-        } else {
-          return false;
-        }
-      }
-      var self = this;
-      this._timer = setTimeout(function() {
-        self._attempts++;
-        if (self._operationTimeoutCb) {
-          self._timeout = setTimeout(function() {
-            self._operationTimeoutCb(self._attempts);
-          }, self._operationTimeout);
-          if (self._options.unref) {
-            self._timeout.unref();
-          }
-        }
-        self._fn(self._attempts);
-      }, timeout);
-      if (this._options.unref) {
-        this._timer.unref();
-      }
-      return true;
-    };
-    RetryOperation.prototype.attempt = function(fn, timeoutOps) {
-      this._fn = fn;
-      if (timeoutOps) {
-        if (timeoutOps.timeout) {
-          this._operationTimeout = timeoutOps.timeout;
-        }
-        if (timeoutOps.cb) {
-          this._operationTimeoutCb = timeoutOps.cb;
-        }
-      }
-      var self = this;
-      if (this._operationTimeoutCb) {
-        this._timeout = setTimeout(function() {
-          self._operationTimeoutCb();
-        }, self._operationTimeout);
-      }
-      this._operationStart = (/* @__PURE__ */ new Date()).getTime();
-      this._fn(this._attempts);
-    };
-    RetryOperation.prototype.try = function(fn) {
-      console.log("Using RetryOperation.try() is deprecated");
-      this.attempt(fn);
-    };
-    RetryOperation.prototype.start = function(fn) {
-      console.log("Using RetryOperation.start() is deprecated");
-      this.attempt(fn);
-    };
-    RetryOperation.prototype.start = RetryOperation.prototype.try;
-    RetryOperation.prototype.errors = function() {
-      return this._errors;
-    };
-    RetryOperation.prototype.attempts = function() {
-      return this._attempts;
-    };
-    RetryOperation.prototype.mainError = function() {
-      if (this._errors.length === 0) {
-        return null;
-      }
-      var counts = {};
-      var mainError = null;
-      var mainErrorCount = 0;
-      for (var i = 0; i < this._errors.length; i++) {
-        var error = this._errors[i];
-        var message = error.message;
-        var count = (counts[message] || 0) + 1;
-        counts[message] = count;
-        if (count >= mainErrorCount) {
-          mainError = error;
-          mainErrorCount = count;
-        }
-      }
-      return mainError;
-    };
-  }
-});
-
-// node_modules/retry/lib/retry.js
-var require_retry = __commonJS({
-  "node_modules/retry/lib/retry.js"(exports2) {
-    var RetryOperation = require_retry_operation();
-    exports2.operation = function(options) {
-      var timeouts = exports2.timeouts(options);
-      return new RetryOperation(timeouts, {
-        forever: options && (options.forever || options.retries === Infinity),
-        unref: options && options.unref,
-        maxRetryTime: options && options.maxRetryTime
-      });
-    };
-    exports2.timeouts = function(options) {
-      if (options instanceof Array) {
-        return [].concat(options);
-      }
-      var opts = {
-        retries: 10,
-        factor: 2,
-        minTimeout: 1 * 1e3,
-        maxTimeout: Infinity,
-        randomize: false
-      };
-      for (var key in options) {
-        opts[key] = options[key];
-      }
-      if (opts.minTimeout > opts.maxTimeout) {
-        throw new Error("minTimeout is greater than maxTimeout");
-      }
-      var timeouts = [];
-      for (var i = 0; i < opts.retries; i++) {
-        timeouts.push(this.createTimeout(i, opts));
-      }
-      if (options && options.forever && !timeouts.length) {
-        timeouts.push(this.createTimeout(i, opts));
-      }
-      timeouts.sort(function(a, b) {
-        return a - b;
-      });
-      return timeouts;
-    };
-    exports2.createTimeout = function(attempt, opts) {
-      var random = opts.randomize ? Math.random() + 1 : 1;
-      var timeout = Math.round(random * Math.max(opts.minTimeout, 1) * Math.pow(opts.factor, attempt));
-      timeout = Math.min(timeout, opts.maxTimeout);
-      return timeout;
-    };
-    exports2.wrap = function(obj, options, methods) {
-      if (options instanceof Array) {
-        methods = options;
-        options = null;
-      }
-      if (!methods) {
-        methods = [];
-        for (var key in obj) {
-          if (typeof obj[key] === "function") {
-            methods.push(key);
-          }
-        }
-      }
-      for (var i = 0; i < methods.length; i++) {
-        var method = methods[i];
-        var original = obj[method];
-        obj[method] = function retryWrapper(original2) {
-          var op = exports2.operation(options);
-          var args = Array.prototype.slice.call(arguments, 1);
-          var callback = args.pop();
-          args.push(function(err) {
-            if (op.retry(err)) {
-              return;
-            }
-            if (err) {
-              arguments[0] = op.mainError();
-            }
-            callback.apply(this, arguments);
-          });
-          op.attempt(function() {
-            original2.apply(obj, args);
-          });
-        }.bind(obj, original);
-        obj[method].options = options;
-      }
-    };
-  }
-});
-
-// node_modules/retry/index.js
-var require_retry2 = __commonJS({
-  "node_modules/retry/index.js"(exports2, module2) {
-    module2.exports = require_retry();
   }
 });
 
@@ -29596,14 +29368,14 @@ var require_retry_agent = __commonJS({
         this.#options = options;
       }
       dispatch(opts, handler) {
-        const retry2 = new RetryHandler({
+        const retry = new RetryHandler({
           ...opts,
           retryOptions: this.#options
         }, {
           dispatch: this.#agent.dispatch.bind(this.#agent),
           handler
         });
-        return this.#agent.dispatch(opts, retry2);
+        return this.#agent.dispatch(opts, retry);
       }
       close() {
         return this.#agent.close();
@@ -33128,7 +32900,7 @@ var require_response_error = __commonJS({
 });
 
 // node_modules/undici/lib/interceptor/retry.js
-var require_retry3 = __commonJS({
+var require_retry = __commonJS({
   "node_modules/undici/lib/interceptor/retry.js"(exports2, module2) {
     "use strict";
     var RetryHandler = require_retry_handler();
@@ -38343,7 +38115,7 @@ var require_fetch2 = __commonJS({
             fetchParams.controller.terminate(e);
           }
         };
-        requestBody = async function* () {
+        requestBody = (async function* () {
           try {
             for await (const bytes of request2.body.stream) {
               yield* processBodyChunk(bytes);
@@ -38352,7 +38124,7 @@ var require_fetch2 = __commonJS({
           } catch (err) {
             processBodyError(err);
           }
-        }();
+        })();
       }
       try {
         const { body, status, statusText, headersList, socket } = await dispatch({ body: requestBody });
@@ -42433,7 +42205,7 @@ var require_undici2 = __commonJS({
     module2.exports.interceptors = {
       redirect: require_redirect(),
       responseError: require_response_error(),
-      retry: require_retry3(),
+      retry: require_retry(),
       dump: require_dump(),
       dns: require_dns(),
       cache: require_cache3(),
@@ -42933,7 +42705,7 @@ var RequestError = class extends Error {
 };
 
 // node_modules/@octokit/request/dist-bundle/index.js
-var VERSION2 = "10.0.3";
+var VERSION2 = "10.0.5";
 var defaults_default = {
   headers: {
     "user-agent": `octokit-request.js/${VERSION2} ${getUserAgent()}`
@@ -44376,7 +44148,7 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION6 = "8.1.0";
+var VERSION6 = "8.1.1";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
@@ -44441,9 +44213,6 @@ function getPermissionsFromInputs(env) {
   }, void 0);
 }
 
-// node_modules/p-retry/index.js
-var import_retry = __toESM(require_retry2(), 1);
-
 // node_modules/is-network-error/index.js
 var objectToString = Object.prototype.toString;
 var isError = (value) => objectToString.call(value) === "[object Error]";
@@ -44477,6 +44246,32 @@ function isNetworkError(error) {
 }
 
 // node_modules/p-retry/index.js
+function validateRetries(retries) {
+  if (typeof retries === "number") {
+    if (retries < 0) {
+      throw new TypeError("Expected `retries` to be a non-negative number.");
+    }
+    if (Number.isNaN(retries)) {
+      throw new TypeError("Expected `retries` to be a valid number or Infinity, got NaN.");
+    }
+  } else if (retries !== void 0) {
+    throw new TypeError("Expected `retries` to be a number or Infinity.");
+  }
+}
+function validateNumberOption(name, value, { min = 0, allowInfinity = false } = {}) {
+  if (value === void 0) {
+    return;
+  }
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    throw new TypeError(`Expected \`${name}\` to be a number${allowInfinity ? " or Infinity" : ""}.`);
+  }
+  if (!allowInfinity && !Number.isFinite(value)) {
+    throw new TypeError(`Expected \`${name}\` to be a finite number.`);
+  }
+  if (value < min) {
+    throw new TypeError(`Expected \`${name}\` to be \u2265 ${min}.`);
+  }
+}
 var AbortError = class extends Error {
   constructor(message) {
     super();
@@ -44491,64 +44286,124 @@ var AbortError = class extends Error {
     this.message = message;
   }
 };
-var decorateErrorWithCounts = (error, attemptNumber, options) => {
-  const retriesLeft = options.retries - (attemptNumber - 1);
-  error.attemptNumber = attemptNumber;
-  error.retriesLeft = retriesLeft;
-  return error;
-};
-async function pRetry(input, options) {
-  return new Promise((resolve, reject) => {
-    options = { ...options };
-    options.onFailedAttempt ??= () => {
-    };
-    options.shouldRetry ??= () => true;
-    options.retries ??= 10;
-    const operation = import_retry.default.operation(options);
-    const abortHandler = () => {
-      operation.stop();
-      reject(options.signal?.reason);
-    };
-    if (options.signal && !options.signal.aborted) {
-      options.signal.addEventListener("abort", abortHandler, { once: true });
-    }
-    const cleanUp = () => {
-      options.signal?.removeEventListener("abort", abortHandler);
-      operation.stop();
-    };
-    operation.attempt(async (attemptNumber) => {
-      try {
-        const result = await input(attemptNumber);
-        cleanUp();
-        resolve(result);
-      } catch (error) {
-        try {
-          if (!(error instanceof Error)) {
-            throw new TypeError(`Non-error was thrown: "${error}". You should only throw errors.`);
-          }
-          if (error instanceof AbortError) {
-            throw error.originalError;
-          }
-          if (error instanceof TypeError && !isNetworkError(error)) {
-            throw error;
-          }
-          decorateErrorWithCounts(error, attemptNumber, options);
-          if (!await options.shouldRetry(error)) {
-            operation.stop();
-            reject(error);
-          }
-          await options.onFailedAttempt(error);
-          if (!operation.retry(error)) {
-            throw operation.mainError();
-          }
-        } catch (finalError) {
-          decorateErrorWithCounts(finalError, attemptNumber, options);
-          cleanUp();
-          reject(finalError);
-        }
-      }
-    });
+function calculateDelay(retriesConsumed, options) {
+  const attempt = Math.max(1, retriesConsumed + 1);
+  const random = options.randomize ? Math.random() + 1 : 1;
+  let timeout = Math.round(random * options.minTimeout * options.factor ** (attempt - 1));
+  timeout = Math.min(timeout, options.maxTimeout);
+  return timeout;
+}
+function calculateRemainingTime(start, max) {
+  if (!Number.isFinite(max)) {
+    return max;
+  }
+  return max - (performance.now() - start);
+}
+async function onAttemptFailure({ error, attemptNumber, retriesConsumed, startTime, options }) {
+  const normalizedError = error instanceof Error ? error : new TypeError(`Non-error was thrown: "${error}". You should only throw errors.`);
+  if (normalizedError instanceof AbortError) {
+    throw normalizedError.originalError;
+  }
+  const retriesLeft = Number.isFinite(options.retries) ? Math.max(0, options.retries - retriesConsumed) : options.retries;
+  const maxRetryTime = options.maxRetryTime ?? Number.POSITIVE_INFINITY;
+  const context = Object.freeze({
+    error: normalizedError,
+    attemptNumber,
+    retriesLeft,
+    retriesConsumed
   });
+  await options.onFailedAttempt(context);
+  if (calculateRemainingTime(startTime, maxRetryTime) <= 0) {
+    throw normalizedError;
+  }
+  const consumeRetry = await options.shouldConsumeRetry(context);
+  const remainingTime = calculateRemainingTime(startTime, maxRetryTime);
+  if (remainingTime <= 0 || retriesLeft <= 0) {
+    throw normalizedError;
+  }
+  if (normalizedError instanceof TypeError && !isNetworkError(normalizedError)) {
+    if (consumeRetry) {
+      throw normalizedError;
+    }
+    options.signal?.throwIfAborted();
+    return false;
+  }
+  if (!await options.shouldRetry(context)) {
+    throw normalizedError;
+  }
+  if (!consumeRetry) {
+    options.signal?.throwIfAborted();
+    return false;
+  }
+  const delayTime = calculateDelay(retriesConsumed, options);
+  const finalDelay = Math.min(delayTime, remainingTime);
+  if (finalDelay > 0) {
+    await new Promise((resolve, reject) => {
+      const onAbort = () => {
+        clearTimeout(timeoutToken);
+        options.signal?.removeEventListener("abort", onAbort);
+        reject(options.signal.reason);
+      };
+      const timeoutToken = setTimeout(() => {
+        options.signal?.removeEventListener("abort", onAbort);
+        resolve();
+      }, finalDelay);
+      if (options.unref) {
+        timeoutToken.unref?.();
+      }
+      options.signal?.addEventListener("abort", onAbort, { once: true });
+    });
+  }
+  options.signal?.throwIfAborted();
+  return true;
+}
+async function pRetry(input, options = {}) {
+  options = { ...options };
+  validateRetries(options.retries);
+  if (Object.hasOwn(options, "forever")) {
+    throw new Error("The `forever` option is no longer supported. For many use-cases, you can set `retries: Infinity` instead.");
+  }
+  options.retries ??= 10;
+  options.factor ??= 2;
+  options.minTimeout ??= 1e3;
+  options.maxTimeout ??= Number.POSITIVE_INFINITY;
+  options.maxRetryTime ??= Number.POSITIVE_INFINITY;
+  options.randomize ??= false;
+  options.onFailedAttempt ??= () => {
+  };
+  options.shouldRetry ??= () => true;
+  options.shouldConsumeRetry ??= () => true;
+  validateNumberOption("factor", options.factor, { min: 0, allowInfinity: false });
+  validateNumberOption("minTimeout", options.minTimeout, { min: 0, allowInfinity: false });
+  validateNumberOption("maxTimeout", options.maxTimeout, { min: 0, allowInfinity: true });
+  validateNumberOption("maxRetryTime", options.maxRetryTime, { min: 0, allowInfinity: true });
+  if (!(options.factor > 0)) {
+    options.factor = 1;
+  }
+  options.signal?.throwIfAborted();
+  let attemptNumber = 0;
+  let retriesConsumed = 0;
+  const startTime = performance.now();
+  while (Number.isFinite(options.retries) ? retriesConsumed <= options.retries : true) {
+    attemptNumber++;
+    try {
+      options.signal?.throwIfAborted();
+      const result = await input(attemptNumber);
+      options.signal?.throwIfAborted();
+      return result;
+    } catch (error) {
+      if (await onAttemptFailure({
+        error,
+        attemptNumber,
+        retriesConsumed,
+        startTime,
+        options
+      })) {
+        retriesConsumed++;
+      }
+    }
+  }
+  throw new Error("Retry attempts exhausted without throwing an error.");
 }
 
 // lib/main.js
@@ -44602,12 +44457,12 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
         permissions2
       ),
       {
-        shouldRetry: (error) => error.status >= 500,
-        onFailedAttempt: (error) => {
+        shouldRetry: ({ error }) => error.status >= 500,
+        onFailedAttempt: (context) => {
           core3.info(
             `Failed to create token for "${parsedRepositoryNames.join(
               ","
-            )}" (attempt ${error.attemptNumber}): ${error.message}`
+            )}" (attempt ${context.attemptNumber}): ${context.error.message}`
           );
         },
         retries: 3
@@ -44617,9 +44472,9 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
     ({ authentication, installationId, appSlug } = await pRetry(
       () => getTokenFromOwner(request2, auth5, parsedOwner, permissions2),
       {
-        onFailedAttempt: (error) => {
+        onFailedAttempt: (context) => {
           core3.info(
-            `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
+            `Failed to create token for "${parsedOwner}" (attempt ${context.attemptNumber}): ${context.error.message}`
           );
         },
         retries: 3
