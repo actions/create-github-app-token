@@ -6,6 +6,8 @@ GitHub Action for creating a GitHub App installation access token.
 
 ## Usage
 
+Detailed instructions can be found in this [GitHub documentation article](https://docs.github.com/en/apps/creating-github-apps/authenticating-with-a-github-app/making-authenticated-api-requests-with-a-github-app-in-a-github-actions-workflow).
+
 In order to use this action, you need to:
 
 1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app)
