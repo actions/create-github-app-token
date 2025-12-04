@@ -57,11 +57,13 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.head_ref }}
-          # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
-          persist-credentials: false
-      - uses: creyD/prettier_action@v4.3
-        with:
-          github_token: ${{ steps.app-token.outputs.token }}
+      - name: Make File Changes
+        run: ~
+      - name: Push with App Token 
+        run: |
+          git add .
+          git commit -m "Auto-generated changes"
+          git push
 ```
 
 ### Create a git committer string for an app installation
