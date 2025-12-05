@@ -9195,7 +9195,7 @@ var require_readable = __commonJS({
     var kBody = Symbol("kBody");
     var kAbort = Symbol("abort");
     var kContentType = Symbol("kContentType");
-    var noop = () => {
+    var noop2 = () => {
     };
     module2.exports = class BodyReadable extends Readable {
       constructor({
@@ -9317,7 +9317,7 @@ var require_readable = __commonJS({
         return new Promise((resolve, reject) => {
           const signalListenerCleanup = signal ? util.addAbortListener(signal, () => {
             this.destroy();
-          }) : noop;
+          }) : noop2;
           this.on("close", function() {
             signalListenerCleanup();
             if (signal && signal.aborted) {
@@ -9325,7 +9325,7 @@ var require_readable = __commonJS({
             } else {
               resolve(null);
             }
-          }).on("error", noop).on("data", function(chunk) {
+          }).on("error", noop2).on("data", function(chunk) {
             limit -= chunk.length;
             if (limit <= 0) {
               this.destroy();
@@ -20873,7 +20873,7 @@ var require_util8 = __commonJS({
         yield* this[kBody];
       }
     };
-    function noop() {
+    function noop2() {
     }
     function wrapRequestBody(body) {
       if (isStream(body)) {
@@ -21284,7 +21284,7 @@ var require_util8 = __commonJS({
     }
     var setupConnectTimeout = process.platform === "win32" ? (socketWeakRef, opts) => {
       if (!opts.timeout) {
-        return noop;
+        return noop2;
       }
       let s1 = null;
       let s2 = null;
@@ -21300,7 +21300,7 @@ var require_util8 = __commonJS({
       };
     } : (socketWeakRef, opts) => {
       if (!opts.timeout) {
-        return noop;
+        return noop2;
       }
       let s1 = null;
       const fastTimer = timers.setFastTimeout(() => {
@@ -25550,12 +25550,12 @@ var require_body2 = __commonJS({
       random = (max) => Math.floor(Math.random() * max);
     }
     var textEncoder = new TextEncoder();
-    function noop() {
+    function noop2() {
     }
     var streamRegistry = new FinalizationRegistry((weakRef) => {
       const stream = weakRef.deref();
       if (stream && !stream.locked && !isDisturbed(stream) && !isErrored(stream)) {
-        stream.cancel("Response object has been garbage collected").catch(noop);
+        stream.cancel("Response object has been garbage collected").catch(noop2);
       }
     });
     function extractBody(object, keepalive = false) {
@@ -27644,7 +27644,7 @@ var require_client2 = __commonJS({
     var getDefaultNodeMaxHeaderSize = http && http.maxHeaderSize && Number.isInteger(http.maxHeaderSize) && http.maxHeaderSize > 0 ? () => http.maxHeaderSize : () => {
       throw new InvalidArgumentError("http module not available or http.maxHeaderSize invalid");
     };
-    var noop = () => {
+    var noop2 = () => {
     };
     function getPipelining(client) {
       return client[kPipelining] ?? client[kHTTPContext]?.defaultPipelining ?? 1;
@@ -27918,7 +27918,7 @@ var require_client2 = __commonJS({
           return;
         }
         if (client.destroyed) {
-          util.destroy(socket.on("error", noop), new ClientDestroyedError());
+          util.destroy(socket.on("error", noop2), new ClientDestroyedError());
           client[kResume]();
           return;
         }
@@ -27926,7 +27926,7 @@ var require_client2 = __commonJS({
         try {
           client[kHTTPContext] = socket.alpnProtocol === "h2" ? connectH2(client, socket) : connectH1(client, socket);
         } catch (err2) {
-          socket.destroy().on("error", noop);
+          socket.destroy().on("error", noop2);
           handleConnectError(client, err2, { host, hostname, protocol, port });
           client[kResume]();
           return;
@@ -28710,7 +28710,7 @@ var require_proxy_agent2 = __commonJS({
     function defaultFactory(origin, opts) {
       return new Pool(origin, opts);
     }
-    var noop = () => {
+    var noop2 = () => {
     };
     function defaultAgentFactory(origin, opts) {
       if (opts.connections === 1) {
@@ -28827,7 +28827,7 @@ var require_proxy_agent2 = __commonJS({
                 servername: this[kProxyTls]?.servername || proxyHostname
               });
               if (statusCode !== 200) {
-                socket.on("error", noop).destroy();
+                socket.on("error", noop2).destroy();
                 callback(new RequestAbortedError(`Proxy response (${statusCode}) !== 200 when HTTP Tunneling`));
               }
               if (opts2.protocol !== "https:") {
@@ -29494,7 +29494,7 @@ var require_readable2 = __commonJS({
     var kContentLength = Symbol("kContentLength");
     var kUsed = Symbol("kUsed");
     var kBytesRead = Symbol("kBytesRead");
-    var noop = () => {
+    var noop2 = () => {
     };
     var BodyReadable = class extends Readable {
       /**
@@ -29719,7 +29719,7 @@ var require_readable2 = __commonJS({
           } else {
             this.on("close", resolve);
           }
-          this.on("error", noop).on("data", () => {
+          this.on("error", noop2).on("data", () => {
             if (this[kBytesRead] > limit) {
               this.destroy();
             }
@@ -29888,7 +29888,7 @@ var require_api_request2 = __commonJS({
     var { Readable } = require_readable2();
     var { InvalidArgumentError, RequestAbortedError } = require_errors2();
     var util = require_util8();
-    function noop() {
+    function noop2() {
     }
     var RequestHandler = class extends AsyncResource {
       constructor(opts, callback) {
@@ -29915,7 +29915,7 @@ var require_api_request2 = __commonJS({
           super("UNDICI_REQUEST");
         } catch (err) {
           if (util.isStream(body)) {
-            util.destroy(body.on("error", noop), err);
+            util.destroy(body.on("error", noop2), err);
           }
           throw err;
         }
@@ -29938,7 +29938,7 @@ var require_api_request2 = __commonJS({
           this.removeAbortListener = util.addAbortListener(signal, () => {
             this.reason = signal.reason ?? new RequestAbortedError();
             if (this.res) {
-              util.destroy(this.res.on("error", noop), this.reason);
+              util.destroy(this.res.on("error", noop2), this.reason);
             } else if (this.abort) {
               this.abort(this.reason);
             }
@@ -29991,7 +29991,7 @@ var require_api_request2 = __commonJS({
             });
           } catch (err) {
             this.res = null;
-            util.destroy(res.on("error", noop), err);
+            util.destroy(res.on("error", noop2), err);
             queueMicrotask(() => {
               throw err;
             });
@@ -30016,13 +30016,13 @@ var require_api_request2 = __commonJS({
         if (res) {
           this.res = null;
           queueMicrotask(() => {
-            util.destroy(res.on("error", noop), err);
+            util.destroy(res.on("error", noop2), err);
           });
         }
         if (body) {
           this.body = null;
           if (util.isStream(body)) {
-            body.on("error", noop);
+            body.on("error", noop2);
             util.destroy(body, err);
           }
         }
@@ -30118,7 +30118,7 @@ var require_api_stream2 = __commonJS({
     var { InvalidArgumentError, InvalidReturnValueError } = require_errors2();
     var util = require_util8();
     var { addSignal, removeSignal } = require_abort_signal2();
-    function noop() {
+    function noop2() {
     }
     var StreamHandler = class extends AsyncResource {
       constructor(opts, factory, callback) {
@@ -30145,7 +30145,7 @@ var require_api_stream2 = __commonJS({
           super("UNDICI_STREAM");
         } catch (err) {
           if (util.isStream(body)) {
-            util.destroy(body.on("error", noop), err);
+            util.destroy(body.on("error", noop2), err);
           }
           throw err;
         }
@@ -30287,7 +30287,7 @@ var require_api_pipeline2 = __commonJS({
     } = require_errors2();
     var util = require_util8();
     var { addSignal, removeSignal } = require_abort_signal2();
-    function noop() {
+    function noop2() {
     }
     var kResume = Symbol("resume");
     var PipelineRequest = class extends Readable {
@@ -30347,7 +30347,7 @@ var require_api_pipeline2 = __commonJS({
         this.abort = null;
         this.context = null;
         this.onInfo = onInfo || null;
-        this.req = new PipelineRequest().on("error", noop);
+        this.req = new PipelineRequest().on("error", noop2);
         this.ret = new Duplex({
           readableObjectMode: opts.objectMode,
           autoDestroy: true,
@@ -30418,7 +30418,7 @@ var require_api_pipeline2 = __commonJS({
             context
           });
         } catch (err) {
-          this.res.on("error", noop);
+          this.res.on("error", noop2);
           throw err;
         }
         if (!body || typeof body.on !== "function") {
@@ -32640,7 +32640,7 @@ var require_redirect_handler = __commonJS({
     var EE = require("node:events");
     var redirectableStatusCodes = [300, 301, 302, 303, 307, 308];
     var kBody = Symbol("body");
-    var noop = () => {
+    var noop2 = () => {
     };
     var BodyAsyncIterable = class {
       constructor(body) {
@@ -32703,14 +32703,14 @@ var require_redirect_handler = __commonJS({
         if ((statusCode === 301 || statusCode === 302) && this.opts.method === "POST") {
           this.opts.method = "GET";
           if (util.isStream(this.opts.body)) {
-            util.destroy(this.opts.body.on("error", noop));
+            util.destroy(this.opts.body.on("error", noop2));
           }
           this.opts.body = null;
         }
         if (statusCode === 303 && this.opts.method !== "HEAD") {
           this.opts.method = "GET";
           if (util.isStream(this.opts.body)) {
-            util.destroy(this.opts.body.on("error", noop));
+            util.destroy(this.opts.body.on("error", noop2));
           }
           this.opts.body = null;
         }
@@ -34098,7 +34098,7 @@ var require_cache_handler = __commonJS({
       isEtagUsable
     } = require_cache2();
     var { parseHttpDate } = require_date();
-    function noop() {
+    function noop2() {
     }
     var HEURISTICALLY_CACHEABLE_STATUS_CODES = [
       200,
@@ -34179,7 +34179,7 @@ var require_cache_handler = __commonJS({
         );
         if (!util.safeHTTPMethods.includes(this.#cacheKey.method) && statusCode >= 200 && statusCode <= 399) {
           try {
-            this.#store.delete(this.#cacheKey)?.catch?.(noop);
+            this.#store.delete(this.#cacheKey)?.catch?.(noop2);
           } catch {
           }
           return downstreamOnHeaders();
@@ -42707,7 +42707,7 @@ var RequestError = class extends Error {
    */
   response;
   constructor(message, statusCode, options) {
-    super(message);
+    super(message, { cause: options.cause });
     this.name = "HttpError";
     this.status = Number.parseInt(statusCode);
     if (Number.isNaN(this.status)) {
@@ -42731,7 +42731,7 @@ var RequestError = class extends Error {
 };
 
 // node_modules/@octokit/request/dist-bundle/index.js
-var VERSION2 = "10.0.5";
+var VERSION2 = "10.0.7";
 var defaults_default = {
   headers: {
     "user-agent": `octokit-request.js/${VERSION2} ${getUserAgent()}`
@@ -42745,6 +42745,7 @@ function isPlainObject2(value) {
   const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
   return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
 }
+var noop = () => "";
 async function fetchWrapper(requestOptions) {
   const fetch = requestOptions.request?.fetch || globalThis.fetch;
   if (!fetch) {
@@ -42846,7 +42847,7 @@ async function fetchWrapper(requestOptions) {
 async function getResponseData(response) {
   const contentType = response.headers.get("content-type");
   if (!contentType) {
-    return response.text().catch(() => "");
+    return response.text().catch(noop);
   }
   const mimetype = (0, import_fast_content_type_parse.safeParse)(contentType);
   if (isJSONResponse(mimetype)) {
@@ -42858,9 +42859,12 @@ async function getResponseData(response) {
       return text;
     }
   } else if (mimetype.type.startsWith("text/") || mimetype.parameters.charset?.toLowerCase() === "utf-8") {
-    return response.text().catch(() => "");
+    return response.text().catch(noop);
   } else {
-    return response.arrayBuffer().catch(() => new ArrayBuffer(0));
+    return response.arrayBuffer().catch(
+      /* v8 ignore next -- @preserve */
+      () => new ArrayBuffer(0)
+    );
   }
 }
 function isJSONResponse(mimetype) {
@@ -42944,4 +42948,11 @@ undici/lib/web/fetch/body.js:
 undici/lib/websocket/frame.js:
 undici/lib/web/websocket/frame.js:
   (*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> *)
+
+@octokit/request-error/dist-src/index.js:
+  (* v8 ignore else -- @preserve -- Bug with vitest coverage where it sees an else branch that doesn't exist *)
+
+@octokit/request/dist-bundle/index.js:
+  (* v8 ignore next -- @preserve *)
+  (* v8 ignore else -- @preserve *)
 */
