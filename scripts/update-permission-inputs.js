@@ -13,7 +13,25 @@ await writeFile(
   "utf8"
 );
 
-const permissionsInputs = Object.entries(appPermissionsSchema.properties)
+const extraPermissions = {
+  variables: {
+    type: "string",
+    description:
+      "The level of permission to grant the access token to manage GitHub Actions configuration variables.",
+    enum: ["read", "write"],
+  },
+  attestations: {
+    type: "string",
+    description:
+      "The level of permission to grant the access token to create and manage GitHub attestations.",
+    enum: ["read", "write"],
+  },
+};
+
+const permissionsInputs = Object.entries({
+  ...appPermissionsSchema.properties,
+  ...extraPermissions,
+})
   .sort((a, b) => a[0].localeCompare(b[0]))
   .reduce((result, [key, value]) => {
     const formatter = new Intl.ListFormat("en", {
