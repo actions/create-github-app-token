@@ -19,7 +19,7 @@
     "@actions/core": "^1.11.1",
     "@octokit/auth-app": "^8.1.2",
     "@octokit/request": "^10.0.3",
-    "p-retry": "^7.1.0",
+    "p-retry": "^7.1.1",
     "undici": "^7.16.0"
   },
   "devDependencies": {
