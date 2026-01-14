@@ -20,7 +20,7 @@
     "@octokit/auth-app": "^8.1.2",
     "@octokit/request": "^10.0.3",
     "p-retry": "^7.1.0",
-    "undici": "^7.16.0"
+    "undici": "^7.18.2"
   },
   "devDependencies": {
     "@octokit/openapi": "^21.0.0",
