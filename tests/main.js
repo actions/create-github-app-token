@@ -103,8 +103,25 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
       { headers: { "content-type": "application/json" } }
     );
 
-  // Run the callback
+  // Run the callback (before validation mock so tests can prepend failure intercepts for retry testing)
   cb(mockPool);
+
+  // Mock token validation request
+  mockPool
+    .intercept({
+      path: `${basePath}/installation/repositories?per_page=1`,
+      method: "GET",
+      headers: {
+        accept: "application/vnd.github.v3+json",
+        "user-agent": "actions/create-github-app-token",
+        authorization: `token ${mockInstallationAccessToken}`,
+      },
+    })
+    .reply(
+      200,
+      { total_count: 1, repositories: [] },
+      { headers: { "content-type": "application/json" } }
+    );
 
   // Run the main script
   const { default: promise } = await import("../main.js");

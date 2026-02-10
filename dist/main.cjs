@@ -44485,6 +44485,9 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
       }
     ));
   }
+  core3.info("Validating token...");
+  await validateToken(request2, authentication.token, core3);
+  core3.info("Token is valid.");
   core3.setSecret(authentication.token);
   core3.setOutput("token", authentication.token);
   core3.setOutput("installation-id", installationId);
@@ -44493,6 +44496,24 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
     core3.saveState("token", authentication.token);
     core3.saveState("expiresAt", authentication.expiresAt);
   }
+}
+async function validateToken(request2, token, core3) {
+  await pRetry(
+    async () => {
+      await request2("GET /installation/repositories", {
+        per_page: 1,
+        headers: { authorization: `token ${token}` }
+      });
+    },
+    {
+      retries: 5,
+      onFailedAttempt: (error) => {
+        core3.info(
+          `Token validation failed (attempt ${error.attemptNumber}): ${error.message}`
+        );
+      }
+    }
+  );
 }
 async function getTokenFromOwner(request2, auth5, parsedOwner, permissions2) {
   const response = await request2("GET /users/{username}/installation", {
