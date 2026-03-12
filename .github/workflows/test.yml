@@ -86,18 +86,11 @@ jobs:
 
           grep -q "Proxy server listening" "$PROXY_SERVER_LOG_PATH"
       - uses: ./ # Uses the action in the root directory
-        id: test
         env:
           https_proxy: http://127.0.0.1:3128
         with:
           app-id: ${{ vars.TEST_APP_ID }}
           private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
-      - uses: octokit/request-action@v2.x
-        id: get-repository
-        env:
-          GITHUB_TOKEN: ${{ steps.test.outputs.token }}
-        with:
-          route: GET /installation/repositories
       - name: Assert proxy traffic
         env:
           PROXY_LOG_PATH: ${{ runner.temp }}/proxy-events.jsonl
