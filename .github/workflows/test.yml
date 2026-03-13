@@ -56,7 +56,7 @@ jobs:
       - run: echo '${{ steps.get-repository.outputs.data }}'
 
   end-to-end-proxy:
-    name: End-to-End with unreachable proxy
+    name: end-to-end with unreachable proxy
     runs-on: ubuntu-latest
     # do not run from forks, as forks don’t have access to repository secrets
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
