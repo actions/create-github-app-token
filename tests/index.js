@@ -40,7 +40,6 @@ for (const file of testFiles) {
     const { stderr, stdout } = await execFileAsync("node", [`tests/${file}`], {
       env,
     });
-    // Strip trailing newline to match execa's default behavior
     const trimmedStderr = stderr.replace(/\r?\n$/, "");
     const trimmedStdout = stdout.replace(/\r?\n$/, "");
     await t.test("stderr", (t) => {
