@@ -1,13 +1,19 @@
 import { readdirSync } from "node:fs";
 
-import test from "ava";
+import { snapshot, test } from "node:test";
+
 import { execa } from "execa";
+
+// Serialize strings as-is so multiline output is human-readable in snapshots
+snapshot.setDefaultSnapshotSerializers([
+  (value) => (typeof value === "string" ? value : value),
+]);
 
 // Get all files in tests directory
 const files = readdirSync("tests");
 
 // Files to ignore
-const ignore = ["index.js", "main.js", "README.md", "snapshots"];
+const ignore = ["index.js", "index.js.snapshot", "main.js", "README.md"];
 
 const testFiles = files.filter((file) => !ignore.includes(file));
 
@@ -31,7 +37,7 @@ for (const file of testFiles) {
       NODE_USE_ENV_PROXY: undefined,
     };
     const { stderr, stdout } = await execa("node", [`tests/${file}`], { env });
-    t.snapshot(stderr, "stderr");
-    t.snapshot(stdout, "stdout");
+    t.assert.snapshot(stderr);
+    t.assert.snapshot(stdout);
   });
 }
