@@ -44427,10 +44427,10 @@ var OidcClient = class _OidcClient {
       var _a;
       const httpclient = _OidcClient.createHttpClient();
       const res = yield httpclient.getJson(id_token_url).catch((error2) => {
-        throw new Error(`Failed to get ID Token.
-
+        throw new Error(`Failed to get ID Token. 
+ 
         Error Code : ${error2.statusCode}
-
+ 
         Error Message: ${error2.message}`);
       });
       const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;

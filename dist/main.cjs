@@ -44436,10 +44436,10 @@ var OidcClient = class _OidcClient {
       var _a;
       const httpclient = _OidcClient.createHttpClient();
       const res = yield httpclient.getJson(id_token_url).catch((error2) => {
-        throw new Error(`Failed to get ID Token.
-
+        throw new Error(`Failed to get ID Token. 
+ 
         Error Code : ${error2.statusCode}
-
+ 
         Error Message: ${error2.message}`);
       });
       const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
@@ -47919,46 +47919,39 @@ async function pRetry(input, options = {}) {
 }
 
 // lib/main.js
-async function main(appId2, privateKey2, enterpriseSlug2, owner2, repositories2, permissions2, core, createAppAuth2, request2, skipTokenRevoke2) {
-  if (enterpriseSlug2 && (owner2 || repositories2.length > 0)) {
-    throw new Error("Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs");
-  }
+async function main(appId2, privateKey2, owner2, repositories2, permissions2, core, createAppAuth2, request2, skipTokenRevoke2) {
   let parsedOwner = "";
   let parsedRepositoryNames = [];
-  if (!enterpriseSlug2) {
-    if (!owner2 && repositories2.length === 0) {
-      const [owner3, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
-      parsedOwner = owner3;
-      parsedRepositoryNames = [repo];
-      core.info(
-        `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${owner3}/${repo}).`
-      );
-    }
-    if (owner2 && repositories2.length === 0) {
-      parsedOwner = owner2;
-      core.info(
-        `Input 'repositories' is not set. Creating token for all repositories owned by ${owner2}.`
-      );
-    }
-    if (!owner2 && repositories2.length > 0) {
-      parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
-      parsedRepositoryNames = repositories2;
-      core.info(
-        `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories2.map((repo) => `
+  if (!owner2 && repositories2.length === 0) {
+    const [owner3, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
+    parsedOwner = owner3;
+    parsedRepositoryNames = [repo];
+    core.info(
+      `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${owner3}/${repo}).`
+    );
+  }
+  if (owner2 && repositories2.length === 0) {
+    parsedOwner = owner2;
+    core.info(
+      `Input 'repositories' is not set. Creating token for all repositories owned by ${owner2}.`
+    );
+  }
+  if (!owner2 && repositories2.length > 0) {
+    parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
+    parsedRepositoryNames = repositories2;
+    core.info(
+      `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories2.map((repo) => `
 - ${parsedOwner}/${repo}`).join("")}`
-      );
-    }
-    if (owner2 && repositories2.length > 0) {
-      parsedOwner = owner2;
-      parsedRepositoryNames = repositories2;
-      core.info(
-        `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
+    );
+  }
+  if (owner2 && repositories2.length > 0) {
+    parsedOwner = owner2;
+    parsedRepositoryNames = repositories2;
+    core.info(
+      `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
       ${repositories2.map((repo) => `
 - ${parsedOwner}/${repo}`).join("")}`
-      );
-    }
-  } else {
-    core.info(`Creating enterprise installation token for enterprise "${enterpriseSlug2}".`);
+    );
   }
   const auth5 = createAppAuth2({
     appId: appId2,
@@ -47966,20 +47959,7 @@ async function main(appId2, privateKey2, enterpriseSlug2, owner2, repositories2,
     request: request2
   });
   let authentication, installationId, appSlug;
-  if (enterpriseSlug2) {
-    ({ authentication, installationId, appSlug } = await pRetry(
-      () => getTokenFromEnterprise(request2, auth5, enterpriseSlug2, permissions2),
-      {
-        shouldRetry: (error2) => error2.status >= 500,
-        onFailedAttempt: (error2) => {
-          core.info(
-            `Failed to create token for enterprise "${enterpriseSlug2}" (attempt ${error2.attemptNumber}): ${error2.message}`
-          );
-        },
-        retries: 3
-      }
-    ));
-  } else if (parsedRepositoryNames.length > 0) {
+  if (parsedRepositoryNames.length > 0) {
     ({ authentication, installationId, appSlug } = await pRetry(
       () => getTokenFromRepository(
         request2,
@@ -48056,27 +48036,6 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
   const appSlug = response.data["app_slug"];
   return { authentication, installationId, appSlug };
 }
-async function getTokenFromEnterprise(request2, auth5, enterpriseSlug2, permissions2) {
-  const response = await request2("GET /app/installations", {
-    request: {
-      hook: auth5.hook
-    }
-  });
-  const enterpriseInstallation = response.data.find(
-    (installation) => installation.target_type === "Enterprise" && installation.account?.slug === enterpriseSlug2
-  );
-  if (!enterpriseInstallation) {
-    throw new Error(`No enterprise installation found matching the name ${enterpriseSlug2}. Available installations: ${response.data.map((i) => `${i.target_type}:${i.account?.login || "N/A"}`).join(", ")}`);
-  }
-  const authentication = await auth5({
-    type: "installation",
-    installationId: enterpriseInstallation.id,
-    permissions: permissions2
-  });
-  const installationId = enterpriseInstallation.id;
-  const appSlug = enterpriseInstallation["app_slug"];
-  return { authentication, installationId, appSlug };
-}
 
 // lib/request.js
 var import_undici2 = __toESM(require_undici2(), 1);
@@ -48113,7 +48072,6 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 }
 var appId = getInput("app-id");
 var privateKey = getInput("private-key");
-var enterpriseSlug = getInput("enterprise-slug");
 var owner = getInput("owner");
 var repositories = getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
 var skipTokenRevoke = getBooleanInput("skip-token-revoke");
@@ -48121,7 +48079,6 @@ var permissions = getPermissionsFromInputs(process.env);
 var main_default = main(
   appId,
   privateKey,
-  enterpriseSlug,
   owner,
   repositories,
   permissions,
@@ -48131,9 +48088,7 @@ var main_default = main(
   skipTokenRevoke
 ).catch((error2) => {
   console.error(error2);
-  if (process.env.GITHUB_OUTPUT !== void 0) {
-    setFailed(error2.message);
-  }
+  setFailed(error2.message);
 });
 /*! Bundled license information:
 
