@@ -7,7 +7,9 @@ import { snapshot, test } from "node:test";
 const execFileAsync = promisify(execFile);
 
 // Serialize strings as-is so multiline output is human-readable in snapshots
-snapshot.setDefaultSnapshotSerializers([(value) => value]);
+snapshot.setDefaultSnapshotSerializers([
+  (value) => (typeof value === "string" ? value : undefined),
+]);
 
 // Get all files in tests directory
 const files = readdirSync("tests");
