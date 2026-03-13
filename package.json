@@ -16,7 +16,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^3.0.0",
     "@octokit/auth-app": "^8.2.0",
     "@octokit/request": "^10.0.8",
     "p-retry": "^7.1.1",
