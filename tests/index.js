@@ -1,8 +1,10 @@
 import { readdirSync } from "node:fs";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 
 import { snapshot, test } from "node:test";
 
-import { execa } from "execa";
+const execFileAsync = promisify(execFile);
 
 // Serialize strings as-is so multiline output is human-readable in snapshots
 snapshot.setDefaultSnapshotSerializers([
@@ -25,6 +27,7 @@ for (const file of testFiles) {
   test(file, async (t) => {
     // Override Actions environment variables that change `core`’s behavior
     const env = {
+      ...process.env,
       GITHUB_OUTPUT: undefined,
       GITHUB_STATE: undefined,
       HTTP_PROXY: undefined,
@@ -36,14 +39,23 @@ for (const file of testFiles) {
       NODE_OPTIONS: undefined,
       NODE_USE_ENV_PROXY: undefined,
     };
-    const { stderr, stdout } = await execa("node", [`tests/${file}`], { env });
+    // Remove keys set to undefined since execFile passes env as-is
+    for (const key of Object.keys(env)) {
+      if (env[key] === undefined) delete env[key];
+    }
+    const { stderr, stdout } = await execFileAsync("node", [`tests/${file}`], {
+      env,
+    });
+    // Strip trailing newline to match execa's default behavior
+    const trimmedStderr = stderr.replace(/\n$/, "");
+    const trimmedStdout = stdout.replace(/\n$/, "");
     await t.test("stderr", (t) => {
-      if (stderr) t.assert.snapshot(stderr);
-      else t.assert.strictEqual(stderr, "");
+      if (trimmedStderr) t.assert.snapshot(trimmedStderr);
+      else t.assert.strictEqual(trimmedStderr, "");
     });
     await t.test("stdout", (t) => {
-      if (stdout) t.assert.snapshot(stdout);
-      else t.assert.strictEqual(stdout, "");
+      if (trimmedStdout) t.assert.snapshot(trimmedStdout);
+      else t.assert.strictEqual(trimmedStdout, "");
     });
   });
 }
