@@ -95,26 +95,7 @@ jobs:
       - name: Assert proxy traffic
         env:
           PROXY_LOG_PATH: ${{ runner.temp }}/proxy-events.jsonl
-        run: |
-          node --input-type=module <<'EOF'
-          import { readFileSync } from "node:fs";
-
-          const events = readFileSync(process.env.PROXY_LOG_PATH, "utf8")
-            .split("\n")
-            .filter(Boolean)
-            .map((line) => JSON.parse(line));
-
-          if (
-            !events.some(
-              (event) =>
-                event.event === "connect" && event.target === "api.github.com:443",
-            )
-          ) {
-            console.error("Expected a CONNECT tunnel to api.github.com:443");
-            console.error(events);
-            process.exit(1);
-          }
-          EOF
+        run: node scripts/test-proxy-server.js assert "$PROXY_LOG_PATH" api.github.com:443
       - if: failure()
         name: Show proxy logs
         run: |

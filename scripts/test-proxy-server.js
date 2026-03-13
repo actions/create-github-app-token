@@ -1,7 +1,38 @@
 import http from "node:http";
 import net from "node:net";
-import { mkdir, appendFile } from "node:fs/promises";
+import { mkdir, appendFile, readFile } from "node:fs/promises";
 import { dirname } from "node:path";
+
+const command = process.argv[2];
+
+if (command === "assert") {
+  const logPath = process.argv[3];
+  const expectedTarget = process.argv[4];
+
+  if (!logPath || !expectedTarget) {
+    throw new Error(
+      "Usage: node scripts/test-proxy-server.js assert <log-path> <expected-target>",
+    );
+  }
+
+  const events = (await readFile(logPath, "utf8"))
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => JSON.parse(line));
+
+  if (
+    !events.some(
+      (event) =>
+        event.event === "connect" && event.target === expectedTarget,
+    )
+  ) {
+    console.error(`Expected a CONNECT tunnel to ${expectedTarget}`);
+    console.error(events);
+    process.exit(1);
+  }
+
+  process.exit(0);
+}
 
 const logPath = process.argv[2];
 const port = Number(process.argv[3] ?? 3128);
