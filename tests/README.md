@@ -2,7 +2,7 @@
 
 Add one test file per scenario. You can run them in isolation with:
 
-```
+```bash
 node tests/post-token-set.test.js
 ```
 

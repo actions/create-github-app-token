@@ -15,7 +15,7 @@ const files = readdirSync("tests");
 // Files to ignore
 const ignore = ["index.js", "index.js.snapshot", "main.js", "README.md"];
 
-const testFiles = files.filter((file) => !ignore.includes(file));
+const testFiles = files.filter((file) => !ignore.includes(file)).sort();
 
 // Throw an error if there is a file that does not end with test.js in the tests directory
 for (const file of testFiles) {
