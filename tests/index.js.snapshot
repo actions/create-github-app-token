@@ -1,16 +1,16 @@
-exports[`action-deprecated-inputs.test.js 1`] = `
+exports[`action-deprecated-inputs.test.js > stderr 1`] = `
 
 `;
 
-exports[`action-deprecated-inputs.test.js 2`] = `
+exports[`action-deprecated-inputs.test.js > stdout 1`] = `
 
 `;
 
-exports[`main-custom-github-api-url.test.js 1`] = `
+exports[`main-custom-github-api-url.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-custom-github-api-url.test.js 2`] = `
+exports[`main-custom-github-api-url.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
       
 - actions/create-github-app-token
@@ -29,27 +29,27 @@ POST /api/v3/app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"]}
 `;
 
-exports[`main-missing-owner.test.js 1`] = `
+exports[`main-missing-owner.test.js > stderr 1`] = `
 GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'
 `;
 
-exports[`main-missing-owner.test.js 2`] = `
+exports[`main-missing-owner.test.js > stdout 1`] = `
 
 `;
 
-exports[`main-missing-repository.test.js 1`] = `
+exports[`main-missing-repository.test.js > stderr 1`] = `
 GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'
 `;
 
-exports[`main-missing-repository.test.js 2`] = `
+exports[`main-missing-repository.test.js > stdout 1`] = `
 
 `;
 
-exports[`main-private-key-with-escaped-newlines.test.js 1`] = `
+exports[`main-private-key-with-escaped-newlines.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-private-key-with-escaped-newlines.test.js 2`] = `
+exports[`main-private-key-with-escaped-newlines.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 
@@ -66,20 +66,20 @@ POST /app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"]}
 `;
 
-exports[`main-proxy-requires-native-support.test.js 1`] = `
+exports[`main-proxy-requires-native-support.test.js > stderr 1`] = `
 A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step.
 `;
 
-exports[`main-proxy-requires-native-support.test.js 2`] = `
+exports[`main-proxy-requires-native-support.test.js > stdout 1`] = `
 ::error::A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step.
 `;
 
-exports[`main-repo-skew.test.js 1`] = `
+exports[`main-repo-skew.test.js > stderr 1`] = `
 'Issued at' claim ('iat') must be an Integer representing the time that the assertion was issued.
 [@octokit/auth-app] GitHub API time and system time are different by 30 seconds. Retrying request with the difference accounted for.
 `;
 
-exports[`main-repo-skew.test.js 2`] = `
+exports[`main-repo-skew.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
       
 - actions/failed-repo
@@ -99,11 +99,11 @@ POST /app/installations/123456/access_tokens
 {"repositories":["failed-repo"]}
 `;
 
-exports[`main-token-get-owner-set-fail-response.test.js 1`] = `
+exports[`main-token-get-owner-set-fail-response.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-get-owner-set-fail-response.test.js 2`] = `
+exports[`main-token-get-owner-set-fail-response.test.js > stdout 1`] = `
 Input 'repositories' is not set. Creating token for all repositories owned by smockle.
 Failed to create token for "smockle" (attempt 1): GitHub API not available
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
@@ -122,11 +122,11 @@ POST /app/installations/123456/access_tokens
 null
 `;
 
-exports[`main-token-get-owner-set-repo-fail-response.test.js 1`] = `
+exports[`main-token-get-owner-set-repo-fail-response.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-get-owner-set-repo-fail-response.test.js 2`] = `
+exports[`main-token-get-owner-set-repo-fail-response.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
       
 - actions/failed-repo
@@ -147,11 +147,11 @@ POST /app/installations/123456/access_tokens
 {"repositories":["failed-repo"]}
 `;
 
-exports[`main-token-get-owner-set-repo-set-to-many-newline.test.js 1`] = `
+exports[`main-token-get-owner-set-repo-set-to-many-newline.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-get-owner-set-repo-set-to-many-newline.test.js 2`] = `
+exports[`main-token-get-owner-set-repo-set-to-many-newline.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
       
 - actions/create-github-app-token
@@ -172,11 +172,11 @@ POST /app/installations/123456/access_tokens
 {"repositories":["create-github-app-token","toolkit","checkout"]}
 `;
 
-exports[`main-token-get-owner-set-repo-set-to-many.test.js 1`] = `
+exports[`main-token-get-owner-set-repo-set-to-many.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-get-owner-set-repo-set-to-many.test.js 2`] = `
+exports[`main-token-get-owner-set-repo-set-to-many.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
       
 - actions/create-github-app-token
@@ -197,11 +197,11 @@ POST /app/installations/123456/access_tokens
 {"repositories":["create-github-app-token","toolkit","checkout"]}
 `;
 
-exports[`main-token-get-owner-set-repo-set-to-one.test.js 1`] = `
+exports[`main-token-get-owner-set-repo-set-to-one.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-get-owner-set-repo-set-to-one.test.js 2`] = `
+exports[`main-token-get-owner-set-repo-set-to-one.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
       
 - actions/create-github-app-token
@@ -220,11 +220,11 @@ POST /app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"]}
 `;
 
-exports[`main-token-get-owner-set-repo-unset.test.js 1`] = `
+exports[`main-token-get-owner-set-repo-unset.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-get-owner-set-repo-unset.test.js 2`] = `
+exports[`main-token-get-owner-set-repo-unset.test.js > stdout 1`] = `
 Input 'repositories' is not set. Creating token for all repositories owned by actions.
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 
@@ -241,11 +241,11 @@ POST /app/installations/123456/access_tokens
 null
 `;
 
-exports[`main-token-get-owner-unset-repo-set.test.js 1`] = `
+exports[`main-token-get-owner-unset-repo-set.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-get-owner-unset-repo-set.test.js 2`] = `
+exports[`main-token-get-owner-unset-repo-set.test.js > stdout 1`] = `
 No 'owner' input provided. Using default owner 'actions' to create token for the following repositories:
 - actions/create-github-app-token
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
@@ -263,11 +263,11 @@ POST /app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"]}
 `;
 
-exports[`main-token-get-owner-unset-repo-unset.test.js 1`] = `
+exports[`main-token-get-owner-unset-repo-unset.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-get-owner-unset-repo-unset.test.js 2`] = `
+exports[`main-token-get-owner-unset-repo-unset.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 
@@ -284,11 +284,11 @@ POST /app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"]}
 `;
 
-exports[`main-token-permissions-set.test.js 1`] = `
+exports[`main-token-permissions-set.test.js > stderr 1`] = `
 
 `;
 
-exports[`main-token-permissions-set.test.js 2`] = `
+exports[`main-token-permissions-set.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 
@@ -305,50 +305,50 @@ POST /app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"],"permissions":{"issues":"write","pull_requests":"read"}}
 `;
 
-exports[`post-proxy-requires-native-support.test.js 1`] = `
+exports[`post-proxy-requires-native-support.test.js > stderr 1`] = `
 A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step.
 `;
 
-exports[`post-proxy-requires-native-support.test.js 2`] = `
+exports[`post-proxy-requires-native-support.test.js > stdout 1`] = `
 ::error::A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step.
 `;
 
-exports[`post-revoke-token-fail-response.test.js 1`] = `
+exports[`post-revoke-token-fail-response.test.js > stderr 1`] = `
 
 `;
 
-exports[`post-revoke-token-fail-response.test.js 2`] = `
+exports[`post-revoke-token-fail-response.test.js > stdout 1`] = `
 ::warning::Token revocation failed: 
 `;
 
-exports[`post-token-expired.test.js 1`] = `
+exports[`post-token-expired.test.js > stderr 1`] = `
 
 `;
 
-exports[`post-token-expired.test.js 2`] = `
+exports[`post-token-expired.test.js > stdout 1`] = `
 Token expired, skipping token revocation
 `;
 
-exports[`post-token-set.test.js 1`] = `
+exports[`post-token-set.test.js > stderr 1`] = `
 
 `;
 
-exports[`post-token-set.test.js 2`] = `
+exports[`post-token-set.test.js > stdout 1`] = `
 Token revoked
 `;
 
-exports[`post-token-skipped.test.js 1`] = `
+exports[`post-token-skipped.test.js > stderr 1`] = `
 
 `;
 
-exports[`post-token-skipped.test.js 2`] = `
+exports[`post-token-skipped.test.js > stdout 1`] = `
 Token revocation was skipped
 `;
 
-exports[`post-token-unset.test.js 1`] = `
+exports[`post-token-unset.test.js > stderr 1`] = `
 
 `;
 
-exports[`post-token-unset.test.js 2`] = `
+exports[`post-token-unset.test.js > stdout 1`] = `
 Token is not set
 `;
