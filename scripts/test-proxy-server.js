@@ -1,5 +1,4 @@
 import { spawn } from "node:child_process";
-import { closeSync, openSync } from "node:fs";
 import http from "node:http";
 import net from "node:net";
 import { mkdir, appendFile, readFile, writeFile } from "node:fs/promises";
@@ -8,10 +7,6 @@ import { setTimeout as delay } from "node:timers/promises";
 
 function getProxyPidPath(logPath) {
   return `${logPath}.pid`;
-}
-
-function getProxyServerLogPath(logPath) {
-  return `${logPath}.server.log`;
 }
 
 function isFileNotFoundError(error) {
@@ -60,7 +55,7 @@ function isProcessRunning(pid) {
   }
 }
 
-async function waitForProxyServer(logPath, pid, serverLogPath) {
+async function waitForProxyServer(logPath, pid) {
   for (let attempt = 0; attempt < 30; attempt++) {
     const events = await readEvents(logPath);
 
@@ -69,27 +64,13 @@ async function waitForProxyServer(logPath, pid, serverLogPath) {
     }
 
     if (!isProcessRunning(pid)) {
-      throw new Error(
-        `Proxy server exited before it was ready. See ${serverLogPath}`,
-      );
+      throw new Error("Proxy server exited before it was ready");
     }
 
     await delay(1000);
   }
 
-  throw new Error(
-    `Timed out waiting for proxy server readiness. See ${serverLogPath}`,
-  );
-}
-
-async function printIfExists(path) {
-  try {
-    process.stdout.write(await readFile(path, "utf8"));
-  } catch (error) {
-    if (!isFileNotFoundError(error)) {
-      throw error;
-    }
-  }
+  throw new Error("Timed out waiting for proxy server readiness");
 }
 
 function reportLogWriteFailure(error) {
@@ -108,22 +89,17 @@ if (command === "start") {
   }
 
   const pidPath = getProxyPidPath(logPath);
-  const serverLogPath = getProxyServerLogPath(logPath);
 
   await mkdir(dirname(logPath), { recursive: true });
   await writeFile(logPath, "");
-  await writeFile(serverLogPath, "");
-
-  const serverLogFd = openSync(serverLogPath, "a");
   const child = spawn(
     process.execPath,
     [process.argv[1], "serve", logPath, String(port)],
     {
       detached: true,
-      stdio: ["ignore", serverLogFd, serverLogFd],
+      stdio: "ignore",
     },
   );
-  closeSync(serverLogFd);
 
   if (child.pid === undefined) {
     throw new Error("Failed to start proxy server");
@@ -133,7 +109,7 @@ if (command === "start") {
   await writeFile(pidPath, `${child.pid}\n`);
 
   try {
-    await waitForProxyServer(logPath, child.pid, serverLogPath);
+    await waitForProxyServer(logPath, child.pid);
   } catch (error) {
     if (isProcessRunning(child.pid)) {
       process.kill(child.pid, "SIGTERM");
@@ -178,10 +154,8 @@ if (command === "logs") {
     throw new Error("Usage: node scripts/test-proxy-server.js logs <log-path>");
   }
 
-  const serverLogPath = getProxyServerLogPath(logPath);
-
-  await printIfExists(serverLogPath);
-  await printIfExists(logPath);
+  const events = await readEvents(logPath);
+  process.stdout.write(`${JSON.stringify(events, null, 2)}\n`);
   process.exit(0);
 }
 
