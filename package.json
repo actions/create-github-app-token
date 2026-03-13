@@ -7,6 +7,7 @@
   "engines": {
     "node": ">=24.4.0"
   },
+  "packageManager": "npm@11.11.0",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --packages=bundle",
     "test": "c8 --100 ava tests/index.js",

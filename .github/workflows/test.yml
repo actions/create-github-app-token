@@ -25,7 +25,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
-          cache: 'npm'
 
       - run: npm ci
       - run: npm test
@@ -40,7 +39,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
-          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - uses: ./ # Uses the action in the root directory
@@ -66,7 +64,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
-          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Start local proxy
