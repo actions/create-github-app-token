@@ -89,7 +89,7 @@ jobs:
       - run: echo "committer string is ${{ steps.committer.outputs.string }}"
 ```
 
-### Configure git CLI for an app's bot user
+### Configure gh/git CLI for an app's bot user
 
 ```yaml
 on: [pull_request]
@@ -104,6 +104,7 @@ jobs:
           # required
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
+          permission-contents: write
       - name: Get GitHub App User ID
         id: get-user-id
         run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
@@ -112,7 +113,9 @@ jobs:
       - run: |
           git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
           git config --global user.email '${{ steps.get-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
-      # git commands like commit work using the bot user
+          echo "${{ steps.app-token.outputs.token }}" | gh auth login --with-token
+          gh auth setup-git
+      # git commands like commit and push work using the bot user
       - run: |
           git add .
           git commit -m "Auto-generated changes"
