@@ -20502,7 +20502,7 @@ function ensureNativeProxySupport() {
     return;
   }
   throw new Error(
-    "A proxy environment variable (HTTP_PROXY, HTTPS_PROXY, http_proxy, or https_proxy) is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step."
+    "A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step."
   );
 }
 var request_default = request.defaults({
