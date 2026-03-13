@@ -53,13 +53,13 @@ jobs:
           # required
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.head_ref }}
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
-      - uses: creyD/prettier_action@v4.3
+      - uses: creyD/prettier_action@v6
         with:
           github_token: ${{ steps.app-token.outputs.token }}
 ```
@@ -141,7 +141,7 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
@@ -166,7 +166,7 @@ jobs:
           repositories: |
             repo1
             repo2
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
@@ -188,7 +188,7 @@ jobs:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: another-owner
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
@@ -214,7 +214,7 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           permission-issues: write
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
