@@ -21294,11 +21294,11 @@ function createOAuthAppAuth(options) {
 }
 
 // node_modules/universal-github-app-jwt/lib/utils.js
-function isPkcs1(privateKey2) {
-  return privateKey2.includes("-----BEGIN RSA PRIVATE KEY-----");
+function isPkcs1(privateKey) {
+  return privateKey.includes("-----BEGIN RSA PRIVATE KEY-----");
 }
-function isOpenSsh(privateKey2) {
-  return privateKey2.includes("-----BEGIN OPENSSH PRIVATE KEY-----");
+function isOpenSsh(privateKey) {
+  return privateKey.includes("-----BEGIN OPENSSH PRIVATE KEY-----");
 }
 function string2ArrayBuffer(str) {
   const buf = new ArrayBuffer(str.length);
@@ -21335,17 +21335,17 @@ function base64encodeJSON(obj) {
 // node_modules/universal-github-app-jwt/lib/crypto-node.js
 var import_node_crypto = require("node:crypto");
 var import_node_crypto2 = require("node:crypto");
-function convertPrivateKey(privateKey2) {
-  if (!isPkcs1(privateKey2)) return privateKey2;
-  return (0, import_node_crypto2.createPrivateKey)(privateKey2).export({
+function convertPrivateKey(privateKey) {
+  if (!isPkcs1(privateKey)) return privateKey;
+  return (0, import_node_crypto2.createPrivateKey)(privateKey).export({
     type: "pkcs8",
     format: "pem"
   });
 }
 
 // node_modules/universal-github-app-jwt/lib/get-token.js
-async function getToken({ privateKey: privateKey2, payload }) {
-  const convertedPrivateKey = convertPrivateKey(privateKey2);
+async function getToken({ privateKey, payload }) {
+  const convertedPrivateKey = convertPrivateKey(privateKey);
   if (isPkcs1(convertedPrivateKey)) {
     throw new Error(
       "[universal-github-app-jwt] Private Key is in PKCS#1 format, but only PKCS#8 is supported. See https://github.com/gr2m/universal-github-app-jwt#private-key-formats"
@@ -21383,10 +21383,10 @@ async function getToken({ privateKey: privateKey2, payload }) {
 // node_modules/universal-github-app-jwt/index.js
 async function githubAppJwt({
   id,
-  privateKey: privateKey2,
+  privateKey,
   now = Math.floor(Date.now() / 1e3)
 }) {
-  const privateKeyWithNewlines = privateKey2.replace(/\\n/g, "\n");
+  const privateKeyWithNewlines = privateKey.replace(/\\n/g, "\n");
   const nowWithSafetyMargin = now - 30;
   const expiration = nowWithSafetyMargin + 60 * 10;
   const payload = {
@@ -21544,14 +21544,14 @@ var LruObject = class {
 
 // node_modules/@octokit/auth-app/dist-node/index.js
 async function getAppAuthentication({
-  appId: appId2,
-  privateKey: privateKey2,
+  appId,
+  privateKey,
   timeDifference
 }) {
   try {
     const authOptions = {
-      id: appId2,
-      privateKey: privateKey2
+      id: appId,
+      privateKey
     };
     if (timeDifference) {
       Object.assign(authOptions, {
@@ -21566,7 +21566,7 @@ async function getAppAuthentication({
       expiresAt: new Date(appAuthentication.expiration * 1e3).toISOString()
     };
   } catch (error) {
-    if (privateKey2 === "-----BEGIN RSA PRIVATE KEY-----") {
+    if (privateKey === "-----BEGIN RSA PRIVATE KEY-----") {
       throw new Error(
         "The 'privateKey` option contains only the first line '-----BEGIN RSA PRIVATE KEY-----'. If you are setting it using a `.env` file, make sure it is set on a single line with newlines replaced by '\n'"
       );
@@ -21597,19 +21597,19 @@ async function get(cache, options) {
     permissionsString,
     singleFileName
   ] = result.split("|");
-  const permissions2 = options.permissions || permissionsString.split(/,/).reduce((permissions22, string) => {
+  const permissions = options.permissions || permissionsString.split(/,/).reduce((permissions2, string) => {
     if (/!$/.test(string)) {
-      permissions22[string.slice(0, -1)] = "write";
+      permissions2[string.slice(0, -1)] = "write";
     } else {
-      permissions22[string] = "read";
+      permissions2[string] = "read";
     }
-    return permissions22;
+    return permissions2;
   }, {});
   return {
     token,
     createdAt,
     expiresAt,
-    permissions: permissions2,
+    permissions,
     repositoryIds: options.repositoryIds,
     repositoryNames: options.repositoryNames,
     singleFileName,
@@ -21633,11 +21633,11 @@ async function set(cache, options, data) {
 }
 function optionsToCacheKey({
   installationId,
-  permissions: permissions2 = {},
+  permissions = {},
   repositoryIds = [],
   repositoryNames = []
 }) {
-  const permissionsString = Object.keys(permissions2).sort().map((name) => permissions2[name] === "read" ? name : `${name}!`).join(",");
+  const permissionsString = Object.keys(permissions).sort().map((name) => permissions[name] === "read" ? name : `${name}!`).join(",");
   const repositoryIdsString = repositoryIds.sort().join(",");
   const repositoryNamesString = repositoryNames.join(",");
   return [
@@ -21653,7 +21653,7 @@ function toTokenAuthentication({
   createdAt,
   expiresAt,
   repositorySelection,
-  permissions: permissions2,
+  permissions,
   repositoryIds,
   repositoryNames,
   singleFileName
@@ -21664,7 +21664,7 @@ function toTokenAuthentication({
       tokenType: "installation",
       token,
       installationId,
-      permissions: permissions2,
+      permissions,
       createdAt,
       expiresAt,
       repositorySelection
@@ -21717,7 +21717,7 @@ async function getInstallationAuthenticationImpl(state, options, request2) {
         token: token2,
         createdAt: createdAt2,
         expiresAt: expiresAt2,
-        permissions: permissions22,
+        permissions: permissions2,
         repositoryIds: repositoryIds2,
         repositoryNames: repositoryNames2,
         singleFileName: singleFileName2,
@@ -21728,7 +21728,7 @@ async function getInstallationAuthenticationImpl(state, options, request2) {
         token: token2,
         createdAt: createdAt2,
         expiresAt: expiresAt2,
-        permissions: permissions22,
+        permissions: permissions2,
         repositorySelection: repositorySelection2,
         repositoryIds: repositoryIds2,
         repositoryNames: repositoryNames2,
@@ -21761,7 +21761,7 @@ async function getInstallationAuthenticationImpl(state, options, request2) {
     data: {
       token,
       expires_at: expiresAt,
-      repositories: repositories2,
+      repositories,
       permissions: permissionsOptional,
       repository_selection: repositorySelectionOptional,
       single_file: singleFileName
@@ -21770,17 +21770,17 @@ async function getInstallationAuthenticationImpl(state, options, request2) {
     "POST /app/installations/{installation_id}/access_tokens",
     payload
   );
-  const permissions2 = permissionsOptional || {};
+  const permissions = permissionsOptional || {};
   const repositorySelection = repositorySelectionOptional || "all";
-  const repositoryIds = repositories2 ? repositories2.map((r) => r.id) : void 0;
-  const repositoryNames = repositories2 ? repositories2.map((repo) => repo.name) : void 0;
+  const repositoryIds = repositories ? repositories.map((r) => r.id) : void 0;
+  const repositoryNames = repositories ? repositories.map((repo) => repo.name) : void 0;
   const createdAt = (/* @__PURE__ */ new Date()).toISOString();
   const cacheOptions = {
     token,
     createdAt,
     expiresAt,
     repositorySelection,
-    permissions: permissions2,
+    permissions,
     repositoryIds,
     repositoryNames
   };
@@ -21794,7 +21794,7 @@ async function getInstallationAuthenticationImpl(state, options, request2) {
     createdAt,
     expiresAt,
     repositorySelection,
-    permissions: permissions2,
+    permissions,
     repositoryIds,
     repositoryNames
   };
@@ -21986,16 +21986,16 @@ function createAppAuth(options) {
 
 // lib/get-permissions-from-inputs.js
 function getPermissionsFromInputs(env) {
-  return Object.entries(env).reduce((permissions2, [key, value]) => {
-    if (!key.startsWith("INPUT_PERMISSION-")) return permissions2;
-    if (!value) return permissions2;
+  return Object.entries(env).reduce((permissions, [key, value]) => {
+    if (!key.startsWith("INPUT_PERMISSION-")) return permissions;
+    if (!value) return permissions;
     const permission = key.slice("INPUT_PERMISSION-".length).toLowerCase().replaceAll(/-/g, "_");
-    if (permissions2 === void 0) {
+    if (permissions === void 0) {
       return { [permission]: value };
     }
     return {
       // @ts-expect-error - needs to be typed correctly
-      ...permissions2,
+      ...permissions,
       [permission]: value
     };
   }, void 0);
@@ -22112,43 +22112,43 @@ async function pRetry(input, options) {
 }
 
 // lib/main.js
-async function main(appId2, privateKey2, owner2, repositories2, permissions2, core3, createAppAuth2, request2, skipTokenRevoke2) {
+async function main(appId, privateKey, owner, repositories, permissions, core3, createAppAuth2, request2, skipTokenRevoke) {
   let parsedOwner = "";
   let parsedRepositoryNames = [];
-  if (!owner2 && repositories2.length === 0) {
-    const [owner3, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
-    parsedOwner = owner3;
+  if (!owner && repositories.length === 0) {
+    const [owner2, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
+    parsedOwner = owner2;
     parsedRepositoryNames = [repo];
     core3.info(
-      `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${owner3}/${repo}).`
+      `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${owner2}/${repo}).`
     );
   }
-  if (owner2 && repositories2.length === 0) {
-    parsedOwner = owner2;
+  if (owner && repositories.length === 0) {
+    parsedOwner = owner;
     core3.info(
-      `Input 'repositories' is not set. Creating token for all repositories owned by ${owner2}.`
+      `Input 'repositories' is not set. Creating token for all repositories owned by ${owner}.`
     );
   }
-  if (!owner2 && repositories2.length > 0) {
+  if (!owner && repositories.length > 0) {
     parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
-    parsedRepositoryNames = repositories2;
+    parsedRepositoryNames = repositories;
     core3.info(
-      `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories2.map((repo) => `
+      `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories.map((repo) => `
 - ${parsedOwner}/${repo}`).join("")}`
     );
   }
-  if (owner2 && repositories2.length > 0) {
-    parsedOwner = owner2;
-    parsedRepositoryNames = repositories2;
+  if (owner && repositories.length > 0) {
+    parsedOwner = owner;
+    parsedRepositoryNames = repositories;
     core3.info(
       `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
-      ${repositories2.map((repo) => `
+      ${repositories.map((repo) => `
 - ${parsedOwner}/${repo}`).join("")}`
     );
   }
   const auth5 = createAppAuth2({
-    appId: appId2,
-    privateKey: privateKey2,
+    appId,
+    privateKey,
     request: request2
   });
   let authentication, installationId, appSlug;
@@ -22159,7 +22159,7 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
         auth5,
         parsedOwner,
         parsedRepositoryNames,
-        permissions2
+        permissions
       ),
       {
         shouldRetry: (error) => error.status >= 500,
@@ -22175,7 +22175,7 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
     ));
   } else {
     ({ authentication, installationId, appSlug } = await pRetry(
-      () => getTokenFromOwner(request2, auth5, parsedOwner, permissions2),
+      () => getTokenFromOwner(request2, auth5, parsedOwner, permissions),
       {
         onFailedAttempt: (error) => {
           core3.info(
@@ -22190,12 +22190,12 @@ async function main(appId2, privateKey2, owner2, repositories2, permissions2, co
   core3.setOutput("token", authentication.token);
   core3.setOutput("installation-id", installationId);
   core3.setOutput("app-slug", appSlug);
-  if (!skipTokenRevoke2) {
+  if (!skipTokenRevoke) {
     core3.saveState("token", authentication.token);
     core3.saveState("expiresAt", authentication.expiresAt);
   }
 }
-async function getTokenFromOwner(request2, auth5, parsedOwner, permissions2) {
+async function getTokenFromOwner(request2, auth5, parsedOwner, permissions) {
   const response = await request2("GET /users/{username}/installation", {
     username: parsedOwner,
     request: {
@@ -22205,13 +22205,13 @@ async function getTokenFromOwner(request2, auth5, parsedOwner, permissions2) {
   const authentication = await auth5({
     type: "installation",
     installationId: response.data.id,
-    permissions: permissions2
+    permissions
   });
   const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
   return { authentication, installationId, appSlug };
 }
-async function getTokenFromRepository(request2, auth5, parsedOwner, parsedRepositoryNames, permissions2) {
+async function getTokenFromRepository(request2, auth5, parsedOwner, parsedRepositoryNames, permissions) {
   const response = await request2("GET /repos/{owner}/{repo}/installation", {
     owner: parsedOwner,
     repo: parsedRepositoryNames[0],
@@ -22223,7 +22223,7 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
     type: "installation",
     installationId: response.data.id,
     repositoryNames: parsedRepositoryNames,
-    permissions: permissions2
+    permissions
   });
   const installationId = response.data.id;
   const appSlug = response.data["app_slug"];
@@ -22233,6 +22233,26 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
 // lib/request.js
 var import_core = __toESM(require_core(), 1);
 var baseUrl = import_core.default.getInput("github-api-url").replace(/\/$/, "");
+var proxyEnvironmentKeys = [
+  "https_proxy",
+  "HTTPS_PROXY",
+  "http_proxy",
+  "HTTP_PROXY"
+];
+function proxyEnvironmentConfigured() {
+  return proxyEnvironmentKeys.some((key) => process.env[key]);
+}
+function nativeProxySupportEnabled() {
+  return process.env.NODE_USE_ENV_PROXY === "1";
+}
+function ensureNativeProxySupport() {
+  if (!proxyEnvironmentConfigured() || nativeProxySupportEnabled()) {
+    return;
+  }
+  throw new Error(
+    "A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step."
+  );
+}
 var request_default = request.defaults({
   headers: { "user-agent": "actions/create-github-app-token" },
   baseUrl
@@ -22245,23 +22265,27 @@ if (!process.env.GITHUB_REPOSITORY) {
 if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
-var appId = import_core2.default.getInput("app-id");
-var privateKey = import_core2.default.getInput("private-key");
-var owner = import_core2.default.getInput("owner");
-var repositories = import_core2.default.getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
-var skipTokenRevoke = import_core2.default.getBooleanInput("skip-token-revoke");
-var permissions = getPermissionsFromInputs(process.env);
-var main_default = main(
-  appId,
-  privateKey,
-  owner,
-  repositories,
-  permissions,
-  import_core2.default,
-  createAppAuth,
-  request_default,
-  skipTokenRevoke
-).catch((error) => {
+async function run() {
+  ensureNativeProxySupport();
+  const appId = import_core2.default.getInput("app-id");
+  const privateKey = import_core2.default.getInput("private-key");
+  const owner = import_core2.default.getInput("owner");
+  const repositories = import_core2.default.getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
+  const skipTokenRevoke = import_core2.default.getBooleanInput("skip-token-revoke");
+  const permissions = getPermissionsFromInputs(process.env);
+  return main(
+    appId,
+    privateKey,
+    owner,
+    repositories,
+    permissions,
+    import_core2.default,
+    createAppAuth,
+    request_default,
+    skipTokenRevoke
+  );
+}
+var main_default = run().catch((error) => {
   console.error(error);
   import_core2.default.setFailed(error.message);
 });

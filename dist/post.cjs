@@ -20485,13 +20485,37 @@ var request = withDefaults2(endpoint, defaults_default);
 
 // lib/request.js
 var baseUrl = import_core.default.getInput("github-api-url").replace(/\/$/, "");
+var proxyEnvironmentKeys = [
+  "https_proxy",
+  "HTTPS_PROXY",
+  "http_proxy",
+  "HTTP_PROXY"
+];
+function proxyEnvironmentConfigured() {
+  return proxyEnvironmentKeys.some((key) => process.env[key]);
+}
+function nativeProxySupportEnabled() {
+  return process.env.NODE_USE_ENV_PROXY === "1";
+}
+function ensureNativeProxySupport() {
+  if (!proxyEnvironmentConfigured() || nativeProxySupportEnabled()) {
+    return;
+  }
+  throw new Error(
+    "A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step."
+  );
+}
 var request_default = request.defaults({
   headers: { "user-agent": "actions/create-github-app-token" },
   baseUrl
 });
 
 // post.js
-post(import_core2.default, request_default).catch((error) => {
+async function run() {
+  ensureNativeProxySupport();
+  return post(import_core2.default, request_default);
+}
+run().catch((error) => {
   console.error(error);
   import_core2.default.setFailed(error.message);
 });
