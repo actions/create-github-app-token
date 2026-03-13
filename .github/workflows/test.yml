@@ -20,11 +20,12 @@ jobs:
     name: Integration
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
+          cache: 'npm'
 
       - run: npm ci
       - run: npm test
@@ -35,10 +36,11 @@ jobs:
     # do not run from forks, as forks don’t have access to repository secrets
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - uses: ./ # Uses the action in the root directory
@@ -60,10 +62,11 @@ jobs:
     # do not run from forks, as forks don’t have access to repository secrets
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Start local proxy

@@ -18,10 +18,11 @@ jobs:
   update-permission-inputs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
+          cache: 'npm'
       - name: Install dependencies
         run: npm ci
       - name: Run permission inputs update script
