@@ -19,6 +19,7 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __reExport = (target, mod, secondTarget) => (__copyProps(target, mod, "default"), secondTarget && __copyProps(secondTarget, mod, "default"));
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
   // If the importer is in node compatibility mode or this is not an ESM
   // file that has been converted to a CommonJS file using a Babel-
@@ -232,10 +233,10 @@ var require_proxy = __commonJS({
       })();
       if (proxyVar) {
         try {
-          return new DecodedURL(proxyVar);
+          return new URL(proxyVar);
         } catch (_a) {
           if (!proxyVar.startsWith("http://") && !proxyVar.startsWith("https://"))
-            return new DecodedURL(`http://${proxyVar}`);
+            return new URL(`http://${proxyVar}`);
         }
       } else {
         return void 0;
@@ -278,19 +279,6 @@ var require_proxy = __commonJS({
       const hostLower = host.toLowerCase();
       return hostLower === "localhost" || hostLower.startsWith("127.") || hostLower.startsWith("[::1]") || hostLower.startsWith("[0:0:0:0:0:0:0:1]");
     }
-    var DecodedURL = class extends URL {
-      constructor(url, base) {
-        super(url, base);
-        this._decodedUsername = decodeURIComponent(super.username);
-        this._decodedPassword = decodeURIComponent(super.password);
-      }
-      get username() {
-        return this._decodedUsername;
-      }
-      get password() {
-        return this._decodedPassword;
-      }
-    };
   }
 });
 
@@ -535,67 +523,67 @@ var require_tunnel2 = __commonJS({
 var require_symbols = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/core/symbols.js"(exports2, module2) {
     module2.exports = {
-      kClose: Symbol("close"),
-      kDestroy: Symbol("destroy"),
-      kDispatch: Symbol("dispatch"),
-      kUrl: Symbol("url"),
-      kWriting: Symbol("writing"),
-      kResuming: Symbol("resuming"),
-      kQueue: Symbol("queue"),
-      kConnect: Symbol("connect"),
-      kConnecting: Symbol("connecting"),
-      kHeadersList: Symbol("headers list"),
-      kKeepAliveDefaultTimeout: Symbol("default keep alive timeout"),
-      kKeepAliveMaxTimeout: Symbol("max keep alive timeout"),
-      kKeepAliveTimeoutThreshold: Symbol("keep alive timeout threshold"),
-      kKeepAliveTimeoutValue: Symbol("keep alive timeout"),
-      kKeepAlive: Symbol("keep alive"),
-      kHeadersTimeout: Symbol("headers timeout"),
-      kBodyTimeout: Symbol("body timeout"),
-      kServerName: Symbol("server name"),
-      kLocalAddress: Symbol("local address"),
-      kHost: Symbol("host"),
-      kNoRef: Symbol("no ref"),
-      kBodyUsed: Symbol("used"),
-      kRunning: Symbol("running"),
-      kBlocking: Symbol("blocking"),
-      kPending: Symbol("pending"),
-      kSize: Symbol("size"),
-      kBusy: Symbol("busy"),
-      kQueued: Symbol("queued"),
-      kFree: Symbol("free"),
-      kConnected: Symbol("connected"),
-      kClosed: Symbol("closed"),
-      kNeedDrain: Symbol("need drain"),
-      kReset: Symbol("reset"),
-      kDestroyed: Symbol.for("nodejs.stream.destroyed"),
-      kMaxHeadersSize: Symbol("max headers size"),
-      kRunningIdx: Symbol("running index"),
-      kPendingIdx: Symbol("pending index"),
-      kError: Symbol("error"),
-      kClients: Symbol("clients"),
-      kClient: Symbol("client"),
-      kParser: Symbol("parser"),
-      kOnDestroyed: Symbol("destroy callbacks"),
-      kPipelining: Symbol("pipelining"),
-      kSocket: Symbol("socket"),
-      kHostHeader: Symbol("host header"),
-      kConnector: Symbol("connector"),
-      kStrictContentLength: Symbol("strict content length"),
-      kMaxRedirections: Symbol("maxRedirections"),
-      kMaxRequests: Symbol("maxRequestsPerClient"),
-      kProxy: Symbol("proxy agent options"),
-      kCounter: Symbol("socket request counter"),
-      kInterceptors: Symbol("dispatch interceptors"),
-      kMaxResponseSize: Symbol("max response size"),
-      kHTTP2Session: Symbol("http2Session"),
-      kHTTP2SessionState: Symbol("http2Session state"),
-      kHTTP2BuildRequest: Symbol("http2 build request"),
-      kHTTP1BuildRequest: Symbol("http1 build request"),
-      kHTTP2CopyHeaders: Symbol("http2 copy headers"),
-      kHTTPConnVersion: Symbol("http connection version"),
-      kRetryHandlerDefaultRetry: Symbol("retry agent default retry"),
-      kConstruct: Symbol("constructable")
+      kClose: /* @__PURE__ */ Symbol("close"),
+      kDestroy: /* @__PURE__ */ Symbol("destroy"),
+      kDispatch: /* @__PURE__ */ Symbol("dispatch"),
+      kUrl: /* @__PURE__ */ Symbol("url"),
+      kWriting: /* @__PURE__ */ Symbol("writing"),
+      kResuming: /* @__PURE__ */ Symbol("resuming"),
+      kQueue: /* @__PURE__ */ Symbol("queue"),
+      kConnect: /* @__PURE__ */ Symbol("connect"),
+      kConnecting: /* @__PURE__ */ Symbol("connecting"),
+      kHeadersList: /* @__PURE__ */ Symbol("headers list"),
+      kKeepAliveDefaultTimeout: /* @__PURE__ */ Symbol("default keep alive timeout"),
+      kKeepAliveMaxTimeout: /* @__PURE__ */ Symbol("max keep alive timeout"),
+      kKeepAliveTimeoutThreshold: /* @__PURE__ */ Symbol("keep alive timeout threshold"),
+      kKeepAliveTimeoutValue: /* @__PURE__ */ Symbol("keep alive timeout"),
+      kKeepAlive: /* @__PURE__ */ Symbol("keep alive"),
+      kHeadersTimeout: /* @__PURE__ */ Symbol("headers timeout"),
+      kBodyTimeout: /* @__PURE__ */ Symbol("body timeout"),
+      kServerName: /* @__PURE__ */ Symbol("server name"),
+      kLocalAddress: /* @__PURE__ */ Symbol("local address"),
+      kHost: /* @__PURE__ */ Symbol("host"),
+      kNoRef: /* @__PURE__ */ Symbol("no ref"),
+      kBodyUsed: /* @__PURE__ */ Symbol("used"),
+      kRunning: /* @__PURE__ */ Symbol("running"),
+      kBlocking: /* @__PURE__ */ Symbol("blocking"),
+      kPending: /* @__PURE__ */ Symbol("pending"),
+      kSize: /* @__PURE__ */ Symbol("size"),
+      kBusy: /* @__PURE__ */ Symbol("busy"),
+      kQueued: /* @__PURE__ */ Symbol("queued"),
+      kFree: /* @__PURE__ */ Symbol("free"),
+      kConnected: /* @__PURE__ */ Symbol("connected"),
+      kClosed: /* @__PURE__ */ Symbol("closed"),
+      kNeedDrain: /* @__PURE__ */ Symbol("need drain"),
+      kReset: /* @__PURE__ */ Symbol("reset"),
+      kDestroyed: /* @__PURE__ */ Symbol.for("nodejs.stream.destroyed"),
+      kMaxHeadersSize: /* @__PURE__ */ Symbol("max headers size"),
+      kRunningIdx: /* @__PURE__ */ Symbol("running index"),
+      kPendingIdx: /* @__PURE__ */ Symbol("pending index"),
+      kError: /* @__PURE__ */ Symbol("error"),
+      kClients: /* @__PURE__ */ Symbol("clients"),
+      kClient: /* @__PURE__ */ Symbol("client"),
+      kParser: /* @__PURE__ */ Symbol("parser"),
+      kOnDestroyed: /* @__PURE__ */ Symbol("destroy callbacks"),
+      kPipelining: /* @__PURE__ */ Symbol("pipelining"),
+      kSocket: /* @__PURE__ */ Symbol("socket"),
+      kHostHeader: /* @__PURE__ */ Symbol("host header"),
+      kConnector: /* @__PURE__ */ Symbol("connector"),
+      kStrictContentLength: /* @__PURE__ */ Symbol("strict content length"),
+      kMaxRedirections: /* @__PURE__ */ Symbol("maxRedirections"),
+      kMaxRequests: /* @__PURE__ */ Symbol("maxRequestsPerClient"),
+      kProxy: /* @__PURE__ */ Symbol("proxy agent options"),
+      kCounter: /* @__PURE__ */ Symbol("socket request counter"),
+      kInterceptors: /* @__PURE__ */ Symbol("dispatch interceptors"),
+      kMaxResponseSize: /* @__PURE__ */ Symbol("max response size"),
+      kHTTP2Session: /* @__PURE__ */ Symbol("http2Session"),
+      kHTTP2SessionState: /* @__PURE__ */ Symbol("http2Session state"),
+      kHTTP2BuildRequest: /* @__PURE__ */ Symbol("http2 build request"),
+      kHTTP1BuildRequest: /* @__PURE__ */ Symbol("http1 build request"),
+      kHTTP2CopyHeaders: /* @__PURE__ */ Symbol("http2 copy headers"),
+      kHTTPConnVersion: /* @__PURE__ */ Symbol("http connection version"),
+      kRetryHandlerDefaultRetry: /* @__PURE__ */ Symbol("retry agent default retry"),
+      kConstruct: /* @__PURE__ */ Symbol("constructable")
     };
   }
 });
@@ -3590,7 +3578,7 @@ var require_constants2 = __commonJS({
 var require_global = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/fetch/global.js"(exports2, module2) {
     "use strict";
-    var globalOrigin = Symbol.for("undici.globalOrigin.1");
+    var globalOrigin = /* @__PURE__ */ Symbol.for("undici.globalOrigin.1");
     function getGlobalOrigin() {
       return globalThis[globalOrigin];
     }
@@ -4242,12 +4230,12 @@ var require_symbols2 = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/fetch/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
-      kUrl: Symbol("url"),
-      kHeaders: Symbol("headers"),
-      kSignal: Symbol("signal"),
-      kState: Symbol("state"),
-      kGuard: Symbol("guard"),
-      kRealm: Symbol("realm")
+      kUrl: /* @__PURE__ */ Symbol("url"),
+      kHeaders: /* @__PURE__ */ Symbol("headers"),
+      kSignal: /* @__PURE__ */ Symbol("signal"),
+      kState: /* @__PURE__ */ Symbol("state"),
+      kGuard: /* @__PURE__ */ Symbol("guard"),
+      kRealm: /* @__PURE__ */ Symbol("realm")
     };
   }
 });
@@ -5640,7 +5628,7 @@ var require_request = __commonJS({
     var tokenRegExp = /^[\^_`a-zA-Z\-0-9!#$%&'*+.|~]+$/;
     var headerCharRegex = /[^\t\x20-\x7e\x80-\xff]/;
     var invalidPathRegex = /[^\u0021-\u00ff]/;
-    var kHandler = Symbol("handler");
+    var kHandler = /* @__PURE__ */ Symbol("handler");
     var channels = {};
     var extractBody;
     try {
@@ -6027,11 +6015,11 @@ var require_dispatcher_base = __commonJS({
       InvalidArgumentError
     } = require_errors();
     var { kDestroy, kClose, kDispatch, kInterceptors } = require_symbols();
-    var kDestroyed = Symbol("destroyed");
-    var kClosed = Symbol("closed");
-    var kOnDestroyed = Symbol("onDestroyed");
-    var kOnClosed = Symbol("onClosed");
-    var kInterceptedDispatch = Symbol("Intercepted Dispatch");
+    var kDestroyed = /* @__PURE__ */ Symbol("destroyed");
+    var kClosed = /* @__PURE__ */ Symbol("closed");
+    var kOnDestroyed = /* @__PURE__ */ Symbol("onDestroyed");
+    var kOnClosed = /* @__PURE__ */ Symbol("onClosed");
+    var kInterceptedDispatch = /* @__PURE__ */ Symbol("Intercepted Dispatch");
     var DispatcherBase = class extends Dispatcher {
       constructor() {
         super();
@@ -6686,7 +6674,7 @@ var require_RedirectHandler = __commonJS({
     var { InvalidArgumentError } = require_errors();
     var EE = require("events");
     var redirectableStatusCodes = [300, 301, 302, 303, 307, 308];
-    var kBody = Symbol("body");
+    var kBody = /* @__PURE__ */ Symbol("body");
     var BodyAsyncIterable = class {
       constructor(body) {
         this[kBody] = body;
@@ -6960,7 +6948,7 @@ var require_client = __commonJS({
     } = http2;
     var h2ExperimentalWarned = false;
     var FastBuffer = Buffer[Symbol.species];
-    var kClosedResolve = Symbol("kClosedResolve");
+    var kClosedResolve = /* @__PURE__ */ Symbol("kClosedResolve");
     var channels = {};
     try {
       const diagnosticsChannel = require("diagnostics_channel");
@@ -8630,7 +8618,7 @@ var require_fixed_queue = __commonJS({
 var require_pool_stats = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/pool-stats.js"(exports2, module2) {
     var { kFree, kConnected, kPending, kQueued, kRunning, kSize } = require_symbols();
-    var kPool = Symbol("pool");
+    var kPool = /* @__PURE__ */ Symbol("pool");
     var PoolStats = class {
       constructor(pool) {
         this[kPool] = pool;
@@ -8666,18 +8654,18 @@ var require_pool_base = __commonJS({
     var FixedQueue = require_fixed_queue();
     var { kConnected, kSize, kRunning, kPending, kQueued, kBusy, kFree, kUrl, kClose, kDestroy, kDispatch } = require_symbols();
     var PoolStats = require_pool_stats();
-    var kClients = Symbol("clients");
-    var kNeedDrain = Symbol("needDrain");
-    var kQueue = Symbol("queue");
-    var kClosedResolve = Symbol("closed resolve");
-    var kOnDrain = Symbol("onDrain");
-    var kOnConnect = Symbol("onConnect");
-    var kOnDisconnect = Symbol("onDisconnect");
-    var kOnConnectionError = Symbol("onConnectionError");
-    var kGetDispatcher = Symbol("get dispatcher");
-    var kAddClient = Symbol("add client");
-    var kRemoveClient = Symbol("remove client");
-    var kStats = Symbol("stats");
+    var kClients = /* @__PURE__ */ Symbol("clients");
+    var kNeedDrain = /* @__PURE__ */ Symbol("needDrain");
+    var kQueue = /* @__PURE__ */ Symbol("queue");
+    var kClosedResolve = /* @__PURE__ */ Symbol("closed resolve");
+    var kOnDrain = /* @__PURE__ */ Symbol("onDrain");
+    var kOnConnect = /* @__PURE__ */ Symbol("onConnect");
+    var kOnDisconnect = /* @__PURE__ */ Symbol("onDisconnect");
+    var kOnConnectionError = /* @__PURE__ */ Symbol("onConnectionError");
+    var kGetDispatcher = /* @__PURE__ */ Symbol("get dispatcher");
+    var kAddClient = /* @__PURE__ */ Symbol("add client");
+    var kRemoveClient = /* @__PURE__ */ Symbol("remove client");
+    var kStats = /* @__PURE__ */ Symbol("stats");
     var PoolBase = class extends DispatcherBase {
       constructor() {
         super();
@@ -8831,9 +8819,9 @@ var require_pool = __commonJS({
     var util = require_util();
     var { kUrl, kInterceptors } = require_symbols();
     var buildConnector = require_connect();
-    var kOptions = Symbol("options");
-    var kConnections = Symbol("connections");
-    var kFactory = Symbol("factory");
+    var kOptions = /* @__PURE__ */ Symbol("options");
+    var kConnections = /* @__PURE__ */ Symbol("connections");
+    var kFactory = /* @__PURE__ */ Symbol("factory");
     function defaultFactory(origin, opts) {
       return new Client(origin, opts);
     }
@@ -8922,14 +8910,14 @@ var require_balanced_pool = __commonJS({
     var Pool = require_pool();
     var { kUrl, kInterceptors } = require_symbols();
     var { parseOrigin } = require_util();
-    var kFactory = Symbol("factory");
-    var kOptions = Symbol("options");
-    var kGreatestCommonDivisor = Symbol("kGreatestCommonDivisor");
-    var kCurrentWeight = Symbol("kCurrentWeight");
-    var kIndex = Symbol("kIndex");
-    var kWeight = Symbol("kWeight");
-    var kMaxWeightPerServer = Symbol("kMaxWeightPerServer");
-    var kErrorPenalty = Symbol("kErrorPenalty");
+    var kFactory = /* @__PURE__ */ Symbol("factory");
+    var kOptions = /* @__PURE__ */ Symbol("options");
+    var kGreatestCommonDivisor = /* @__PURE__ */ Symbol("kGreatestCommonDivisor");
+    var kCurrentWeight = /* @__PURE__ */ Symbol("kCurrentWeight");
+    var kIndex = /* @__PURE__ */ Symbol("kIndex");
+    var kWeight = /* @__PURE__ */ Symbol("kWeight");
+    var kMaxWeightPerServer = /* @__PURE__ */ Symbol("kMaxWeightPerServer");
+    var kErrorPenalty = /* @__PURE__ */ Symbol("kErrorPenalty");
     function getGreatestCommonDivisor(a, b) {
       if (b === 0) return a;
       return getGreatestCommonDivisor(b, a % b);
@@ -9092,14 +9080,14 @@ var require_agent = __commonJS({
     var util = require_util();
     var createRedirectInterceptor = require_redirectInterceptor();
     var { WeakRef: WeakRef2, FinalizationRegistry } = require_dispatcher_weakref()();
-    var kOnConnect = Symbol("onConnect");
-    var kOnDisconnect = Symbol("onDisconnect");
-    var kOnConnectionError = Symbol("onConnectionError");
-    var kMaxRedirections = Symbol("maxRedirections");
-    var kOnDrain = Symbol("onDrain");
-    var kFactory = Symbol("factory");
-    var kFinalizer = Symbol("finalizer");
-    var kOptions = Symbol("options");
+    var kOnConnect = /* @__PURE__ */ Symbol("onConnect");
+    var kOnDisconnect = /* @__PURE__ */ Symbol("onDisconnect");
+    var kOnConnectionError = /* @__PURE__ */ Symbol("onConnectionError");
+    var kMaxRedirections = /* @__PURE__ */ Symbol("maxRedirections");
+    var kOnDrain = /* @__PURE__ */ Symbol("onDrain");
+    var kFactory = /* @__PURE__ */ Symbol("factory");
+    var kFinalizer = /* @__PURE__ */ Symbol("finalizer");
+    var kOptions = /* @__PURE__ */ Symbol("options");
     function defaultFactory(origin, opts) {
       return opts && opts.connections === 1 ? new Client(origin, opts) : new Pool(origin, opts);
     }
@@ -9208,12 +9196,12 @@ var require_readable = __commonJS({
     var util = require_util();
     var { ReadableStreamFrom, toUSVString } = require_util();
     var Blob2;
-    var kConsume = Symbol("kConsume");
-    var kReading = Symbol("kReading");
-    var kBody = Symbol("kBody");
-    var kAbort = Symbol("abort");
-    var kContentType = Symbol("kContentType");
-    var noop = () => {
+    var kConsume = /* @__PURE__ */ Symbol("kConsume");
+    var kReading = /* @__PURE__ */ Symbol("kReading");
+    var kBody = /* @__PURE__ */ Symbol("kBody");
+    var kAbort = /* @__PURE__ */ Symbol("abort");
+    var kContentType = /* @__PURE__ */ Symbol("kContentType");
+    var noop2 = () => {
     };
     module2.exports = class BodyReadable extends Readable {
       constructor({
@@ -9335,7 +9323,7 @@ var require_readable = __commonJS({
         return new Promise((resolve, reject) => {
           const signalListenerCleanup = signal ? util.addAbortListener(signal, () => {
             this.destroy();
-          }) : noop;
+          }) : noop2;
           this.on("close", function() {
             signalListenerCleanup();
             if (signal && signal.aborted) {
@@ -9343,7 +9331,7 @@ var require_readable = __commonJS({
             } else {
               resolve(null);
             }
-          }).on("error", noop).on("data", function(chunk) {
+          }).on("error", noop2).on("data", function(chunk) {
             limit -= chunk.length;
             if (limit <= 0) {
               this.destroy();
@@ -9498,8 +9486,8 @@ var require_abort_signal = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/api/abort-signal.js"(exports2, module2) {
     var { addAbortListener } = require_util();
     var { RequestAbortedError } = require_errors();
-    var kListener = Symbol("kListener");
-    var kSignal = Symbol("kSignal");
+    var kListener = /* @__PURE__ */ Symbol("kListener");
+    var kSignal = /* @__PURE__ */ Symbol("kSignal");
     function abort(self) {
       if (self.abort) {
         self.abort();
@@ -9888,7 +9876,7 @@ var require_api_pipeline = __commonJS({
     var { AsyncResource } = require("async_hooks");
     var { addSignal, removeSignal } = require_abort_signal();
     var assert = require("assert");
-    var kResume = Symbol("resume");
+    var kResume = /* @__PURE__ */ Symbol("resume");
     var PipelineRequest = class extends Readable {
       constructor() {
         super({ autoDestroy: true });
@@ -10282,25 +10270,25 @@ var require_mock_symbols = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/mock/mock-symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
-      kAgent: Symbol("agent"),
-      kOptions: Symbol("options"),
-      kFactory: Symbol("factory"),
-      kDispatches: Symbol("dispatches"),
-      kDispatchKey: Symbol("dispatch key"),
-      kDefaultHeaders: Symbol("default headers"),
-      kDefaultTrailers: Symbol("default trailers"),
-      kContentLength: Symbol("content length"),
-      kMockAgent: Symbol("mock agent"),
-      kMockAgentSet: Symbol("mock agent set"),
-      kMockAgentGet: Symbol("mock agent get"),
-      kMockDispatch: Symbol("mock dispatch"),
-      kClose: Symbol("close"),
-      kOriginalClose: Symbol("original agent close"),
-      kOrigin: Symbol("origin"),
-      kIsMockActive: Symbol("is mock active"),
-      kNetConnect: Symbol("net connect"),
-      kGetNetConnect: Symbol("get net connect"),
-      kConnected: Symbol("connected")
+      kAgent: /* @__PURE__ */ Symbol("agent"),
+      kOptions: /* @__PURE__ */ Symbol("options"),
+      kFactory: /* @__PURE__ */ Symbol("factory"),
+      kDispatches: /* @__PURE__ */ Symbol("dispatches"),
+      kDispatchKey: /* @__PURE__ */ Symbol("dispatch key"),
+      kDefaultHeaders: /* @__PURE__ */ Symbol("default headers"),
+      kDefaultTrailers: /* @__PURE__ */ Symbol("default trailers"),
+      kContentLength: /* @__PURE__ */ Symbol("content length"),
+      kMockAgent: /* @__PURE__ */ Symbol("mock agent"),
+      kMockAgentSet: /* @__PURE__ */ Symbol("mock agent set"),
+      kMockAgentGet: /* @__PURE__ */ Symbol("mock agent get"),
+      kMockDispatch: /* @__PURE__ */ Symbol("mock dispatch"),
+      kClose: /* @__PURE__ */ Symbol("close"),
+      kOriginalClose: /* @__PURE__ */ Symbol("original agent close"),
+      kOrigin: /* @__PURE__ */ Symbol("origin"),
+      kIsMockActive: /* @__PURE__ */ Symbol("is mock active"),
+      kNetConnect: /* @__PURE__ */ Symbol("net connect"),
+      kGetNetConnect: /* @__PURE__ */ Symbol("get net connect"),
+      kConnected: /* @__PURE__ */ Symbol("connected")
     };
   }
 });
@@ -11072,12 +11060,12 @@ var require_proxy_agent = __commonJS({
     var DispatcherBase = require_dispatcher_base();
     var { InvalidArgumentError, RequestAbortedError } = require_errors();
     var buildConnector = require_connect();
-    var kAgent = Symbol("proxy agent");
-    var kClient = Symbol("proxy client");
-    var kProxyHeaders = Symbol("proxy headers");
-    var kRequestTls = Symbol("request tls settings");
-    var kProxyTls = Symbol("proxy tls settings");
-    var kConnectEndpoint = Symbol("connect endpoint function");
+    var kAgent = /* @__PURE__ */ Symbol("proxy agent");
+    var kClient = /* @__PURE__ */ Symbol("proxy client");
+    var kProxyHeaders = /* @__PURE__ */ Symbol("proxy headers");
+    var kRequestTls = /* @__PURE__ */ Symbol("request tls settings");
+    var kProxyTls = /* @__PURE__ */ Symbol("proxy tls settings");
+    var kConnectEndpoint = /* @__PURE__ */ Symbol("connect endpoint function");
     function defaultProtocolPort(protocol) {
       return protocol === "https:" ? 443 : 80;
     }
@@ -11484,7 +11472,7 @@ var require_RetryHandler = __commonJS({
 var require_global2 = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/global.js"(exports2, module2) {
     "use strict";
-    var globalDispatcher = Symbol.for("undici.globalDispatcher.1");
+    var globalDispatcher = /* @__PURE__ */ Symbol.for("undici.globalDispatcher.1");
     var { InvalidArgumentError } = require_errors();
     var Agent = require_agent();
     if (getGlobalDispatcher() === void 0) {
@@ -11559,8 +11547,8 @@ var require_headers = __commonJS({
     var util = require("util");
     var { webidl } = require_webidl();
     var assert = require("assert");
-    var kHeadersMap = Symbol("headers map");
-    var kHeadersSortedMap = Symbol("headers map sorted");
+    var kHeadersMap = /* @__PURE__ */ Symbol("headers map");
+    var kHeadersSortedMap = /* @__PURE__ */ Symbol("headers map sorted");
     function isHTTPWhiteSpaceCharCode(code) {
       return code === 10 || code === 13 || code === 9 || code === 32;
     }
@@ -11887,7 +11875,7 @@ var require_headers = __commonJS({
           callbackFn.apply(thisArg, [value, key, this]);
         }
       }
-      [Symbol.for("nodejs.util.inspect.custom")]() {
+      [/* @__PURE__ */ Symbol.for("nodejs.util.inspect.custom")]() {
         webidl.brandCheck(this, _Headers);
         return this[kHeadersList];
       }
@@ -12347,7 +12335,7 @@ var require_request2 = __commonJS({
     var assert = require("assert");
     var { getMaxListeners, setMaxListeners, getEventListeners, defaultMaxListeners } = require("events");
     var TransformStream = globalThis.TransformStream;
-    var kAbortController = Symbol("abortController");
+    var kAbortController = /* @__PURE__ */ Symbol("abortController");
     var requestFinalizer = new FinalizationRegistry(({ signal, abort }) => {
       signal.removeEventListener("abort", abort);
     });
@@ -13993,12 +13981,12 @@ var require_symbols3 = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/fileapi/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
-      kState: Symbol("FileReader state"),
-      kResult: Symbol("FileReader result"),
-      kError: Symbol("FileReader error"),
-      kLastProgressEventFired: Symbol("FileReader last progress event fired timestamp"),
-      kEvents: Symbol("FileReader events"),
-      kAborted: Symbol("FileReader aborted")
+      kState: /* @__PURE__ */ Symbol("FileReader state"),
+      kResult: /* @__PURE__ */ Symbol("FileReader result"),
+      kError: /* @__PURE__ */ Symbol("FileReader error"),
+      kLastProgressEventFired: /* @__PURE__ */ Symbol("FileReader last progress event fired timestamp"),
+      kEvents: /* @__PURE__ */ Symbol("FileReader events"),
+      kAborted: /* @__PURE__ */ Symbol("FileReader aborted")
     };
   }
 });
@@ -14008,7 +13996,7 @@ var require_progressevent = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/fileapi/progressevent.js"(exports2, module2) {
     "use strict";
     var { webidl } = require_webidl();
-    var kState = Symbol("ProgressEvent state");
+    var kState = /* @__PURE__ */ Symbol("ProgressEvent state");
     var ProgressEvent = class _ProgressEvent extends Event {
       constructor(type, eventInitDict = {}) {
         type = webidl.converters.DOMString(type);
@@ -15958,14 +15946,14 @@ var require_symbols5 = __commonJS({
   "node_modules/@actions/http-client/node_modules/undici/lib/websocket/symbols.js"(exports2, module2) {
     "use strict";
     module2.exports = {
-      kWebSocketURL: Symbol("url"),
-      kReadyState: Symbol("ready state"),
-      kController: Symbol("controller"),
-      kResponse: Symbol("response"),
-      kBinaryType: Symbol("binary type"),
-      kSentClose: Symbol("sent close"),
-      kReceivedClose: Symbol("received close"),
-      kByteParser: Symbol("byte parser")
+      kWebSocketURL: /* @__PURE__ */ Symbol("url"),
+      kReadyState: /* @__PURE__ */ Symbol("ready state"),
+      kController: /* @__PURE__ */ Symbol("controller"),
+      kResponse: /* @__PURE__ */ Symbol("response"),
+      kBinaryType: /* @__PURE__ */ Symbol("binary type"),
+      kSentClose: /* @__PURE__ */ Symbol("sent close"),
+      kReceivedClose: /* @__PURE__ */ Symbol("received close"),
+      kByteParser: /* @__PURE__ */ Symbol("byte parser")
     };
   }
 });
@@ -17830,7 +17818,7 @@ var require_lib = __commonJS({
         }
         const usingSsl = parsedUrl.protocol === "https:";
         proxyAgent = new undici_1.ProxyAgent(Object.assign({ uri: proxyUrl.href, pipelining: !this._keepAlive ? 0 : 1 }, (proxyUrl.username || proxyUrl.password) && {
-          token: `Basic ${Buffer.from(`${proxyUrl.username}:${proxyUrl.password}`).toString("base64")}`
+          token: `${proxyUrl.username}:${proxyUrl.password}`
         }));
         this._proxyAgentDispatcher = proxyAgent;
         if (usingSsl && this._ignoreSslError) {
@@ -19908,234 +19896,6 @@ var require_fast_content_type_parse = __commonJS({
   }
 });
 
-// node_modules/retry/lib/retry_operation.js
-var require_retry_operation = __commonJS({
-  "node_modules/retry/lib/retry_operation.js"(exports2, module2) {
-    function RetryOperation(timeouts, options) {
-      if (typeof options === "boolean") {
-        options = { forever: options };
-      }
-      this._originalTimeouts = JSON.parse(JSON.stringify(timeouts));
-      this._timeouts = timeouts;
-      this._options = options || {};
-      this._maxRetryTime = options && options.maxRetryTime || Infinity;
-      this._fn = null;
-      this._errors = [];
-      this._attempts = 1;
-      this._operationTimeout = null;
-      this._operationTimeoutCb = null;
-      this._timeout = null;
-      this._operationStart = null;
-      this._timer = null;
-      if (this._options.forever) {
-        this._cachedTimeouts = this._timeouts.slice(0);
-      }
-    }
-    module2.exports = RetryOperation;
-    RetryOperation.prototype.reset = function() {
-      this._attempts = 1;
-      this._timeouts = this._originalTimeouts.slice(0);
-    };
-    RetryOperation.prototype.stop = function() {
-      if (this._timeout) {
-        clearTimeout(this._timeout);
-      }
-      if (this._timer) {
-        clearTimeout(this._timer);
-      }
-      this._timeouts = [];
-      this._cachedTimeouts = null;
-    };
-    RetryOperation.prototype.retry = function(err) {
-      if (this._timeout) {
-        clearTimeout(this._timeout);
-      }
-      if (!err) {
-        return false;
-      }
-      var currentTime = (/* @__PURE__ */ new Date()).getTime();
-      if (err && currentTime - this._operationStart >= this._maxRetryTime) {
-        this._errors.push(err);
-        this._errors.unshift(new Error("RetryOperation timeout occurred"));
-        return false;
-      }
-      this._errors.push(err);
-      var timeout = this._timeouts.shift();
-      if (timeout === void 0) {
-        if (this._cachedTimeouts) {
-          this._errors.splice(0, this._errors.length - 1);
-          timeout = this._cachedTimeouts.slice(-1);
-        } else {
-          return false;
-        }
-      }
-      var self = this;
-      this._timer = setTimeout(function() {
-        self._attempts++;
-        if (self._operationTimeoutCb) {
-          self._timeout = setTimeout(function() {
-            self._operationTimeoutCb(self._attempts);
-          }, self._operationTimeout);
-          if (self._options.unref) {
-            self._timeout.unref();
-          }
-        }
-        self._fn(self._attempts);
-      }, timeout);
-      if (this._options.unref) {
-        this._timer.unref();
-      }
-      return true;
-    };
-    RetryOperation.prototype.attempt = function(fn, timeoutOps) {
-      this._fn = fn;
-      if (timeoutOps) {
-        if (timeoutOps.timeout) {
-          this._operationTimeout = timeoutOps.timeout;
-        }
-        if (timeoutOps.cb) {
-          this._operationTimeoutCb = timeoutOps.cb;
-        }
-      }
-      var self = this;
-      if (this._operationTimeoutCb) {
-        this._timeout = setTimeout(function() {
-          self._operationTimeoutCb();
-        }, self._operationTimeout);
-      }
-      this._operationStart = (/* @__PURE__ */ new Date()).getTime();
-      this._fn(this._attempts);
-    };
-    RetryOperation.prototype.try = function(fn) {
-      console.log("Using RetryOperation.try() is deprecated");
-      this.attempt(fn);
-    };
-    RetryOperation.prototype.start = function(fn) {
-      console.log("Using RetryOperation.start() is deprecated");
-      this.attempt(fn);
-    };
-    RetryOperation.prototype.start = RetryOperation.prototype.try;
-    RetryOperation.prototype.errors = function() {
-      return this._errors;
-    };
-    RetryOperation.prototype.attempts = function() {
-      return this._attempts;
-    };
-    RetryOperation.prototype.mainError = function() {
-      if (this._errors.length === 0) {
-        return null;
-      }
-      var counts = {};
-      var mainError = null;
-      var mainErrorCount = 0;
-      for (var i = 0; i < this._errors.length; i++) {
-        var error = this._errors[i];
-        var message = error.message;
-        var count = (counts[message] || 0) + 1;
-        counts[message] = count;
-        if (count >= mainErrorCount) {
-          mainError = error;
-          mainErrorCount = count;
-        }
-      }
-      return mainError;
-    };
-  }
-});
-
-// node_modules/retry/lib/retry.js
-var require_retry = __commonJS({
-  "node_modules/retry/lib/retry.js"(exports2) {
-    var RetryOperation = require_retry_operation();
-    exports2.operation = function(options) {
-      var timeouts = exports2.timeouts(options);
-      return new RetryOperation(timeouts, {
-        forever: options && (options.forever || options.retries === Infinity),
-        unref: options && options.unref,
-        maxRetryTime: options && options.maxRetryTime
-      });
-    };
-    exports2.timeouts = function(options) {
-      if (options instanceof Array) {
-        return [].concat(options);
-      }
-      var opts = {
-        retries: 10,
-        factor: 2,
-        minTimeout: 1 * 1e3,
-        maxTimeout: Infinity,
-        randomize: false
-      };
-      for (var key in options) {
-        opts[key] = options[key];
-      }
-      if (opts.minTimeout > opts.maxTimeout) {
-        throw new Error("minTimeout is greater than maxTimeout");
-      }
-      var timeouts = [];
-      for (var i = 0; i < opts.retries; i++) {
-        timeouts.push(this.createTimeout(i, opts));
-      }
-      if (options && options.forever && !timeouts.length) {
-        timeouts.push(this.createTimeout(i, opts));
-      }
-      timeouts.sort(function(a, b) {
-        return a - b;
-      });
-      return timeouts;
-    };
-    exports2.createTimeout = function(attempt, opts) {
-      var random = opts.randomize ? Math.random() + 1 : 1;
-      var timeout = Math.round(random * Math.max(opts.minTimeout, 1) * Math.pow(opts.factor, attempt));
-      timeout = Math.min(timeout, opts.maxTimeout);
-      return timeout;
-    };
-    exports2.wrap = function(obj, options, methods) {
-      if (options instanceof Array) {
-        methods = options;
-        options = null;
-      }
-      if (!methods) {
-        methods = [];
-        for (var key in obj) {
-          if (typeof obj[key] === "function") {
-            methods.push(key);
-          }
-        }
-      }
-      for (var i = 0; i < methods.length; i++) {
-        var method = methods[i];
-        var original = obj[method];
-        obj[method] = function retryWrapper(original2) {
-          var op = exports2.operation(options);
-          var args = Array.prototype.slice.call(arguments, 1);
-          var callback = args.pop();
-          args.push(function(err) {
-            if (op.retry(err)) {
-              return;
-            }
-            if (err) {
-              arguments[0] = op.mainError();
-            }
-            callback.apply(this, arguments);
-          });
-          op.attempt(function() {
-            original2.apply(obj, args);
-          });
-        }.bind(obj, original);
-        obj[method].options = options;
-      }
-    };
-  }
-});
-
-// node_modules/retry/index.js
-var require_retry2 = __commonJS({
-  "node_modules/retry/index.js"(exports2, module2) {
-    module2.exports = require_retry();
-  }
-});
-
 // main.js
 var main_exports = {};
 __export(main_exports, {
@@ -20290,7 +20050,7 @@ function isKeyOperator(operator) {
 function getValues(context, operator, key, modifier) {
   var value = context[key], result = [];
   if (isDefined(value) && value !== "") {
-    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    if (typeof value === "string" || typeof value === "number" || typeof value === "bigint" || typeof value === "boolean") {
       value = value.toString();
       if (modifier && modifier !== "*") {
         value = value.substring(0, parseInt(modifier, 10));
@@ -20471,6 +20231,92 @@ var endpoint = withDefaults(null, DEFAULTS);
 // node_modules/@octokit/request/dist-bundle/index.js
 var import_fast_content_type_parse = __toESM(require_fast_content_type_parse(), 1);
 
+// node_modules/json-with-bigint/json-with-bigint.js
+var intRegex = /^-?\d+$/;
+var noiseValue = /^-?\d+n+$/;
+var originalStringify = JSON.stringify;
+var originalParse = JSON.parse;
+var customFormat = /^-?\d+n$/;
+var bigIntsStringify = /([\[:])?"(-?\d+)n"($|([\\n]|\s)*(\s|[\\n])*[,\}\]])/g;
+var noiseStringify = /([\[:])?("-?\d+n+)n("$|"([\\n]|\s)*(\s|[\\n])*[,\}\]])/g;
+var JSONStringify = (value, replacer, space) => {
+  if ("rawJSON" in JSON) {
+    return originalStringify(
+      value,
+      (key, value2) => {
+        if (typeof value2 === "bigint") return JSON.rawJSON(value2.toString());
+        if (typeof replacer === "function") return replacer(key, value2);
+        if (Array.isArray(replacer) && replacer.includes(key)) return value2;
+        return value2;
+      },
+      space
+    );
+  }
+  if (!value) return originalStringify(value, replacer, space);
+  const convertedToCustomJSON = originalStringify(
+    value,
+    (key, value2) => {
+      const isNoise = typeof value2 === "string" && Boolean(value2.match(noiseValue));
+      if (isNoise) return value2.toString() + "n";
+      if (typeof value2 === "bigint") return value2.toString() + "n";
+      if (typeof replacer === "function") return replacer(key, value2);
+      if (Array.isArray(replacer) && replacer.includes(key)) return value2;
+      return value2;
+    },
+    space
+  );
+  const processedJSON = convertedToCustomJSON.replace(
+    bigIntsStringify,
+    "$1$2$3"
+  );
+  const denoisedJSON = processedJSON.replace(noiseStringify, "$1$2$3");
+  return denoisedJSON;
+};
+var isContextSourceSupported = () => JSON.parse("1", (_, __, context) => !!context && context.source === "1");
+var convertMarkedBigIntsReviver = (key, value, context, userReviver) => {
+  const isCustomFormatBigInt = typeof value === "string" && value.match(customFormat);
+  if (isCustomFormatBigInt) return BigInt(value.slice(0, -1));
+  const isNoiseValue = typeof value === "string" && value.match(noiseValue);
+  if (isNoiseValue) return value.slice(0, -1);
+  if (typeof userReviver !== "function") return value;
+  return userReviver(key, value, context);
+};
+var JSONParseV2 = (text, reviver) => {
+  return JSON.parse(text, (key, value, context) => {
+    const isBigNumber = typeof value === "number" && (value > Number.MAX_SAFE_INTEGER || value < Number.MIN_SAFE_INTEGER);
+    const isInt = context && intRegex.test(context.source);
+    const isBigInt = isBigNumber && isInt;
+    if (isBigInt) return BigInt(context.source);
+    if (typeof reviver !== "function") return value;
+    return reviver(key, value, context);
+  });
+};
+var MAX_INT = Number.MAX_SAFE_INTEGER.toString();
+var MAX_DIGITS = MAX_INT.length;
+var stringsOrLargeNumbers = /"(?:\\.|[^"])*"|-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?/g;
+var noiseValueWithQuotes = /^"-?\d+n+"$/;
+var JSONParse = (text, reviver) => {
+  if (!text) return originalParse(text, reviver);
+  if (isContextSourceSupported()) return JSONParseV2(text, reviver);
+  const serializedData = text.replace(
+    stringsOrLargeNumbers,
+    (text2, digits, fractional, exponential) => {
+      const isString = text2[0] === '"';
+      const isNoise = isString && Boolean(text2.match(noiseValueWithQuotes));
+      if (isNoise) return text2.substring(0, text2.length - 1) + 'n"';
+      const isFractionalOrExponential = fractional || exponential;
+      const isLessThanMaxSafeInt = digits && (digits.length < MAX_DIGITS || digits.length === MAX_DIGITS && digits <= MAX_INT);
+      if (isString || isFractionalOrExponential || isLessThanMaxSafeInt)
+        return text2;
+      return '"' + text2 + 'n"';
+    }
+  );
+  return originalParse(
+    serializedData,
+    (key, value, context) => convertMarkedBigIntsReviver(key, value, context, reviver)
+  );
+};
+
 // node_modules/@octokit/request-error/dist-src/index.js
 var RequestError = class extends Error {
   name;
@@ -20487,7 +20333,7 @@ var RequestError = class extends Error {
    */
   response;
   constructor(message, statusCode, options) {
-    super(message);
+    super(message, { cause: options.cause });
     this.name = "HttpError";
     this.status = Number.parseInt(statusCode);
     if (Number.isNaN(this.status)) {
@@ -20511,7 +20357,7 @@ var RequestError = class extends Error {
 };
 
 // node_modules/@octokit/request/dist-bundle/index.js
-var VERSION2 = "9.2.4";
+var VERSION2 = "10.0.8";
 var defaults_default = {
   headers: {
     "user-agent": `octokit-request.js/${VERSION2} ${getUserAgent()}`
@@ -20525,6 +20371,7 @@ function isPlainObject2(value) {
   const Ctor = Object.prototype.hasOwnProperty.call(proto, "constructor") && proto.constructor;
   return typeof Ctor === "function" && Ctor instanceof Ctor && Function.prototype.call(Ctor) === Function.prototype.call(value);
 }
+var noop = () => "";
 async function fetchWrapper(requestOptions) {
   const fetch = requestOptions.request?.fetch || globalThis.fetch;
   if (!fetch) {
@@ -20534,7 +20381,7 @@ async function fetchWrapper(requestOptions) {
   }
   const log = requestOptions.request?.log || console;
   const parseSuccessResponseBody = requestOptions.request?.parseSuccessResponseBody !== false;
-  const body = isPlainObject2(requestOptions.body) || Array.isArray(requestOptions.body) ? JSON.stringify(requestOptions.body) : requestOptions.body;
+  const body = isPlainObject2(requestOptions.body) || Array.isArray(requestOptions.body) ? JSONStringify(requestOptions.body) : requestOptions.body;
   const requestHeaders = Object.fromEntries(
     Object.entries(requestOptions.headers).map(([name, value]) => [
       name,
@@ -20626,21 +20473,24 @@ async function fetchWrapper(requestOptions) {
 async function getResponseData(response) {
   const contentType = response.headers.get("content-type");
   if (!contentType) {
-    return response.text().catch(() => "");
+    return response.text().catch(noop);
   }
   const mimetype = (0, import_fast_content_type_parse.safeParse)(contentType);
   if (isJSONResponse(mimetype)) {
     let text = "";
     try {
       text = await response.text();
-      return JSON.parse(text);
+      return JSONParse(text);
     } catch (err) {
       return text;
     }
   } else if (mimetype.type.startsWith("text/") || mimetype.parameters.charset?.toLowerCase() === "utf-8") {
-    return response.text().catch(() => "");
+    return response.text().catch(noop);
   } else {
-    return response.arrayBuffer().catch(() => new ArrayBuffer(0));
+    return response.arrayBuffer().catch(
+      /* v8 ignore next -- @preserve */
+      () => new ArrayBuffer(0)
+    );
   }
 }
 function isJSONResponse(mimetype) {
@@ -21333,11 +21183,15 @@ function base64encodeJSON(obj) {
 }
 
 // node_modules/universal-github-app-jwt/lib/crypto-node.js
+var crypto_node_exports = {};
+__export(crypto_node_exports, {
+  convertPrivateKey: () => convertPrivateKey
+});
+__reExport(crypto_node_exports, require("node:crypto"));
 var import_node_crypto = require("node:crypto");
-var import_node_crypto2 = require("node:crypto");
 function convertPrivateKey(privateKey) {
   if (!isPkcs1(privateKey)) return privateKey;
-  return (0, import_node_crypto2.createPrivateKey)(privateKey).export({
+  return (0, import_node_crypto.createPrivateKey)(privateKey).export({
     type: "pkcs8",
     format: "pem"
   });
@@ -21362,7 +21216,7 @@ async function getToken({ privateKey, payload }) {
   };
   const header = { alg: "RS256", typ: "JWT" };
   const privateKeyDER = getDERfromPEM(convertedPrivateKey);
-  const importedKey = await import_node_crypto.subtle.importKey(
+  const importedKey = await crypto_node_exports.subtle.importKey(
     "pkcs8",
     privateKeyDER,
     algorithm,
@@ -21371,7 +21225,7 @@ async function getToken({ privateKey, payload }) {
   );
   const encodedMessage = getEncodedMessage(header, payload);
   const encodedMessageArrBuf = string2ArrayBuffer(encodedMessage);
-  const signatureArrBuf = await import_node_crypto.subtle.sign(
+  const signatureArrBuf = await crypto_node_exports.subtle.sign(
     algorithm.name,
     importedKey,
     encodedMessageArrBuf
@@ -21546,9 +21400,19 @@ var LruObject = class {
 async function getAppAuthentication({
   appId,
   privateKey,
-  timeDifference
+  timeDifference,
+  createJwt
 }) {
   try {
+    if (createJwt) {
+      const { jwt, expiresAt } = await createJwt(appId, timeDifference);
+      return {
+        type: "app",
+        token: jwt,
+        appId,
+        expiresAt
+      };
+    }
     const authOptions = {
       id: appId,
       privateKey
@@ -21842,7 +21706,8 @@ var PATHS = [
   "/marketplace_listing/stubbed/plans/{plan_id}/accounts",
   "/orgs/{org}/installation",
   "/repos/{owner}/{repo}/installation",
-  "/users/{username}/installation"
+  "/users/{username}/installation",
+  "/enterprises/{enterprise}/installation"
 ];
 function routeMatcher(paths) {
   const regexes = paths.map(
@@ -21858,6 +21723,8 @@ function requiresAppAuth(url) {
 var FIVE_SECONDS_IN_MS = 5 * 1e3;
 function isNotTimeSkewError(error) {
   return !(error.message.match(
+    /'Expiration time' claim \('exp'\) is too far in the future/
+  ) || error.message.match(
     /'Expiration time' claim \('exp'\) must be a numeric value representing the future time at which the assertion expires/
   ) || error.message.match(
     /'Issued at' claim \('iat'\) must be an Integer representing the time that the assertion was issued/
@@ -21940,13 +21807,17 @@ async function sendRequestWithRetries(state, request2, options, createdAt, retri
     return sendRequestWithRetries(state, request2, options, createdAt, retries);
   }
 }
-var VERSION6 = "7.2.2";
+var VERSION6 = "8.2.0";
 function createAppAuth(options) {
   if (!options.appId) {
     throw new Error("[@octokit/auth-app] appId option is required");
   }
-  if (!options.privateKey) {
+  if (!options.privateKey && !options.createJwt) {
     throw new Error("[@octokit/auth-app] privateKey option is required");
+  } else if (options.privateKey && options.createJwt) {
+    throw new Error(
+      "[@octokit/auth-app] privateKey and createJwt options are mutually exclusive"
+    );
   }
   if ("installationId" in options && !options.installationId) {
     throw new Error(
@@ -22001,9 +21872,6 @@ function getPermissionsFromInputs(env) {
   }, void 0);
 }
 
-// node_modules/p-retry/index.js
-var import_retry = __toESM(require_retry2(), 1);
-
 // node_modules/is-network-error/index.js
 var objectToString = Object.prototype.toString;
 var isError = (value) => objectToString.call(value) === "[object Error]";
@@ -22037,6 +21905,32 @@ function isNetworkError(error) {
 }
 
 // node_modules/p-retry/index.js
+function validateRetries(retries) {
+  if (typeof retries === "number") {
+    if (retries < 0) {
+      throw new TypeError("Expected `retries` to be a non-negative number.");
+    }
+    if (Number.isNaN(retries)) {
+      throw new TypeError("Expected `retries` to be a valid number or Infinity, got NaN.");
+    }
+  } else if (retries !== void 0) {
+    throw new TypeError("Expected `retries` to be a number or Infinity.");
+  }
+}
+function validateNumberOption(name, value, { min = 0, allowInfinity = false } = {}) {
+  if (value === void 0) {
+    return;
+  }
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    throw new TypeError(`Expected \`${name}\` to be a number${allowInfinity ? " or Infinity" : ""}.`);
+  }
+  if (!allowInfinity && !Number.isFinite(value)) {
+    throw new TypeError(`Expected \`${name}\` to be a finite number.`);
+  }
+  if (value < min) {
+    throw new TypeError(`Expected \`${name}\` to be \u2265 ${min}.`);
+  }
+}
 var AbortError = class extends Error {
   constructor(message) {
     super();
@@ -22051,64 +21945,124 @@ var AbortError = class extends Error {
     this.message = message;
   }
 };
-var decorateErrorWithCounts = (error, attemptNumber, options) => {
-  const retriesLeft = options.retries - (attemptNumber - 1);
-  error.attemptNumber = attemptNumber;
-  error.retriesLeft = retriesLeft;
-  return error;
-};
-async function pRetry(input, options) {
-  return new Promise((resolve, reject) => {
-    options = { ...options };
-    options.onFailedAttempt ??= () => {
-    };
-    options.shouldRetry ??= () => true;
-    options.retries ??= 10;
-    const operation = import_retry.default.operation(options);
-    const abortHandler = () => {
-      operation.stop();
-      reject(options.signal?.reason);
-    };
-    if (options.signal && !options.signal.aborted) {
-      options.signal.addEventListener("abort", abortHandler, { once: true });
-    }
-    const cleanUp = () => {
-      options.signal?.removeEventListener("abort", abortHandler);
-      operation.stop();
-    };
-    operation.attempt(async (attemptNumber) => {
-      try {
-        const result = await input(attemptNumber);
-        cleanUp();
-        resolve(result);
-      } catch (error) {
-        try {
-          if (!(error instanceof Error)) {
-            throw new TypeError(`Non-error was thrown: "${error}". You should only throw errors.`);
-          }
-          if (error instanceof AbortError) {
-            throw error.originalError;
-          }
-          if (error instanceof TypeError && !isNetworkError(error)) {
-            throw error;
-          }
-          decorateErrorWithCounts(error, attemptNumber, options);
-          if (!await options.shouldRetry(error)) {
-            operation.stop();
-            reject(error);
-          }
-          await options.onFailedAttempt(error);
-          if (!operation.retry(error)) {
-            throw operation.mainError();
-          }
-        } catch (finalError) {
-          decorateErrorWithCounts(finalError, attemptNumber, options);
-          cleanUp();
-          reject(finalError);
-        }
-      }
-    });
+function calculateDelay(retriesConsumed, options) {
+  const attempt = Math.max(1, retriesConsumed + 1);
+  const random = options.randomize ? Math.random() + 1 : 1;
+  let timeout = Math.round(random * options.minTimeout * options.factor ** (attempt - 1));
+  timeout = Math.min(timeout, options.maxTimeout);
+  return timeout;
+}
+function calculateRemainingTime(start, max) {
+  if (!Number.isFinite(max)) {
+    return max;
+  }
+  return max - (performance.now() - start);
+}
+async function onAttemptFailure({ error, attemptNumber, retriesConsumed, startTime, options }) {
+  const normalizedError = error instanceof Error ? error : new TypeError(`Non-error was thrown: "${error}". You should only throw errors.`);
+  if (normalizedError instanceof AbortError) {
+    throw normalizedError.originalError;
+  }
+  const retriesLeft = Number.isFinite(options.retries) ? Math.max(0, options.retries - retriesConsumed) : options.retries;
+  const maxRetryTime = options.maxRetryTime ?? Number.POSITIVE_INFINITY;
+  const context = Object.freeze({
+    error: normalizedError,
+    attemptNumber,
+    retriesLeft,
+    retriesConsumed
   });
+  await options.onFailedAttempt(context);
+  if (calculateRemainingTime(startTime, maxRetryTime) <= 0) {
+    throw normalizedError;
+  }
+  const consumeRetry = await options.shouldConsumeRetry(context);
+  const remainingTime = calculateRemainingTime(startTime, maxRetryTime);
+  if (remainingTime <= 0 || retriesLeft <= 0) {
+    throw normalizedError;
+  }
+  if (normalizedError instanceof TypeError && !isNetworkError(normalizedError)) {
+    if (consumeRetry) {
+      throw normalizedError;
+    }
+    options.signal?.throwIfAborted();
+    return false;
+  }
+  if (!await options.shouldRetry(context)) {
+    throw normalizedError;
+  }
+  if (!consumeRetry) {
+    options.signal?.throwIfAborted();
+    return false;
+  }
+  const delayTime = calculateDelay(retriesConsumed, options);
+  const finalDelay = Math.min(delayTime, remainingTime);
+  if (finalDelay > 0) {
+    await new Promise((resolve, reject) => {
+      const onAbort = () => {
+        clearTimeout(timeoutToken);
+        options.signal?.removeEventListener("abort", onAbort);
+        reject(options.signal.reason);
+      };
+      const timeoutToken = setTimeout(() => {
+        options.signal?.removeEventListener("abort", onAbort);
+        resolve();
+      }, finalDelay);
+      if (options.unref) {
+        timeoutToken.unref?.();
+      }
+      options.signal?.addEventListener("abort", onAbort, { once: true });
+    });
+  }
+  options.signal?.throwIfAborted();
+  return true;
+}
+async function pRetry(input, options = {}) {
+  options = { ...options };
+  validateRetries(options.retries);
+  if (Object.hasOwn(options, "forever")) {
+    throw new Error("The `forever` option is no longer supported. For many use-cases, you can set `retries: Infinity` instead.");
+  }
+  options.retries ??= 10;
+  options.factor ??= 2;
+  options.minTimeout ??= 1e3;
+  options.maxTimeout ??= Number.POSITIVE_INFINITY;
+  options.maxRetryTime ??= Number.POSITIVE_INFINITY;
+  options.randomize ??= false;
+  options.onFailedAttempt ??= () => {
+  };
+  options.shouldRetry ??= () => true;
+  options.shouldConsumeRetry ??= () => true;
+  validateNumberOption("factor", options.factor, { min: 0, allowInfinity: false });
+  validateNumberOption("minTimeout", options.minTimeout, { min: 0, allowInfinity: false });
+  validateNumberOption("maxTimeout", options.maxTimeout, { min: 0, allowInfinity: true });
+  validateNumberOption("maxRetryTime", options.maxRetryTime, { min: 0, allowInfinity: true });
+  if (!(options.factor > 0)) {
+    options.factor = 1;
+  }
+  options.signal?.throwIfAborted();
+  let attemptNumber = 0;
+  let retriesConsumed = 0;
+  const startTime = performance.now();
+  while (Number.isFinite(options.retries) ? retriesConsumed <= options.retries : true) {
+    attemptNumber++;
+    try {
+      options.signal?.throwIfAborted();
+      const result = await input(attemptNumber);
+      options.signal?.throwIfAborted();
+      return result;
+    } catch (error) {
+      if (await onAttemptFailure({
+        error,
+        attemptNumber,
+        retriesConsumed,
+        startTime,
+        options
+      })) {
+        retriesConsumed++;
+      }
+    }
+  }
+  throw new Error("Retry attempts exhausted without throwing an error.");
 }
 
 // lib/main.js
@@ -22162,12 +22116,12 @@ async function main(appId, privateKey, owner, repositories, permissions, core3, 
         permissions
       ),
       {
-        shouldRetry: (error) => error.status >= 500,
-        onFailedAttempt: (error) => {
+        shouldRetry: ({ error }) => error.status >= 500,
+        onFailedAttempt: (context) => {
           core3.info(
             `Failed to create token for "${parsedRepositoryNames.join(
               ","
-            )}" (attempt ${error.attemptNumber}): ${error.message}`
+            )}" (attempt ${context.attemptNumber}): ${context.error.message}`
           );
         },
         retries: 3
@@ -22177,9 +22131,9 @@ async function main(appId, privateKey, owner, repositories, permissions, core3, 
     ({ authentication, installationId, appSlug } = await pRetry(
       () => getTokenFromOwner(request2, auth5, parsedOwner, permissions),
       {
-        onFailedAttempt: (error) => {
+        onFailedAttempt: (context) => {
           core3.info(
-            `Failed to create token for "${parsedOwner}" (attempt ${error.attemptNumber}): ${error.message}`
+            `Failed to create token for "${parsedOwner}" (attempt ${context.attemptNumber}): ${context.error.message}`
           );
         },
         retries: 3
@@ -22296,6 +22250,13 @@ undici/lib/fetch/body.js:
 
 undici/lib/websocket/frame.js:
   (*! ws. MIT License. Einar Otto Stangvik <einaros@gmail.com> *)
+
+@octokit/request-error/dist-src/index.js:
+  (* v8 ignore else -- @preserve -- Bug with vitest coverage where it sees an else branch that doesn't exist *)
+
+@octokit/request/dist-bundle/index.js:
+  (* v8 ignore next -- @preserve *)
+  (* v8 ignore else -- @preserve *)
 
 toad-cache/dist/toad-cache.mjs:
   (**

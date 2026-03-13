@@ -18,14 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # build local version to create token
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version-file: package.json
-          cache: 'npm'
 
       - run: npm ci
       - run: npm run build

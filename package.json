@@ -7,6 +7,7 @@
   "engines": {
     "node": ">=24.4.0"
   },
+  "packageManager": "npm@10.9.4",
   "scripts": {
     "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --packages=bundle",
     "test": "c8 --100 ava tests/index.js",
@@ -16,21 +17,21 @@
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@octokit/auth-app": "^7.2.1",
-    "@octokit/request": "^9.2.2",
-    "p-retry": "^6.2.1"
+    "@octokit/auth-app": "^8.1.2",
+    "@octokit/request": "^10.0.3",
+    "p-retry": "^7.1.0",
+    "undici": "^7.16.0"
   },
   "devDependencies": {
-    "@octokit/openapi": "^19.1.0",
-    "@sinonjs/fake-timers": "^14.0.0",
+    "@octokit/openapi": "^21.0.0",
+    "@sinonjs/fake-timers": "^15.1.0",
     "ava": "^6.4.1",
     "c8": "^10.1.3",
-    "dotenv": "^17.2.1",
-    "esbuild": "^0.25.8",
-    "execa": "^9.6.0",
+    "dotenv": "^17.3.1",
+    "esbuild": "^0.27.3",
+    "execa": "^9.6.1",
     "open-cli": "^8.0.0",
-    "undici": "^7.13.0",
-    "yaml": "^2.8.1"
+    "yaml": "^2.8.2"
   },
   "release": {
     "branches": [

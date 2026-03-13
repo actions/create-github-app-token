@@ -37,12 +37,16 @@ inputs:
     description: "The level of permission to grant the access token to create, edit, delete, and list Codespaces. Can be set to 'read' or 'write'."
   permission-contents:
     description: "The level of permission to grant the access token for repository contents, commits, branches, downloads, releases, and merges. Can be set to 'read' or 'write'."
+  permission-custom-properties-for-organizations:
+    description: "The level of permission to grant the access token to view and edit custom properties for an organization, when allowed by the property. Can be set to 'read' or 'write'."
   permission-dependabot-secrets:
     description: "The level of permission to grant the access token to manage Dependabot secrets. Can be set to 'read' or 'write'."
   permission-deployments:
     description: "The level of permission to grant the access token for deployments and deployment statuses. Can be set to 'read' or 'write'."
   permission-email-addresses:
     description: "The level of permission to grant the access token to manage the email addresses belonging to a user. Can be set to 'read' or 'write'."
+  permission-enterprise-custom-properties-for-organizations:
+    description: "The level of permission to grant the access token for organization custom properties management at the enterprise level. Can be set to 'read', 'write', or 'admin'."
   permission-environments:
     description: "The level of permission to grant the access token for managing repository environments. Can be set to 'read' or 'write'."
   permission-followers:
@@ -68,7 +72,7 @@ inputs:
   permission-organization-custom-org-roles:
     description: "The level of permission to grant the access token for custom organization roles management. Can be set to 'read' or 'write'."
   permission-organization-custom-properties:
-    description: "The level of permission to grant the access token for custom property management. Can be set to 'read', 'write', or 'admin'."
+    description: "The level of permission to grant the access token for repository custom properties management at the organization level. Can be set to 'read', 'write', or 'admin'."
   permission-organization-custom-roles:
     description: "The level of permission to grant the access token for custom repository roles management. Can be set to 'read' or 'write'."
   permission-organization-events:
