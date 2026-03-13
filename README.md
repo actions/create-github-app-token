@@ -19,7 +19,7 @@ In order to use this action, you need to:
 
 This action relies on Node.js native proxy support.
 
-If you set `HTTP_PROXY`, `HTTPS_PROXY`, or `NO_PROXY`, also set `NODE_USE_ENV_PROXY: "1"` (or `NODE_OPTIONS: --use-env-proxy`) on the action step so Node.js honors those variables.
+If you set `HTTP_PROXY`, `HTTPS_PROXY`, or `NO_PROXY`, also set `NODE_USE_ENV_PROXY: "1"` on the action step so Node.js honors those variables.
 
 ```yaml
 - uses: actions/create-github-app-token@v3
