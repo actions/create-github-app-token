@@ -1,6 +1,6 @@
 // @ts-check
 
-import core from "@actions/core";
+import * as core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
 
 import { getPermissionsFromInputs } from "./lib/get-permissions-from-inputs.js";
