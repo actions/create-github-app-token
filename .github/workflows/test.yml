@@ -87,6 +87,7 @@ jobs:
           grep -q "Proxy server listening" "$PROXY_SERVER_LOG_PATH"
       - uses: ./ # Uses the action in the root directory
         env:
+          NODE_USE_ENV_PROXY: "1"
           https_proxy: http://127.0.0.1:3128
         with:
           app-id: ${{ vars.TEST_APP_ID }}

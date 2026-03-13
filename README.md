@@ -15,6 +15,24 @@ In order to use this action, you need to:
 > [!IMPORTANT]  
 > An installation access token expires after 1 hour. Please [see this comment](https://github.com/actions/create-github-app-token/issues/121#issuecomment-2043214796) for alternative approaches if you have long-running processes.
 
+### Proxy support
+
+This action relies on Node.js native proxy support.
+
+If you set `HTTP_PROXY`, `HTTPS_PROXY`, or `NO_PROXY`, also set `NODE_USE_ENV_PROXY: "1"` (or `NODE_OPTIONS: --use-env-proxy`) on the action step so Node.js honors those variables.
+
+```yaml
+- uses: actions/create-github-app-token@v3
+  id: app-token
+  env:
+    HTTPS_PROXY: http://proxy.example.com:8080
+    NO_PROXY: github.example.com
+    NODE_USE_ENV_PROXY: "1"
+  with:
+    app-id: ${{ vars.APP_ID }}
+    private-key: ${{ secrets.PRIVATE_KEY }}
+```
+
 ### Create a token for the current repository
 
 ```yaml

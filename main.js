@@ -3,6 +3,7 @@
 import core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
 
+import { ensureNativeProxySupport } from "./lib/ensure-native-proxy-support.js";
 import { getPermissionsFromInputs } from "./lib/get-permissions-from-inputs.js";
 import { main } from "./lib/main.js";
 import request from "./lib/request.js";
@@ -14,6 +15,8 @@ if (!process.env.GITHUB_REPOSITORY) {
 if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
+
+ensureNativeProxySupport();
 
 const appId = core.getInput("app-id");
 const privateKey = core.getInput("private-key");
