@@ -61,6 +61,8 @@ jobs:
     runs-on: ubuntu-latest
     # do not run from forks, as forks don’t have access to repository secrets
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
+    env:
+      PROXY_LOG_PATH: ${{ runner.temp }}/proxy-events.jsonl
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
@@ -70,21 +72,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Start local proxy
-        env:
-          PROXY_LOG_PATH: ${{ runner.temp }}/proxy-events.jsonl
-          PROXY_SERVER_LOG_PATH: ${{ runner.temp }}/proxy-server.log
-        run: |
-          node scripts/test-proxy-server.js "$PROXY_LOG_PATH" 3128 >"$PROXY_SERVER_LOG_PATH" 2>&1 &
-          echo $! > "$RUNNER_TEMP/proxy-server.pid"
-
-          for _ in $(seq 1 30); do
-            if test -f "$PROXY_SERVER_LOG_PATH" && grep -q "Proxy server listening" "$PROXY_SERVER_LOG_PATH"; then
-              break
-            fi
-            sleep 1
-          done
-
-          grep -q "Proxy server listening" "$PROXY_SERVER_LOG_PATH"
+        run: node scripts/test-proxy-server.js start "$PROXY_LOG_PATH" 3128
       - uses: ./ # Uses the action in the root directory
         env:
           NODE_USE_ENV_PROXY: "1"
@@ -93,17 +81,10 @@ jobs:
           app-id: ${{ vars.TEST_APP_ID }}
           private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
       - name: Assert proxy traffic
-        env:
-          PROXY_LOG_PATH: ${{ runner.temp }}/proxy-events.jsonl
         run: node scripts/test-proxy-server.js assert "$PROXY_LOG_PATH" api.github.com:443
       - if: failure()
         name: Show proxy logs
-        run: |
-          test -f "$RUNNER_TEMP/proxy-server.log" && cat "$RUNNER_TEMP/proxy-server.log"
-          test -f "$RUNNER_TEMP/proxy-events.jsonl" && cat "$RUNNER_TEMP/proxy-events.jsonl"
+        run: node scripts/test-proxy-server.js logs "$PROXY_LOG_PATH"
       - if: always()
         name: Stop local proxy
-        run: |
-          if test -f "$RUNNER_TEMP/proxy-server.pid"; then
-            kill "$(cat "$RUNNER_TEMP/proxy-server.pid")"
-          fi
+        run: node scripts/test-proxy-server.js stop "$PROXY_LOG_PATH"
