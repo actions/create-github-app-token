@@ -59,4 +59,6 @@ await test((mockPool) => {
       };
     })
     .times(2);
+}).finally(() => {
+  mock.timers.reset();
 });

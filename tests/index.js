@@ -45,6 +45,7 @@ for (const file of testFiles) {
     }
     const { stderr, stdout } = await execFileAsync("node", [`tests/${file}`], {
       env,
+      maxBuffer: 10 * 1024 * 1024,
     });
     // Strip trailing newline to match execa's default behavior
     const trimmedStderr = stderr.replace(/\r?\n$/, "");
