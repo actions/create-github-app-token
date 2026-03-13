@@ -71,7 +71,7 @@ jobs:
           # required
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.head_ref }}
