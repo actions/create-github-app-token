@@ -21,6 +21,14 @@ for (const file of testFiles) {
     const env = {
       GITHUB_OUTPUT: undefined,
       GITHUB_STATE: undefined,
+      HTTP_PROXY: undefined,
+      HTTPS_PROXY: undefined,
+      http_proxy: undefined,
+      https_proxy: undefined,
+      NO_PROXY: undefined,
+      no_proxy: undefined,
+      NODE_OPTIONS: undefined,
+      NODE_USE_ENV_PROXY: undefined,
     };
     const { stderr, stdout } = await execa("node", [`tests/${file}`], { env });
     t.snapshot(stderr, "stderr");
