@@ -7,9 +7,7 @@ import { snapshot, test } from "node:test";
 const execFileAsync = promisify(execFile);
 
 // Serialize strings as-is so multiline output is human-readable in snapshots
-snapshot.setDefaultSnapshotSerializers([
-  (value) => (typeof value === "string" ? value : value),
-]);
+snapshot.setDefaultSnapshotSerializers([(value) => value]);
 
 // Get all files in tests directory
 const files = readdirSync("tests");
@@ -26,23 +24,19 @@ for (const file of testFiles) {
   }
   test(file, async (t) => {
     // Override Actions environment variables that change `core`’s behavior
-    const env = {
-      ...process.env,
-      GITHUB_OUTPUT: undefined,
-      GITHUB_STATE: undefined,
-      HTTP_PROXY: undefined,
-      HTTPS_PROXY: undefined,
-      http_proxy: undefined,
-      https_proxy: undefined,
-      NO_PROXY: undefined,
-      no_proxy: undefined,
-      NODE_OPTIONS: undefined,
-      NODE_USE_ENV_PROXY: undefined,
-    };
-    // Remove keys set to undefined since execFile passes env as-is
-    for (const key of Object.keys(env)) {
-      if (env[key] === undefined) delete env[key];
-    }
+    const {
+      GITHUB_OUTPUT,
+      GITHUB_STATE,
+      HTTP_PROXY,
+      HTTPS_PROXY,
+      http_proxy,
+      https_proxy,
+      NO_PROXY,
+      no_proxy,
+      NODE_OPTIONS,
+      NODE_USE_ENV_PROXY,
+      ...env
+    } = process.env;
     const { stderr, stdout } = await execFileAsync("node", [`tests/${file}`], {
       env,
     });
