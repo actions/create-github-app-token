@@ -15,33 +15,37 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
   throw new Error("GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'");
 }
 
-ensureNativeProxySupport();
+async function run() {
+  ensureNativeProxySupport();
 
-const appId = core.getInput("app-id");
-const privateKey = core.getInput("private-key");
-const owner = core.getInput("owner");
-const repositories = core
-  .getInput("repositories")
-  .split(/[\n,]+/)
-  .map((s) => s.trim())
-  .filter((x) => x !== "");
+  const appId = core.getInput("app-id");
+  const privateKey = core.getInput("private-key");
+  const owner = core.getInput("owner");
+  const repositories = core
+    .getInput("repositories")
+    .split(/[\n,]+/)
+    .map((s) => s.trim())
+    .filter((x) => x !== "");
 
-const skipTokenRevoke = core.getBooleanInput("skip-token-revoke");
+  const skipTokenRevoke = core.getBooleanInput("skip-token-revoke");
 
-const permissions = getPermissionsFromInputs(process.env);
+  const permissions = getPermissionsFromInputs(process.env);
+
+  return main(
+    appId,
+    privateKey,
+    owner,
+    repositories,
+    permissions,
+    core,
+    createAppAuth,
+    request,
+    skipTokenRevoke,
+  );
+}
 
 // Export promise for testing
-export default main(
-  appId,
-  privateKey,
-  owner,
-  repositories,
-  permissions,
-  core,
-  createAppAuth,
-  request,
-  skipTokenRevoke,
-).catch((error) => {
+export default run().catch((error) => {
   /* c8 ignore next 3 */
   console.error(error);
   core.setFailed(error.message);

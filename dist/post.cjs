@@ -20511,8 +20511,11 @@ var request_default = request.defaults({
 });
 
 // post.js
-ensureNativeProxySupport();
-post(import_core2.default, request_default).catch((error) => {
+async function run() {
+  ensureNativeProxySupport();
+  return post(import_core2.default, request_default);
+}
+run().catch((error) => {
   console.error(error);
   import_core2.default.setFailed(error.message);
 });
