@@ -21984,29 +21984,6 @@ function createAppAuth(options) {
   });
 }
 
-// lib/ensure-native-proxy-support.js
-var proxyEnvironmentKeys = [
-  "https_proxy",
-  "HTTPS_PROXY",
-  "http_proxy",
-  "HTTP_PROXY"
-];
-var useEnvProxyPattern = /(^|\s)--use[-_]env[-_]proxy(?=\s|$)/;
-function proxyEnvironmentConfigured() {
-  return proxyEnvironmentKeys.some((key) => process.env[key]);
-}
-function nativeProxySupportEnabled() {
-  return process.env.NODE_USE_ENV_PROXY === "1" || process.execArgv.some((arg) => useEnvProxyPattern.test(arg)) || useEnvProxyPattern.test(process.env.NODE_OPTIONS || "");
-}
-function ensureNativeProxySupport() {
-  if (!proxyEnvironmentConfigured() || nativeProxySupportEnabled()) {
-    return;
-  }
-  throw new Error(
-    "HTTP_PROXY or HTTPS_PROXY is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 or NODE_OPTIONS=--use-env-proxy for this action step."
-  );
-}
-
 // lib/get-permissions-from-inputs.js
 function getPermissionsFromInputs(env) {
   return Object.entries(env).reduce((permissions2, [key, value]) => {
@@ -22256,6 +22233,27 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
 // lib/request.js
 var import_core = __toESM(require_core(), 1);
 var baseUrl = import_core.default.getInput("github-api-url").replace(/\/$/, "");
+var proxyEnvironmentKeys = [
+  "https_proxy",
+  "HTTPS_PROXY",
+  "http_proxy",
+  "HTTP_PROXY"
+];
+var useEnvProxyPattern = /(^|\s)--use[-_]env[-_]proxy(?=\s|$)/;
+function proxyEnvironmentConfigured() {
+  return proxyEnvironmentKeys.some((key) => process.env[key]);
+}
+function nativeProxySupportEnabled() {
+  return process.env.NODE_USE_ENV_PROXY === "1" || process.execArgv.some((arg) => useEnvProxyPattern.test(arg)) || useEnvProxyPattern.test(process.env.NODE_OPTIONS || "");
+}
+function ensureNativeProxySupport() {
+  if (!proxyEnvironmentConfigured() || nativeProxySupportEnabled()) {
+    return;
+  }
+  throw new Error(
+    "HTTP_PROXY or HTTPS_PROXY is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 or NODE_OPTIONS=--use-env-proxy for this action step."
+  );
+}
 var request_default = request.defaults({
   headers: { "user-agent": "actions/create-github-app-token" },
   baseUrl
