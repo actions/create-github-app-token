@@ -1,6 +1,6 @@
 // @ts-check
 
-import core from "@actions/core";
+import * as core from "@actions/core";
 
 import { post } from "./lib/post.js";
 import request from "./lib/request.js";
