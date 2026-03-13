@@ -47,8 +47,8 @@ for (const file of testFiles) {
       env,
     });
     // Strip trailing newline to match execa's default behavior
-    const trimmedStderr = stderr.replace(/\n$/, "");
-    const trimmedStdout = stdout.replace(/\n$/, "");
+    const trimmedStderr = stderr.replace(/\r?\n$/, "");
+    const trimmedStdout = stdout.replace(/\r?\n$/, "");
     await t.test("stderr", (t) => {
       if (trimmedStderr) t.assert.snapshot(trimmedStderr);
       else t.assert.strictEqual(trimmedStderr, "");
