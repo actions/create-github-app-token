@@ -1,6 +1,6 @@
 // @ts-check
 
-import core from "@actions/core";
+import * as core from "@actions/core";
 import { createAppAuth } from "@octokit/auth-app";
 
 import { getPermissionsFromInputs } from "./lib/get-permissions-from-inputs.js";
@@ -42,7 +42,7 @@ export default main(
   request,
   skipTokenRevoke,
 ).catch((error) => {
-  /* c8 ignore next 3 */
+  /* c8 ignore next 5 */
   console.error(error);
   // Don't set failed in test mode (when GITHUB_OUTPUT is undefined)
   if (process.env.GITHUB_OUTPUT !== undefined) {
