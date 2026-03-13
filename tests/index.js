@@ -22,7 +22,15 @@ for (const file of testFiles) {
       GITHUB_OUTPUT: undefined,
       GITHUB_STATE: undefined,
     };
-    const { stderr, stdout } = await execa("node", [`tests/${file}`], { env });
+    const { stderr, stdout } = await execa(
+      "node",
+      [
+        "--experimental-test-module-mocks",
+        "--disable-warning=ExperimentalWarning",
+        `tests/${file}`,
+      ],
+      { env },
+    );
     t.snapshot(stderr, "stderr");
     t.snapshot(stdout, "stdout");
   });

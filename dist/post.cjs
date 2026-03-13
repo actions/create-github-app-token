@@ -7,6 +7,10 @@ var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
@@ -23,6 +27,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // node_modules/@actions/core/lib/utils.js
 var require_utils = __commonJS({
@@ -42325,6 +42330,11 @@ var require_undici2 = __commonJS({
 });
 
 // post.js
+var post_exports = {};
+__export(post_exports, {
+  default: () => post_default
+});
+module.exports = __toCommonJS(post_exports);
 var import_core2 = __toESM(require_core(), 1);
 
 // lib/post.js
@@ -42934,10 +42944,42 @@ var request_default = request.defaults({
   request: proxyUrl ? { fetch: proxyFetch } : {}
 });
 
+// lib/run-with-proxy.js
+var import_node_child_process = require("node:child_process");
+async function runWithProxy(run) {
+  const httpProxyEnvVars = [
+    "https_proxy",
+    "HTTPS_PROXY",
+    "http_proxy",
+    "HTTP_PROXY"
+  ];
+  const nodeHasProxySupportEnabled = process.env.NODE_USE_ENV_PROXY === "1";
+  const shouldUseProxy = httpProxyEnvVars.some((v) => process.env[v]);
+  if (!nodeHasProxySupportEnabled && shouldUseProxy) {
+    return new Promise((resolve, reject) => {
+      const child = (0, import_node_child_process.spawn)(process.execPath, process.argv.slice(1), {
+        env: { ...process.env, NODE_USE_ENV_PROXY: "1" },
+        stdio: "inherit"
+      });
+      child.on("exit", (code) => {
+        process.exitCode = code;
+        if (code !== 0) {
+          reject(new Error(`Child process exited with code ${code}`));
+        } else {
+          resolve();
+        }
+      });
+    });
+  }
+  return run();
+}
+
 // post.js
-post(import_core2.default, request_default).catch((error) => {
-  console.error(error);
-  import_core2.default.setFailed(error.message);
+var post_default = runWithProxy(async () => {
+  return post(import_core2.default, request_default).catch((error) => {
+    console.error(error);
+    import_core2.default.setFailed(error.message);
+  });
 });
 /*! Bundled license information:
 
