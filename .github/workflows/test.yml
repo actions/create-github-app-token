@@ -57,7 +57,7 @@ jobs:
       - run: echo '${{ steps.get-repository.outputs.data }}'
 
   end-to-end-proxy:
-    name: End-to-End with proxy
+    name: End-to-End with unreachable proxy
     runs-on: ubuntu-latest
     # do not run from forks, as forks don’t have access to repository secrets
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
@@ -78,5 +78,5 @@ jobs:
         with:
           app-id: ${{ vars.TEST_APP_ID }}
           private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
-      - name: Assert action failed with proxy enabled
+      - name: Assert action failed through unreachable proxy
         run: test "${{ steps.test.outcome }}" = "failure"
