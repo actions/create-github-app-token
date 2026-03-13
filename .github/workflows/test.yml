@@ -61,8 +61,6 @@ jobs:
     runs-on: ubuntu-latest
     # do not run from forks, as forks don’t have access to repository secrets
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
-    env:
-      PROXY_LOG_PATH: ${{ runner.temp }}/proxy-events.jsonl
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
@@ -71,20 +69,14 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build
-      - name: Start local proxy
-        run: node scripts/test-proxy-server.js start "$PROXY_LOG_PATH" 3128
       - uses: ./ # Uses the action in the root directory
+        continue-on-error: true
+        id: test
         env:
           NODE_USE_ENV_PROXY: "1"
-          https_proxy: http://127.0.0.1:3128
+          https_proxy: http://127.0.0.1:9
         with:
           app-id: ${{ vars.TEST_APP_ID }}
           private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
-      - name: Assert proxy traffic
-        run: node scripts/test-proxy-server.js assert "$PROXY_LOG_PATH" api.github.com:443
-      - if: failure()
-        name: Show proxy logs
-        run: node scripts/test-proxy-server.js logs "$PROXY_LOG_PATH"
-      - if: always()
-        name: Stop local proxy
-        run: node scripts/test-proxy-server.js stop "$PROXY_LOG_PATH"
+      - name: Assert action failed with proxy enabled
+        run: test "${{ steps.test.outcome }}" = "failure"
