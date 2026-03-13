@@ -37,7 +37,13 @@ for (const file of testFiles) {
       NODE_USE_ENV_PROXY: undefined,
     };
     const { stderr, stdout } = await execa("node", [`tests/${file}`], { env });
-    await t.test("stderr", (t) => t.assert.snapshot(stderr));
-    await t.test("stdout", (t) => t.assert.snapshot(stdout));
+    await t.test("stderr", (t) => {
+      if (stderr) t.assert.snapshot(stderr);
+      else t.assert.strictEqual(stderr, "");
+    });
+    await t.test("stdout", (t) => {
+      if (stdout) t.assert.snapshot(stdout);
+      else t.assert.strictEqual(stdout, "");
+    });
   });
 }
