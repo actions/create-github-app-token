@@ -20,6 +20,7 @@ async function run() {
 
   const appId = core.getInput("app-id");
   const privateKey = core.getInput("private-key");
+  const enterpriseSlug = core.getInput("enterprise-slug");
   const owner = core.getInput("owner");
   const repositories = core
     .getInput("repositories")
@@ -34,6 +35,7 @@ async function run() {
   return main(
     appId,
     privateKey,
+    enterpriseSlug,
     owner,
     repositories,
     permissions,
@@ -46,7 +48,10 @@ async function run() {
 
 // Export promise for testing
 export default run().catch((error) => {
-  /* c8 ignore next 3 */
+  /* c8 ignore next 5 */
   console.error(error);
-  core.setFailed(error.message);
+  // Don't set failed in test mode (when GITHUB_OUTPUT is undefined)
+  if (process.env.GITHUB_OUTPUT !== undefined) {
+    core.setFailed(error.message);
+  }
 });

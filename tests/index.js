@@ -11,6 +11,13 @@ snapshot.setDefaultSnapshotSerializers([
   (value) => (typeof value === "string" ? value : undefined),
 ]);
 
+function normalizeStderr(stderr) {
+  return stderr
+    .replaceAll(/\u001B\[[0-9;]*m/g, "")
+    .replaceAll(process.cwd(), "<cwd>")
+    .replaceAll(/:\d+:\d+/g, ":<line>:<column>");
+}
+
 // Get all files in tests directory
 const files = readdirSync("tests");
 
@@ -42,7 +49,7 @@ for (const file of testFiles) {
     const { stderr, stdout } = await execFileAsync("node", [`tests/${file}`], {
       env,
     });
-    const trimmedStderr = stderr.replace(/\r?\n$/, "");
+    const trimmedStderr = normalizeStderr(stderr).replace(/\r?\n$/, "");
     const trimmedStdout = stdout.replace(/\r?\n$/, "");
     await t.test("stderr", (t) => {
       if (trimmedStderr) t.assert.snapshot(trimmedStderr);
