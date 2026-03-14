@@ -18,20 +18,20 @@ POST /api/v3/app/installations/123456/access_tokens
 `;
 
 exports[`main-enterprise-installation-not-found.test.js > stderr 1`] = `
-Error: No enterprise installation found matching the name test-enterprise. Available installations: Organization:some-org, User:some-user
-    at getTokenFromEnterprise [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:230:11[90m)[39m
+Error: No enterprise installation found matching the name test-enterprise.
+    at getTokenFromEnterprise [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:223:13[90m)[39m
 [90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
     at async pRetry [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mnode_modules/[4mp-retry[24m/index.js:197:19[90m)[39m
     at async main [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:95:52[90m)[39m
     at async test [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mtests/main.js:111:3[90m)[39m
-    at async [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mtests/main-enterprise-installation-not-found.test.js:5:1
+    at async [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mtests/main-enterprise-installation-not-found.test.js:4:1
 `;
 
 exports[`main-enterprise-installation-not-found.test.js > stdout 1`] = `
 Creating enterprise installation token for enterprise "test-enterprise".
-Failed to create token for enterprise "test-enterprise" (attempt 1): No enterprise installation found matching the name test-enterprise. Available installations: Organization:some-org, User:some-user
+Failed to create token for enterprise "test-enterprise" (attempt 1): No enterprise installation found matching the name test-enterprise.
 --- REQUESTS ---
-GET /app/installations
+GET /enterprises/test-enterprise/installation
 `;
 
 exports[`main-enterprise-mutual-exclusivity-both.test.js > stderr 1`] = `
@@ -76,7 +76,7 @@ Creating enterprise installation token for enterprise "test-enterprise".
 ::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 ::save-state name=expiresAt::2016-07-11T22:14:10Z
 --- REQUESTS ---
-GET /app/installations
+GET /enterprises/test-enterprise/installation
 POST /app/installations/123456/access_tokens
 null
 `;
@@ -93,7 +93,7 @@ Creating enterprise installation token for enterprise "test-enterprise".
 ::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 ::save-state name=expiresAt::2016-07-11T22:14:10Z
 --- REQUESTS ---
-GET /app/installations
+GET /enterprises/test-enterprise/installation
 POST /app/installations/123456/access_tokens
 null
 `;
@@ -110,7 +110,7 @@ Creating enterprise installation token for enterprise "test-enterprise".
 ::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 ::save-state name=expiresAt::2016-07-11T22:14:10Z
 --- REQUESTS ---
-GET /app/installations
+GET /enterprises/test-enterprise/installation
 POST /app/installations/123456/access_tokens
 {"permissions":{"enterprise_organizations":"read","enterprise_people":"write"}}
 `;

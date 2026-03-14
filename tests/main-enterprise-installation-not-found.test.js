@@ -1,17 +1,15 @@
 import { test } from "./main.js";
 
-
 // Verify `main` handles when no enterprise installation is found.
 await test((mockPool) => {
   delete process.env.INPUT_OWNER;
-  delete process.env.INPUT_REPOSITORIES;  
+  delete process.env.INPUT_REPOSITORIES;
   process.env["INPUT_ENTERPRISE-SLUG"] = "test-enterprise";
-  
 
-  // Mock the /app/installations endpoint to return only non-enterprise installations
+  // Mock the enterprise installation endpoint to return no matching installation
   mockPool
     .intercept({
-      path: "/app/installations",
+      path: "/enterprises/test-enterprise/installation",
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -20,21 +18,8 @@ await test((mockPool) => {
       },
     })
     .reply(
-      200,
-      [
-        {
-          id: "111111",
-          app_slug: "github-actions",
-          target_type: "Organization",
-          account: { login: "some-org" }
-        },
-        {
-          id: "222222",
-          app_slug: "github-actions",
-          target_type: "User",
-          account: { login: "some-user" }
-        }
-      ],
+      404,
+      { message: "Not Found" },
       { headers: { "content-type": "application/json" } }
     );
 });

@@ -6,12 +6,12 @@ await test((mockPool) => {
   delete process.env.INPUT_OWNER;
   delete process.env.INPUT_REPOSITORIES;
 
-  // Mock the /app/installations endpoint to return an enterprise installation
+  // Mock the enterprise installation endpoint
   const mockInstallationId = "123456";
   const mockAppSlug = "github-actions";
   mockPool
     .intercept({
-      path: "/app/installations",
+      path: "/enterprises/test-enterprise/installation",
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
@@ -21,14 +21,10 @@ await test((mockPool) => {
     })
     .reply(
       200,
-      [
-        {
-          id: mockInstallationId,
-          app_slug: mockAppSlug,
-          target_type: "Enterprise",
-          account: { login: "test-enterprise", slug: "test-enterprise" }
-        }
-      ],
+      {
+        id: mockInstallationId,
+        app_slug: mockAppSlug,
+      },
       { headers: { "content-type": "application/json" } }
     );
 });
