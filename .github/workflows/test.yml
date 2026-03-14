@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - beta
   pull_request:
   merge_group:
   workflow_dispatch:
@@ -33,7 +34,7 @@ jobs:
     name: end-to-end
     runs-on: ubuntu-latest
     # do not run from forks, as forks don’t have access to repository secrets
-    if: github.event_name == 'merge_group' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -53,3 +54,28 @@ jobs:
         with:
           route: GET /installation/repositories
       - run: echo '${{ steps.get-repository.outputs.data }}'
+
+  end-to-end-proxy:
+    name: end-to-end with unreachable proxy
+    runs-on: ubuntu-latest
+    # do not run from forks, as forks don’t have access to repository secrets
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.owner.login == github.event.pull_request.base.repo.owner.login
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: package.json
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - uses: ./ # Uses the action in the root directory
+        continue-on-error: true
+        id: test
+        env:
+          NODE_USE_ENV_PROXY: "1"
+          https_proxy: http://127.0.0.1:9
+        with:
+          app-id: ${{ vars.TEST_APP_ID }}
+          private-key: ${{ secrets.TEST_APP_PRIVATE_KEY }}
+      - name: Assert action failed through unreachable proxy
+        run: test "${{ steps.test.outcome }}" = "failure"

@@ -2,15 +2,15 @@
   "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "2.2.2",
+  "version": "3.0.0",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
   "engines": {
-    "node": ">=20"
+    "node": ">=24.4.0"
   },
   "packageManager": "npm@10.9.4",
   "scripts": {
-    "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20.0.0 --packages=bundle",
-    "test": "c8 --100 ava tests/index.js",
+    "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --packages=bundle",
+    "test": "c8 --100 node --test tests/index.js",
     "coverage": "c8 report --reporter html",
     "postcoverage": "open-cli coverage/index.html"
   },
@@ -19,18 +19,14 @@
     "@actions/core": "^3.0.0",
     "@octokit/auth-app": "^8.2.0",
     "@octokit/request": "^10.0.8",
-    "p-retry": "^7.1.1",
-    "undici": "^7.24.1"
+    "p-retry": "^7.1.1"
   },
   "devDependencies": {
     "@octokit/openapi": "^21.0.0",
-    "@sinonjs/fake-timers": "^15.1.0",
-    "ava": "^6.4.1",
     "c8": "^10.1.3",
-    "dotenv": "^17.3.1",
     "esbuild": "^0.27.3",
-    "execa": "^9.6.1",
     "open-cli": "^8.0.0",
+    "undici": "^7.24.1",
     "yaml": "^2.8.2"
   },
   "release": {

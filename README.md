@@ -28,7 +28,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -47,19 +47,19 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           # required
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           token: ${{ steps.app-token.outputs.token }}
           ref: ${{ github.head_ref }}
           # Make sure the value of GITHUB_TOKEN will not be persisted in repo's config
           persist-credentials: false
-      - uses: creyD/prettier_action@v4.3
+      - uses: creyD/prettier_action@v6
         with:
           github_token: ${{ steps.app-token.outputs.token }}
 ```
@@ -73,7 +73,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           # required
@@ -98,7 +98,7 @@ jobs:
   auto-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           # required
@@ -135,13 +135,13 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
@@ -157,7 +157,7 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -166,7 +166,7 @@ jobs:
           repositories: |
             repo1
             repo2
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
@@ -182,13 +182,13 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: another-owner
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
@@ -229,14 +229,14 @@ jobs:
   hello-world:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           permission-issues: write
-      - uses: peter-evans/create-or-update-comment@v3
+      - uses: peter-evans/create-or-update-comment@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           issue-number: ${{ github.event.issue.number }}
@@ -271,7 +271,7 @@ jobs:
         owners-and-repos: ${{ fromJson(needs.set-matrix.outputs.matrix) }}
 
     steps:
-      - uses: actions/create-github-app-token@v2
+      - uses: actions/create-github-app-token@v3
         id: app-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -301,7 +301,7 @@ jobs:
     steps:
       - name: Create GitHub App token
         id: create_token
-        uses: actions/create-github-app-token@v2
+        uses: actions/create-github-app-token@v3
         with:
           app-id: ${{ vars.GHES_APP_ID }}
           private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
@@ -316,6 +316,24 @@ jobs:
           body: "This is a new issue created from a GitHub Action workflow."
         env:
           GITHUB_TOKEN: ${{ steps.create_token.outputs.token }}
+```
+
+### Proxy support
+
+This action relies on Node.js native proxy support.
+
+If you set `HTTP_PROXY` or `HTTPS_PROXY`, also set `NODE_USE_ENV_PROXY: "1"` on the action step so Node.js honors those variables. If you need proxy bypass rules, set `NO_PROXY` alongside them.
+
+```yaml
+- uses: actions/create-github-app-token@v3
+  id: app-token
+  env:
+    HTTPS_PROXY: http://proxy.example.com:8080
+    NO_PROXY: github.example.com
+    NODE_USE_ENV_PROXY: "1"
+  with:
+    app-id: ${{ vars.APP_ID }}
+    private-key: ${{ secrets.PRIVATE_KEY }}
 ```
 
 ## Inputs
@@ -340,7 +358,7 @@ steps:
       echo "private-key=$private_key" >> "$GITHUB_OUTPUT"
   - name: Generate GitHub App Token
     id: app-token
-    uses: actions/create-github-app-token@v2
+    uses: actions/create-github-app-token@v3
     with:
       app-id: ${{ vars.APP_ID }}
       private-key: ${{ steps.decode.outputs.private-key }}

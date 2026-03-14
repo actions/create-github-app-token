@@ -1,6 +1,6 @@
-import { test } from "./main.js";
+import { mock } from "node:test";
 
-import { install } from "@sinonjs/fake-timers";
+import { test } from "./main.js";
 
 // Verify `main` retry when the clock has drifted.
 await test((mockPool) => {
@@ -11,7 +11,7 @@ await test((mockPool) => {
   const mockInstallationId = "123456";
   const mockAppSlug = "github-actions";
 
-  install({ now: 0, toFake: ["Date"] });
+  mock.timers.enable({ apis: ["Date"], now: 0 });
 
   mockPool
     .intercept({
@@ -59,4 +59,6 @@ await test((mockPool) => {
       };
     })
     .times(2);
+}).finally(() => {
+  mock.timers.reset();
 });
