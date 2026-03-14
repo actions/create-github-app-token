@@ -19,12 +19,12 @@ POST /api/v3/app/installations/123456/access_tokens
 
 exports[`main-enterprise-installation-not-found.test.js > stderr 1`] = `
 Error: No enterprise installation found matching the name test-enterprise.
-    at getTokenFromEnterprise [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:223:13[90m)[39m
-[90m    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)[39m
-    at async pRetry [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mnode_modules/[4mp-retry[24m/index.js:197:19[90m)[39m
-    at async main [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:95:52[90m)[39m
-    at async test [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mtests/main.js:111:3[90m)[39m
-    at async [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mtests/main-enterprise-installation-not-found.test.js:4:1
+    at getTokenFromEnterprise (file://<cwd>/lib/main.js:<line>:<column>)
+    at process.processTicksAndRejections (node:internal/process/task_queues:<line>:<column>)
+    at async pRetry (file://<cwd>/node_modules/p-retry/index.js:<line>:<column>)
+    at async main (file://<cwd>/lib/main.js:<line>:<column>)
+    at async test (file://<cwd>/tests/main.js:<line>:<column>)
+    at async file://<cwd>/tests/main-enterprise-installation-not-found.test.js:<line>:<column>
 `;
 
 exports[`main-enterprise-installation-not-found.test.js > stdout 1`] = `
@@ -36,22 +36,22 @@ GET /enterprises/test-enterprise/installation
 
 exports[`main-enterprise-mutual-exclusivity-owner.test.js > stderr 1`] = `
 Error: Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs
-    at main [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:31:11[90m)[39m
-    at run [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mmain.js:35:10[90m)[39m
-    at [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mmain.js:50:16
-[90m    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)[39m
-[90m    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:639:26)[39m
-    at async [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mtests/main-enterprise-mutual-exclusivity-owner.test.js:12:3
+    at main (file://<cwd>/lib/main.js:<line>:<column>)
+    at run (file://<cwd>/main.js:<line>:<column>)
+    at file://<cwd>/main.js:<line>:<column>
+    at ModuleJob.run (node:internal/modules/esm/module_job:<line>:<column>)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:<line>:<column>)
+    at async file://<cwd>/tests/main-enterprise-mutual-exclusivity-owner.test.js:<line>:<column>
 `;
 
 exports[`main-enterprise-mutual-exclusivity-repositories.test.js > stderr 1`] = `
 Error: Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs
-    at main [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:31:11[90m)[39m
-    at run [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mmain.js:35:10[90m)[39m
-    at [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mmain.js:50:16
-[90m    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)[39m
-[90m    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:639:26)[39m
-    at async [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mtests/main-enterprise-mutual-exclusivity-repositories.test.js:12:3
+    at main (file://<cwd>/lib/main.js:<line>:<column>)
+    at run (file://<cwd>/main.js:<line>:<column>)
+    at file://<cwd>/main.js:<line>:<column>
+    at ModuleJob.run (node:internal/modules/esm/module_job:<line>:<column>)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:<line>:<column>)
+    at async file://<cwd>/tests/main-enterprise-mutual-exclusivity-repositories.test.js:<line>:<column>
 `;
 
 exports[`main-enterprise-only-success.test.js > stdout 1`] = `
