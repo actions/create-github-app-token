@@ -34,16 +34,6 @@ Failed to create token for enterprise "test-enterprise" (attempt 1): No enterpri
 GET /enterprises/test-enterprise/installation
 `;
 
-exports[`main-enterprise-mutual-exclusivity-both.test.js > stderr 1`] = `
-Error: Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs
-    at main [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:31:11[90m)[39m
-    at run [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mmain.js:35:10[90m)[39m
-    at [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mmain.js:50:16
-[90m    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)[39m
-[90m    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:639:26)[39m
-    at async [90mfile:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mtests/main-enterprise-mutual-exclusivity-both.test.js:13:3
-`;
-
 exports[`main-enterprise-mutual-exclusivity-owner.test.js > stderr 1`] = `
 Error: Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs
     at main [90m(file:///Users/parkerbxyz/.copilot/worktrees/create-github-app-token/pr-263/[39mlib/main.js:31:11[90m)[39m
@@ -65,23 +55,6 @@ Error: Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs
 `;
 
 exports[`main-enterprise-only-success.test.js > stdout 1`] = `
-Creating enterprise installation token for enterprise "test-enterprise".
-::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
-
-::set-output name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
-
-::set-output name=installation-id::123456
-
-::set-output name=app-slug::github-actions
-::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
-::save-state name=expiresAt::2016-07-11T22:14:10Z
---- REQUESTS ---
-GET /enterprises/test-enterprise/installation
-POST /app/installations/123456/access_tokens
-null
-`;
-
-exports[`main-enterprise-token-success.test.js > stdout 1`] = `
 Creating enterprise installation token for enterprise "test-enterprise".
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 
