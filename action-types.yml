@@ -1,0 +1,334 @@
+# See https://github.com/typesafegithub/github-actions-typing
+inputs:
+  app-id:
+    type: string
+
+  private-key:
+    type: string
+
+  owner:
+    type: string
+
+  repositories:
+    type: list
+    separator: "\n"
+    list-item:
+      type: string
+
+  skip-token-revoke:
+    type: boolean
+
+  github-api-url:
+    type: string
+
+  # <START GENERATED PERMISSIONS TYPES>
+  permission-actions:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-administration:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-checks:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-codespaces:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-contents:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-custom-properties-for-organizations:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-dependabot-secrets:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-deployments:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-email-addresses:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-enterprise-custom-properties-for-organizations:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+      - "admin"
+
+  permission-environments:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-followers:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-git-ssh-keys:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-gpg-keys:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-interaction-limits:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-issues:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-members:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-metadata:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-administration:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-announcement-banners:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-copilot-seat-management:
+    type: enum
+    allowed-values:
+      - "write"
+
+  permission-organization-custom-org-roles:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-custom-properties:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+      - "admin"
+
+  permission-organization-custom-roles:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-events:
+    type: enum
+    allowed-values:
+      - "read"
+
+  permission-organization-hooks:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-packages:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-personal-access-token-requests:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-personal-access-tokens:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-plan:
+    type: enum
+    allowed-values:
+      - "read"
+
+  permission-organization-projects:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+      - "admin"
+
+  permission-organization-secrets:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-self-hosted-runners:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-organization-user-blocking:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-packages:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-pages:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-profile:
+    type: enum
+    allowed-values:
+      - "write"
+
+  permission-pull-requests:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-repository-custom-properties:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-repository-hooks:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-repository-projects:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+      - "admin"
+
+  permission-secret-scanning-alerts:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-secrets:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-security-events:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-single-file:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-starring:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-statuses:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-team-discussions:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-vulnerability-alerts:
+    type: enum
+    allowed-values:
+      - "read"
+      - "write"
+
+  permission-workflows:
+    type: enum
+    allowed-values:
+      - "write"
+
+  # <END GENERATED PERMISSIONS TYPES>
+
+outputs:
+  token:
+    type: string
+
+  installation-id:
+    type: integer
+
+  app-slug:
+    type: string
