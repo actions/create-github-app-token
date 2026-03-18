@@ -6,7 +6,7 @@ branding:
   color: "gray-dark"
 inputs:
   app-id:
-    description: "GitHub App ID"
+    description: "GitHub App ID or Client ID"
     required: true
   private-key:
     description: "GitHub App private key"
