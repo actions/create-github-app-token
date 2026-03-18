@@ -1,3 +1,7 @@
+exports[`action-deprecated-inputs.test.js > stdout 1`] = `
+app-id — Use 'client-id' instead.
+`;
+
 exports[`main-client-id.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
@@ -32,6 +36,19 @@ Inputs 'owner' and 'repositories' are set. Creating token for the following repo
 GET /api/v3/repos/actions/create-github-app-token/installation
 POST /api/v3/app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"]}
+`;
+
+exports[`main-missing-client-and-app-id.test.js > stderr 1`] = `
+Error: Either 'client-id' or 'app-id' input must be set
+    at run [90m(file:///home/runner/work/create-github-app-token/create-github-app-token/[39mmain.js:23:11[90m)[39m
+    at [90mfile:///home/runner/work/create-github-app-token/create-github-app-token/[39mmain.js:51:16
+[90m    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)[39m
+[90m    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)[39m
+    at async [90mfile:///home/runner/work/create-github-app-token/create-github-app-token/[39mtests/main-missing-client-and-app-id.test.js:12:30
+`;
+
+exports[`main-missing-client-and-app-id.test.js > stdout 1`] = `
+::error::Either 'client-id' or 'app-id' input must be set
 `;
 
 exports[`main-missing-owner.test.js > stderr 1`] = `

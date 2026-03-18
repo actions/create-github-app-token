@@ -5,9 +5,13 @@ branding:
   icon: "lock"
   color: "gray-dark"
 inputs:
+  client-id:
+    description: "GitHub App Client ID"
+    required: false
   app-id:
-    description: "GitHub App ID or Client ID"
-    required: true
+    description: "GitHub App ID"
+    required: false
+    deprecationMessage: "Use 'client-id' instead."
   private-key:
     description: "GitHub App private key"
     required: true

@@ -9,10 +9,10 @@ GitHub Action for creating a GitHub App installation access token.
 In order to use this action, you need to:
 
 1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app).
-2. [Store the App's Client ID (recommended) or App ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_ID`).
+2. [Store the App's Client ID in your repository environment variables](https://docs.github.com/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_CLIENT_ID`).
 3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/security-guides/encrypted-secrets?tool=webui#creating-encrypted-secrets-for-a-repository) (example: `PRIVATE_KEY`).
 
-Pass the App's Client ID or App ID using the `app-id` input. GitHub recommends using the Client ID when available.
+Pass the App's Client ID using the `client-id` input. The legacy `app-id` input remains available for compatibility, but is deprecated.
 
 > [!IMPORTANT]  
 > An installation access token expires after 1 hour. Please [see this comment](https://github.com/actions/create-github-app-token/issues/121#issuecomment-2043214796) for alternative approaches if you have long-running processes.
@@ -33,7 +33,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
       - uses: ./actions/staging-tests
         with:
@@ -53,7 +53,7 @@ jobs:
         id: app-token
         with:
           # required
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
       - uses: actions/checkout@v6
         with:
@@ -79,7 +79,7 @@ jobs:
         id: app-token
         with:
           # required
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
       - name: Get GitHub App User ID
         id: get-user-id
@@ -104,7 +104,7 @@ jobs:
         id: app-token
         with:
           # required
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
       - name: Get GitHub App User ID
         id: get-user-id
@@ -140,7 +140,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
       - uses: peter-evans/create-or-update-comment@v4
@@ -162,7 +162,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           repositories: |
@@ -187,7 +187,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: another-owner
       - uses: peter-evans/create-or-update-comment@v4
@@ -212,7 +212,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
           permission-issues: write
@@ -254,7 +254,7 @@ jobs:
       - uses: actions/create-github-app-token@v3
         id: app-token
         with:
-          app-id: ${{ vars.APP_ID }}
+          client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
           owner: ${{ matrix.owners-and-repos.owner }}
           repositories: ${{ join(matrix.owners-and-repos.repos) }}
@@ -283,7 +283,7 @@ jobs:
         id: create_token
         uses: actions/create-github-app-token@v3
         with:
-          app-id: ${{ vars.GHES_APP_ID }}
+          client-id: ${{ vars.GHES_APP_CLIENT_ID }}
           private-key: ${{ secrets.GHES_APP_PRIVATE_KEY }}
           owner: ${{ vars.GHES_INSTALLATION_ORG }}
           github-api-url: ${{ vars.GITHUB_API_URL }}
@@ -312,15 +312,24 @@ If you set `HTTP_PROXY` or `HTTPS_PROXY`, also set `NODE_USE_ENV_PROXY: "1"` on 
     NO_PROXY: github.example.com
     NODE_USE_ENV_PROXY: "1"
   with:
-    app-id: ${{ vars.APP_ID }}
+    client-id: ${{ vars.APP_CLIENT_ID }}
     private-key: ${{ secrets.PRIVATE_KEY }}
 ```
 
 ## Inputs
 
+### `client-id`
+
+**Optional:** GitHub App Client ID. This is the recommended input.
+
 ### `app-id`
 
-**Required:** GitHub App Client ID or App ID. GitHub recommends using the Client ID when available.
+**Optional:** GitHub App ID.
+
+> [!WARNING]
+> `app-id` is deprecated. Use `client-id` instead.
+
+You must set either `client-id` or `app-id`. If both are set, `client-id` takes precedence.
 
 ### `private-key`
 
@@ -340,7 +349,7 @@ steps:
     id: app-token
     uses: actions/create-github-app-token@v3
     with:
-      app-id: ${{ vars.APP_ID }}
+      client-id: ${{ vars.APP_CLIENT_ID }}
       private-key: ${{ steps.decode.outputs.private-key }}
 ```
 

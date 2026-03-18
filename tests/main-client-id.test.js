@@ -1,6 +1,11 @@
-import { test } from "./main.js";
+import { DEFAULT_ENV, test } from "./main.js";
 
-// Verify `main` accepts a GitHub App client ID via the `app-id` input
-await test(() => {
-  process.env["INPUT_APP-ID"] = "Iv1.0123456789abcdef";
-});
+// Verify `main` accepts a GitHub App client ID via the `client-id` input
+await test(
+  () => {},
+  {
+    ...DEFAULT_ENV,
+    "INPUT_CLIENT-ID": "Iv1.0123456789abcdef",
+    "INPUT_APP-ID": "",
+  }
+);

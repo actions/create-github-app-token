@@ -23307,7 +23307,10 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 }
 async function run() {
   ensureNativeProxySupport();
-  const appId = getInput("app-id");
+  const appId = getInput("client-id") || getInput("app-id");
+  if (!appId) {
+    throw new Error("Either 'client-id' or 'app-id' input must be set");
+  }
   const privateKey = getInput("private-key");
   const owner = getInput("owner");
   const repositories = getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
