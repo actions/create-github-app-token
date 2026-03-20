@@ -18,8 +18,8 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 async function run() {
   ensureNativeProxySupport();
 
-  const appId = core.getInput("client-id") || core.getInput("app-id");
-  if (!appId) {
+  const clientId = core.getInput("client-id") || core.getInput("app-id");
+  if (!clientId) {
     throw new Error("Either 'client-id' or 'app-id' input must be set");
   }
   const privateKey = core.getInput("private-key");
@@ -35,7 +35,7 @@ async function run() {
   const permissions = getPermissionsFromInputs(process.env);
 
   return main(
-    appId,
+    clientId,
     privateKey,
     owner,
     repositories,
