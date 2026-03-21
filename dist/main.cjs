@@ -23305,12 +23305,12 @@ async function getTokenFromEnterprise(request2, auth5, enterprise, permissions) 
       }
     });
   } catch (error2) {
-    if (error2.status !== 404) {
-      throw error2;
+    if (error2.status === 404) {
+      throw new Error(
+        `No enterprise installation found matching the name ${enterprise}.`
+      );
     }
-    throw new Error(
-      `No enterprise installation found matching the name ${enterprise}.`
-    );
+    throw error2;
   }
   return createInstallationAuthResult(auth5, response.data, permissions);
 }

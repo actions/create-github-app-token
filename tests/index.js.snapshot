@@ -17,6 +17,25 @@ POST /api/v3/app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"]}
 `;
 
+exports[`main-enterprise-fail-response.test.js > stdout 1`] = `
+Creating enterprise installation token for enterprise "test-enterprise".
+Failed to create token for enterprise "test-enterprise" (attempt 1): GitHub API not available
+::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=installation-id::123456
+
+::set-output name=app-slug::github-actions
+::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+::save-state name=expiresAt::2016-07-11T22:14:10Z
+--- REQUESTS ---
+GET /enterprises/test-enterprise/installation
+GET /enterprises/test-enterprise/installation
+POST /app/installations/123456/access_tokens
+null
+`;
+
 exports[`main-enterprise-installation-not-found.test.js > stderr 1`] = `
 Error: No enterprise installation found matching the name test-enterprise.
     at getTokenFromEnterprise (file://<cwd>/lib/main.js:<line>:<column>)
