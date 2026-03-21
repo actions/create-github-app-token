@@ -23157,76 +23157,40 @@ async function main(appId, privateKey, enterprise, owner, repositories, permissi
   if (enterprise && (owner || repositories.length > 0)) {
     throw new Error("Cannot use 'enterprise' input with 'owner' or 'repositories' inputs");
   }
-  let parsedOwner = "";
-  let parsedRepositoryNames = [];
-  if (!enterprise) {
-    if (!owner && repositories.length === 0) {
-      const [owner2, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
-      parsedOwner = owner2;
-      parsedRepositoryNames = [repo];
-      core.info(
-        `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${owner2}/${repo}).`
-      );
-    }
-    if (owner && repositories.length === 0) {
-      parsedOwner = owner;
-      core.info(
-        `Input 'repositories' is not set. Creating token for all repositories owned by ${owner}.`
-      );
-    }
-    if (!owner && repositories.length > 0) {
-      parsedOwner = String(process.env.GITHUB_REPOSITORY_OWNER);
-      parsedRepositoryNames = repositories;
-      core.info(
-        `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories.map((repo) => `
-- ${parsedOwner}/${repo}`).join("")}`
-      );
-    }
-    if (owner && repositories.length > 0) {
-      parsedOwner = owner;
-      parsedRepositoryNames = repositories;
-      core.info(
-        `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
-      ${repositories.map((repo) => `
-- ${parsedOwner}/${repo}`).join("")}`
-      );
-    }
-  } else {
-    core.info(`Creating enterprise installation token for enterprise "${enterprise}".`);
-  }
+  const target = resolveInstallationTarget(enterprise, owner, repositories, core);
   const auth5 = createAppAuth2({
     appId,
     privateKey,
     request: request2
   });
   let authentication, installationId, appSlug;
-  if (enterprise) {
+  if (target.type === "enterprise") {
     ({ authentication, installationId, appSlug } = await pRetry(
-      () => getTokenFromEnterprise(request2, auth5, enterprise, permissions),
+      () => getTokenFromEnterprise(request2, auth5, target.enterprise, permissions),
       {
         shouldRetry: ({ error: error2 }) => error2.status >= 500,
         onFailedAttempt: (context) => {
           core.info(
-            `Failed to create token for enterprise "${enterprise}" (attempt ${context.attemptNumber}): ${context.error.message}`
+            `Failed to create token for enterprise "${target.enterprise}" (attempt ${context.attemptNumber}): ${context.error.message}`
           );
         },
         retries: 3
       }
     ));
-  } else if (parsedRepositoryNames.length > 0) {
+  } else if (target.type === "repository") {
     ({ authentication, installationId, appSlug } = await pRetry(
       () => getTokenFromRepository(
         request2,
         auth5,
-        parsedOwner,
-        parsedRepositoryNames,
+        target.owner,
+        target.repositories,
         permissions
       ),
       {
         shouldRetry: ({ error: error2 }) => error2.status >= 500,
         onFailedAttempt: (context) => {
           core.info(
-            `Failed to create token for "${parsedRepositoryNames.join(
+            `Failed to create token for "${target.repositories.join(
               ","
             )}" (attempt ${context.attemptNumber}): ${context.error.message}`
           );
@@ -23236,11 +23200,11 @@ async function main(appId, privateKey, enterprise, owner, repositories, permissi
     ));
   } else {
     ({ authentication, installationId, appSlug } = await pRetry(
-      () => getTokenFromOwner(request2, auth5, parsedOwner, permissions),
+      () => getTokenFromOwner(request2, auth5, target.owner, permissions),
       {
         onFailedAttempt: (context) => {
           core.info(
-            `Failed to create token for "${parsedOwner}" (attempt ${context.attemptNumber}): ${context.error.message}`
+            `Failed to create token for "${target.owner}" (attempt ${context.attemptNumber}): ${context.error.message}`
           );
         },
         retries: 3
@@ -23255,6 +23219,47 @@ async function main(appId, privateKey, enterprise, owner, repositories, permissi
     core.saveState("token", authentication.token);
     core.saveState("expiresAt", authentication.expiresAt);
   }
+}
+function resolveInstallationTarget(enterprise, owner, repositories, core) {
+  if (enterprise) {
+    core.info(`Creating enterprise installation token for enterprise "${enterprise}".`);
+    return { type: "enterprise", enterprise };
+  }
+  if (!owner && repositories.length === 0) {
+    const [defaultOwner, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
+    core.info(
+      `Inputs 'owner' and 'repositories' are not set. Creating token for this repository (${defaultOwner}/${repo}).`
+    );
+    return {
+      type: "repository",
+      owner: defaultOwner,
+      repositories: [repo]
+    };
+  }
+  if (owner && repositories.length === 0) {
+    core.info(
+      `Input 'repositories' is not set. Creating token for all repositories owned by ${owner}.`
+    );
+    return { type: "owner", owner };
+  }
+  const parsedOwner = owner || String(process.env.GITHUB_REPOSITORY_OWNER);
+  if (!owner) {
+    core.info(
+      `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories.map((repo) => `
+- ${parsedOwner}/${repo}`).join("")}`
+    );
+  } else {
+    core.info(
+      `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
+      ${repositories.map((repo) => `
+- ${parsedOwner}/${repo}`).join("")}`
+    );
+  }
+  return {
+    type: "repository",
+    owner: parsedOwner,
+    repositories
+  };
 }
 async function getTokenFromOwner(request2, auth5, parsedOwner, permissions) {
   const response = await request2("GET /users/{username}/installation", {
