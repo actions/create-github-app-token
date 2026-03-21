@@ -20,6 +20,7 @@ async function run() {
 
   const appId = core.getInput("app-id");
   const privateKey = core.getInput("private-key");
+  const enterprise = core.getInput("enterprise");
   const owner = core.getInput("owner");
   const repositories = core
     .getInput("repositories")
@@ -34,6 +35,7 @@ async function run() {
   return main(
     appId,
     privateKey,
+    enterprise,
     owner,
     repositories,
     permissions,
