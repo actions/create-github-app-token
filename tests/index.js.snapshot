@@ -30,6 +30,7 @@ Error: No enterprise installation found matching the name test-enterprise.
 exports[`main-enterprise-installation-not-found.test.js > stdout 1`] = `
 Creating enterprise installation token for enterprise "test-enterprise".
 Failed to create token for enterprise "test-enterprise" (attempt 1): No enterprise installation found matching the name test-enterprise.
+::error::No enterprise installation found matching the name test-enterprise.
 --- REQUESTS ---
 GET /enterprises/test-enterprise/installation
 `;
@@ -44,6 +45,10 @@ Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
     at async file://<cwd>/tests/main-enterprise-mutual-exclusivity-owner.test.js:<line>:<column>
 `;
 
+exports[`main-enterprise-mutual-exclusivity-owner.test.js > stdout 1`] = `
+::error::Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
+`;
+
 exports[`main-enterprise-mutual-exclusivity-repositories.test.js > stderr 1`] = `
 Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
     at main (file://<cwd>/lib/main.js:<line>:<column>)
@@ -52,6 +57,10 @@ Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
     at ModuleJob.run (node:internal/modules/esm/module_job:<line>:<column>)
     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:<line>:<column>)
     at async file://<cwd>/tests/main-enterprise-mutual-exclusivity-repositories.test.js:<line>:<column>
+`;
+
+exports[`main-enterprise-mutual-exclusivity-repositories.test.js > stdout 1`] = `
+::error::Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
 `;
 
 exports[`main-enterprise-only-success.test.js > stdout 1`] = `
@@ -115,6 +124,10 @@ POST /app/installations/123456/access_tokens
 
 exports[`main-proxy-requires-native-support.test.js > stderr 1`] = `
 A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step.
+`;
+
+exports[`main-proxy-requires-native-support.test.js > stdout 1`] = `
+::error::A proxy environment variable is set, but Node.js native proxy support is not enabled. Set NODE_USE_ENV_PROXY=1 for this action step.
 `;
 
 exports[`main-repo-skew.test.js > stderr 1`] = `

@@ -23375,9 +23375,7 @@ async function run() {
 }
 var main_default = run().catch((error2) => {
   console.error(error2);
-  if (process.env.GITHUB_OUTPUT !== void 0) {
-    setFailed(error2.message);
-  }
+  setFailed(error2.message);
 });
 /*! Bundled license information:
 

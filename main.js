@@ -48,10 +48,7 @@ async function run() {
 
 // Export promise for testing
 export default run().catch((error) => {
-  /* c8 ignore next 5 */
+  /* c8 ignore next 3 */
   console.error(error);
-  // Don't set failed in test mode (when GITHUB_OUTPUT is undefined)
-  if (process.env.GITHUB_OUTPUT !== undefined) {
-    core.setFailed(error.message);
-  }
+  core.setFailed(error.message);
 });

@@ -46,9 +46,18 @@ for (const file of testFiles) {
       NODE_USE_ENV_PROXY,
       ...env
     } = process.env;
-    const { stderr, stdout } = await execFileAsync("node", [`tests/${file}`], {
-      env,
-    });
+    let stderr, stdout;
+    try {
+      ({ stderr, stdout } = await execFileAsync("node", [`tests/${file}`], {
+        env,
+      }));
+    } catch (error) {
+      if (!(error instanceof Error) || !("stderr" in error) || !("stdout" in error)) {
+        throw error;
+      }
+
+      ({ stderr, stdout } = error);
+    }
     const trimmedStderr = normalizeStderr(stderr).replace(/\r?\n$/, "");
     const trimmedStdout = stdout.replace(/\r?\n$/, "");
     await t.test("stderr", (t) => {
