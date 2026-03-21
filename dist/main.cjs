@@ -23261,6 +23261,19 @@ function resolveInstallationTarget(enterprise, owner, repositories, core) {
     repositories
   };
 }
+async function createInstallationAuthResult(auth5, installation, permissions, options = {}) {
+  const authentication = await auth5({
+    type: "installation",
+    installationId: installation.id,
+    permissions,
+    ...options
+  });
+  return {
+    authentication,
+    installationId: installation.id,
+    appSlug: installation["app_slug"]
+  };
+}
 async function getTokenFromOwner(request2, auth5, parsedOwner, permissions) {
   const response = await request2("GET /users/{username}/installation", {
     username: parsedOwner,
@@ -23268,14 +23281,7 @@ async function getTokenFromOwner(request2, auth5, parsedOwner, permissions) {
       hook: auth5.hook
     }
   });
-  const authentication = await auth5({
-    type: "installation",
-    installationId: response.data.id,
-    permissions
-  });
-  const installationId = response.data.id;
-  const appSlug = response.data["app_slug"];
-  return { authentication, installationId, appSlug };
+  return createInstallationAuthResult(auth5, response.data, permissions);
 }
 async function getTokenFromRepository(request2, auth5, parsedOwner, parsedRepositoryNames, permissions) {
   const response = await request2("GET /repos/{owner}/{repo}/installation", {
@@ -23285,15 +23291,9 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
       hook: auth5.hook
     }
   });
-  const authentication = await auth5({
-    type: "installation",
-    installationId: response.data.id,
-    repositoryNames: parsedRepositoryNames,
-    permissions
+  return createInstallationAuthResult(auth5, response.data, permissions, {
+    repositoryNames: parsedRepositoryNames
   });
-  const installationId = response.data.id;
-  const appSlug = response.data["app_slug"];
-  return { authentication, installationId, appSlug };
 }
 async function getTokenFromEnterprise(request2, auth5, enterprise, permissions) {
   let response;
@@ -23305,21 +23305,14 @@ async function getTokenFromEnterprise(request2, auth5, enterprise, permissions) 
       }
     });
   } catch (error2) {
-    if (error2.status === 404) {
-      throw new Error(
-        `No enterprise installation found matching the name ${enterprise}.`
-      );
+    if (error2.status !== 404) {
+      throw error2;
     }
-    throw error2;
+    throw new Error(
+      `No enterprise installation found matching the name ${enterprise}.`
+    );
   }
-  const authentication = await auth5({
-    type: "installation",
-    installationId: response.data.id,
-    permissions
-  });
-  const installationId = response.data.id;
-  const appSlug = response.data["app_slug"];
-  return { authentication, installationId, appSlug };
+  return createInstallationAuthResult(auth5, response.data, permissions);
 }
 
 // lib/request.js
