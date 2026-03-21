@@ -23153,13 +23153,13 @@ async function pRetry(input, options = {}) {
 }
 
 // lib/main.js
-async function main(appId, privateKey, enterpriseSlug, owner, repositories, permissions, core, createAppAuth2, request2, skipTokenRevoke) {
-  if (enterpriseSlug && (owner || repositories.length > 0)) {
-    throw new Error("Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs");
+async function main(appId, privateKey, enterprise, owner, repositories, permissions, core, createAppAuth2, request2, skipTokenRevoke) {
+  if (enterprise && (owner || repositories.length > 0)) {
+    throw new Error("Cannot use 'enterprise' input with 'owner' or 'repositories' inputs");
   }
   let parsedOwner = "";
   let parsedRepositoryNames = [];
-  if (!enterpriseSlug) {
+  if (!enterprise) {
     if (!owner && repositories.length === 0) {
       const [owner2, repo] = String(process.env.GITHUB_REPOSITORY).split("/");
       parsedOwner = owner2;
@@ -23192,7 +23192,7 @@ async function main(appId, privateKey, enterpriseSlug, owner, repositories, perm
       );
     }
   } else {
-    core.info(`Creating enterprise installation token for enterprise "${enterpriseSlug}".`);
+    core.info(`Creating enterprise installation token for enterprise "${enterprise}".`);
   }
   const auth5 = createAppAuth2({
     appId,
@@ -23200,14 +23200,14 @@ async function main(appId, privateKey, enterpriseSlug, owner, repositories, perm
     request: request2
   });
   let authentication, installationId, appSlug;
-  if (enterpriseSlug) {
+  if (enterprise) {
     ({ authentication, installationId, appSlug } = await pRetry(
-      () => getTokenFromEnterprise(request2, auth5, enterpriseSlug, permissions),
+      () => getTokenFromEnterprise(request2, auth5, enterprise, permissions),
       {
         shouldRetry: ({ error: error2 }) => error2.status >= 500,
         onFailedAttempt: (context) => {
           core.info(
-            `Failed to create token for enterprise "${enterpriseSlug}" (attempt ${context.attemptNumber}): ${context.error.message}`
+            `Failed to create token for enterprise "${enterprise}" (attempt ${context.attemptNumber}): ${context.error.message}`
           );
         },
         retries: 3
@@ -23290,11 +23290,11 @@ async function getTokenFromRepository(request2, auth5, parsedOwner, parsedReposi
   const appSlug = response.data["app_slug"];
   return { authentication, installationId, appSlug };
 }
-async function getTokenFromEnterprise(request2, auth5, enterpriseSlug, permissions) {
+async function getTokenFromEnterprise(request2, auth5, enterprise, permissions) {
   let response;
   try {
     response = await request2("GET /enterprises/{enterprise}/installation", {
-      enterprise: enterpriseSlug,
+      enterprise,
       request: {
         hook: auth5.hook
       }
@@ -23302,7 +23302,7 @@ async function getTokenFromEnterprise(request2, auth5, enterpriseSlug, permissio
   } catch (error2) {
     if (error2.status === 404) {
       throw new Error(
-        `No enterprise installation found matching the name ${enterpriseSlug}.`
+        `No enterprise installation found matching the name ${enterprise}.`
       );
     }
     throw error2;
@@ -23355,7 +23355,7 @@ async function run() {
   ensureNativeProxySupport();
   const appId = getInput("app-id");
   const privateKey = getInput("private-key");
-  const enterpriseSlug = getInput("enterprise-slug");
+  const enterprise = getInput("enterprise");
   const owner = getInput("owner");
   const repositories = getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
   const skipTokenRevoke = getBooleanInput("skip-token-revoke");
@@ -23363,7 +23363,7 @@ async function run() {
   return main(
     appId,
     privateKey,
-    enterpriseSlug,
+    enterprise,
     owner,
     repositories,
     permissions,

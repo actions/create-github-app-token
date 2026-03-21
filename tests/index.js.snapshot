@@ -35,7 +35,7 @@ GET /enterprises/test-enterprise/installation
 `;
 
 exports[`main-enterprise-mutual-exclusivity-owner.test.js > stderr 1`] = `
-Error: Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs
+Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
     at main (file://<cwd>/lib/main.js:<line>:<column>)
     at run (file://<cwd>/main.js:<line>:<column>)
     at file://<cwd>/main.js:<line>:<column>
@@ -45,7 +45,7 @@ Error: Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs
 `;
 
 exports[`main-enterprise-mutual-exclusivity-repositories.test.js > stderr 1`] = `
-Error: Cannot use 'enterprise-slug' input with 'owner' or 'repositories' inputs
+Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
     at main (file://<cwd>/lib/main.js:<line>:<column>)
     at run (file://<cwd>/main.js:<line>:<column>)
     at file://<cwd>/main.js:<line>:<column>

@@ -1,8 +1,8 @@
 import { test } from "./main.js";
 
-// Verify `main` successfully obtains a token when only the `enterprise-slug` input is set.
+// Verify `main` successfully obtains a token when only the `enterprise` input is set.
 await test((mockPool) => {
-  process.env["INPUT_ENTERPRISE-SLUG"] = "test-enterprise";
+  process.env.INPUT_ENTERPRISE = "test-enterprise";
   delete process.env.INPUT_OWNER;
   delete process.env.INPUT_REPOSITORIES;
 

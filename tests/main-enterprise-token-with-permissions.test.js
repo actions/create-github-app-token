@@ -2,7 +2,7 @@ import { test } from "./main.js";
 
 // Verify `main` successfully generates enterprise token with specific permissions.
 await test((mockPool) => {
-  process.env["INPUT_ENTERPRISE-SLUG"] = "test-enterprise";
+  process.env.INPUT_ENTERPRISE = "test-enterprise";
   delete process.env.INPUT_OWNER;
   delete process.env.INPUT_REPOSITORIES;
   process.env["INPUT_PERMISSION-ENTERPRISE-ORGANIZATIONS"] = "read";
