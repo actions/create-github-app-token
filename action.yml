@@ -31,6 +31,10 @@ inputs:
     description: "The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts. Can be set to 'read' or 'write'."
   permission-administration:
     description: "The level of permission to grant the access token for repository creation, deletion, settings, teams, and collaborators creation. Can be set to 'read' or 'write'."
+  permission-artifact-metadata:
+    description: "The level of permission to grant the access token to create and retrieve build artifact metadata records. Can be set to 'read' or 'write'."
+  permission-attestations:
+    description: "The level of permission to create and retrieve the access token for repository attestations. Can be set to 'read' or 'write'."
   permission-checks:
     description: "The level of permission to grant the access token for checks on code. Can be set to 'read' or 'write'."
   permission-codespaces:
@@ -43,6 +47,8 @@ inputs:
     description: "The level of permission to grant the access token to manage Dependabot secrets. Can be set to 'read' or 'write'."
   permission-deployments:
     description: "The level of permission to grant the access token for deployments and deployment statuses. Can be set to 'read' or 'write'."
+  permission-discussions:
+    description: "The level of permission to grant the access token for discussions and related comments and labels. Can be set to 'read' or 'write'."
   permission-email-addresses:
     description: "The level of permission to grant the access token to manage the email addresses belonging to a user. Can be set to 'read' or 'write'."
   permission-enterprise-custom-properties-for-organizations:
@@ -61,6 +67,8 @@ inputs:
     description: "The level of permission to grant the access token for issues and related comments, assignees, labels, and milestones. Can be set to 'read' or 'write'."
   permission-members:
     description: "The level of permission to grant the access token for organization teams and members. Can be set to 'read' or 'write'."
+  permission-merge-queues:
+    description: "The level of permission to grant the access token to manage the merge queues for a repository. Can be set to 'read' or 'write'."
   permission-metadata:
     description: "The level of permission to grant the access token to search repositories, list collaborators, and access repository metadata. Can be set to 'read' or 'write'."
   permission-organization-administration:
