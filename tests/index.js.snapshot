@@ -2,7 +2,7 @@ exports[`action-deprecated-inputs.test.js > stdout 1`] = `
 app-id — Use 'client-id' instead.
 `;
 
-exports[`main-client-id.test.js > stdout 1`] = `
+exports[`main-app-id-fallback.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
 

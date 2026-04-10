@@ -9,7 +9,7 @@ export const DEFAULT_ENV = {
   // https://docs.github.com/actions/creating-actions/metadata-syntax-for-github-actions#example-specifying-inputs
   "INPUT_GITHUB-API-URL": "https://api.github.com",
   "INPUT_SKIP-TOKEN-REVOKE": "false",
-  "INPUT_APP-ID": "123456",
+  "INPUT_CLIENT-ID": "Iv1.0123456789abcdef",
   // This key is invalidated. It’s from https://github.com/octokit/auth-app.js/issues/465#issuecomment-1564998327.
   "INPUT_PRIVATE-KEY": `-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA280nfuUM9w00Ib9E2rvZJ6Qu3Ua3IqR34ZlK53vn/Iobn2EL
