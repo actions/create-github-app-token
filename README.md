@@ -318,18 +318,12 @@ If you set `HTTP_PROXY` or `HTTPS_PROXY`, also set `NODE_USE_ENV_PROXY: "1"` on 
 
 ## Inputs
 
-### `client-id`
+### `client-id` or `app-id`
 
-**Optional:** GitHub App Client ID. This is the recommended input.
+**Required:** GitHub App Client ID.
 
-### `app-id`
-
-**Optional:** GitHub App ID.
-
-> [!WARNING]
-> `app-id` is deprecated. Use `client-id` instead.
-
-You must set either `client-id` or `app-id`. If both are set, `client-id` takes precedence.
+> [!NOTE]
+> The legacy `app-id` input is also accepted, but `client-id` is recommended. If both are set, `client-id` takes precedence.
 
 ### `private-key`
 
