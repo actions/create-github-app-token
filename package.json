@@ -22,7 +22,7 @@
     "p-retry": "^8.0.0"
   },
   "devDependencies": {
-    "@octokit/openapi": "^21.0.0",
+    "@octokit/openapi": "^22.0.0",
     "c8": "^11.0.0",
     "esbuild": "^0.27.4",
     "open-cli": "^9.0.0",
