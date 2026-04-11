@@ -2,37 +2,41 @@
   "name": "create-github-app-token",
   "private": true,
   "type": "module",
-  "version": "2.0.6",
+  "version": "3.1.0",
   "description": "GitHub Action for creating a GitHub App Installation Access Token",
+  "engines": {
+    "node": ">=24.4.0"
+  },
+  "packageManager": "npm@10.9.4",
   "scripts": {
-    "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --target=node20.0.0 --packages=bundle",
-    "test": "c8 --100 ava tests/index.js",
+    "build": "esbuild main.js post.js --bundle --outdir=dist --out-extension:.js=.cjs --platform=node --packages=bundle",
+    "test": "c8 --100 node --test tests/index.js",
     "coverage": "c8 report --reporter html",
     "postcoverage": "open-cli coverage/index.html"
   },
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.11.1",
-    "@octokit/auth-app": "^7.2.1",
-    "@octokit/request": "^9.2.2",
-    "p-retry": "^6.2.1",
-    "undici": "^7.8.0"
+    "@actions/core": "^3.0.0",
+    "@octokit/auth-app": "^8.2.0",
+    "@octokit/request": "^10.0.8",
+    "p-retry": "^8.0.0"
   },
   "devDependencies": {
-    "@octokit/openapi": "^19.1.0",
-    "@sinonjs/fake-timers": "^14.0.0",
-    "ava": "^6.3.0",
-    "c8": "^10.1.3",
-    "dotenv": "^16.5.0",
-    "esbuild": "^0.25.5",
-    "execa": "^9.6.0",
-    "open-cli": "^8.0.0",
-    "yaml": "^2.8.0"
+    "@octokit/openapi": "^22.0.0",
+    "c8": "^11.0.0",
+    "esbuild": "^0.27.4",
+    "open-cli": "^9.0.0",
+    "undici": "^7.24.6",
+    "yaml": "^2.8.3"
   },
   "release": {
     "branches": [
       "+([0-9]).x",
-      "main"
+      "main",
+      {
+        "name": "beta",
+        "prerelease": true
+      }
     ],
     "plugins": [
       "@semantic-release/commit-analyzer",
