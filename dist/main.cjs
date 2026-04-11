@@ -22964,30 +22964,37 @@ var isError = (value) => objectToString.call(value) === "[object Error]";
 var errorMessages = /* @__PURE__ */ new Set([
   "network error",
   // Chrome
-  "Failed to fetch",
-  // Chrome
   "NetworkError when attempting to fetch resource.",
   // Firefox
   "The Internet connection appears to be offline.",
   // Safari 16
-  "Load failed",
-  // Safari 17+
   "Network request failed",
   // `cross-fetch`
   "fetch failed",
   // Undici (Node.js)
-  "terminated"
+  "terminated",
   // Undici (Node.js)
+  " A network error occurred.",
+  // Bun (WebKit)
+  "Network connection lost"
+  // Cloudflare Workers (fetch)
 ]);
 function isNetworkError(error2) {
   const isValid = error2 && isError(error2) && error2.name === "TypeError" && typeof error2.message === "string";
   if (!isValid) {
     return false;
   }
-  if (error2.message === "Load failed") {
-    return error2.stack === void 0;
+  const { message, stack } = error2;
+  if (message === "Load failed") {
+    return stack === void 0 || "__sentry_captured__" in error2;
   }
-  return errorMessages.has(error2.message);
+  if (message.startsWith("error sending request for url")) {
+    return true;
+  }
+  if (message === "Failed to fetch" || message.startsWith("Failed to fetch (") && message.endsWith(")")) {
+    return true;
+  }
+  return errorMessages.has(message);
 }
 
 // node_modules/p-retry/index.js
@@ -23017,6 +23024,14 @@ function validateNumberOption(name, value, { min = 0, allowInfinity = false } = 
     throw new TypeError(`Expected \`${name}\` to be \u2265 ${min}.`);
   }
 }
+function validateFunctionOption(name, value) {
+  if (value === void 0) {
+    return;
+  }
+  if (typeof value !== "function") {
+    throw new TypeError(`Expected \`${name}\` to be a function.`);
+  }
+}
 var AbortError = class extends Error {
   constructor(message) {
     super();
@@ -23044,6 +23059,26 @@ function calculateRemainingTime(start, max) {
   }
   return max - (performance.now() - start);
 }
+async function delayForRetry(delay, options) {
+  if (delay <= 0) {
+    return;
+  }
+  await new Promise((resolve2, reject) => {
+    const onAbort = () => {
+      clearTimeout(timeoutToken);
+      options.signal?.removeEventListener("abort", onAbort);
+      reject(options.signal.reason);
+    };
+    const timeoutToken = setTimeout(() => {
+      options.signal?.removeEventListener("abort", onAbort);
+      resolve2();
+    }, delay);
+    if (options.unref) {
+      timeoutToken.unref?.();
+    }
+    options.signal?.addEventListener("abort", onAbort, { once: true });
+  });
+}
 async function onAttemptFailure({ error: error2, attemptNumber, retriesConsumed, startTime, options }) {
   const normalizedError = error2 instanceof Error ? error2 : new TypeError(`Non-error was thrown: "${error2}". You should only throw errors.`);
   if (normalizedError instanceof AbortError) {
@@ -23051,55 +23086,60 @@ async function onAttemptFailure({ error: error2, attemptNumber, retriesConsumed,
   }
   const retriesLeft = Number.isFinite(options.retries) ? Math.max(0, options.retries - retriesConsumed) : options.retries;
   const maxRetryTime = options.maxRetryTime ?? Number.POSITIVE_INFINITY;
+  const delayTime = calculateDelay(retriesConsumed, options);
+  const remainingTimeBeforeCallbacks = calculateRemainingTime(startTime, maxRetryTime);
+  if (remainingTimeBeforeCallbacks <= 0) {
+    const context2 = Object.freeze({
+      error: normalizedError,
+      attemptNumber,
+      retriesLeft,
+      retriesConsumed,
+      retryDelay: 0
+    });
+    await options.onFailedAttempt(context2);
+    throw normalizedError;
+  }
+  const consumeRetryContext = Object.freeze({
+    error: normalizedError,
+    attemptNumber,
+    retriesLeft,
+    retriesConsumed,
+    retryDelay: retriesLeft > 0 ? delayTime : 0
+  });
+  const consumeRetry = await options.shouldConsumeRetry(consumeRetryContext);
+  const effectiveDelay = consumeRetry && retriesLeft > 0 ? delayTime : 0;
   const context = Object.freeze({
     error: normalizedError,
     attemptNumber,
     retriesLeft,
-    retriesConsumed
+    retriesConsumed,
+    retryDelay: effectiveDelay
   });
   await options.onFailedAttempt(context);
   if (calculateRemainingTime(startTime, maxRetryTime) <= 0) {
     throw normalizedError;
   }
-  const consumeRetry = await options.shouldConsumeRetry(context);
   const remainingTime = calculateRemainingTime(startTime, maxRetryTime);
   if (remainingTime <= 0 || retriesLeft <= 0) {
     throw normalizedError;
   }
   if (normalizedError instanceof TypeError && !isNetworkError(normalizedError)) {
-    if (consumeRetry) {
-      throw normalizedError;
-    }
-    options.signal?.throwIfAborted();
-    return false;
+    throw normalizedError;
   }
   if (!await options.shouldRetry(context)) {
+    throw normalizedError;
+  }
+  const remainingTimeAfterShouldRetry = calculateRemainingTime(startTime, maxRetryTime);
+  if (remainingTimeAfterShouldRetry <= 0) {
     throw normalizedError;
   }
   if (!consumeRetry) {
     options.signal?.throwIfAborted();
     return false;
   }
-  const delayTime = calculateDelay(retriesConsumed, options);
-  const finalDelay = Math.min(delayTime, remainingTime);
+  const finalDelay = Math.min(effectiveDelay, remainingTimeAfterShouldRetry);
   options.signal?.throwIfAborted();
-  if (finalDelay > 0) {
-    await new Promise((resolve2, reject) => {
-      const onAbort = () => {
-        clearTimeout(timeoutToken);
-        options.signal?.removeEventListener("abort", onAbort);
-        reject(options.signal.reason);
-      };
-      const timeoutToken = setTimeout(() => {
-        options.signal?.removeEventListener("abort", onAbort);
-        resolve2();
-      }, finalDelay);
-      if (options.unref) {
-        timeoutToken.unref?.();
-      }
-      options.signal?.addEventListener("abort", onAbort, { once: true });
-    });
-  }
+  await delayForRetry(finalDelay, options);
   options.signal?.throwIfAborted();
   return true;
 }
@@ -23119,6 +23159,9 @@ async function pRetry(input, options = {}) {
   };
   options.shouldRetry ??= () => true;
   options.shouldConsumeRetry ??= () => true;
+  validateFunctionOption("onFailedAttempt", options.onFailedAttempt);
+  validateFunctionOption("shouldRetry", options.shouldRetry);
+  validateFunctionOption("shouldConsumeRetry", options.shouldConsumeRetry);
   validateNumberOption("factor", options.factor, { min: 0, allowInfinity: false });
   validateNumberOption("minTimeout", options.minTimeout, { min: 0, allowInfinity: false });
   validateNumberOption("maxTimeout", options.maxTimeout, { min: 0, allowInfinity: true });
