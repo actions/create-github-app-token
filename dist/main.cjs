@@ -23352,7 +23352,7 @@ async function run() {
   ensureNativeProxySupport();
   const clientId = getInput("client-id") || getInput("app-id");
   if (!clientId) {
-    throw new Error("Either 'client-id' or 'app-id' input must be set");
+    throw new Error("The 'client-id' (or deprecated 'app-id') input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
   }
   const privateKey = getInput("private-key");
   const owner = getInput("owner");

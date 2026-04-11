@@ -56,11 +56,11 @@ POST /api/v3/app/installations/123456/access_tokens
 `;
 
 exports[`main-missing-client-and-app-id.test.js > stderr 1`] = `
-Either 'client-id' or 'app-id' input must be set
+The 'client-id' (or deprecated 'app-id') input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
 `;
 
 exports[`main-missing-client-and-app-id.test.js > stdout 1`] = `
-::error::Either 'client-id' or 'app-id' input must be set
+::error::The 'client-id' (or deprecated 'app-id') input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
 `;
 
 exports[`main-missing-owner.test.js > stderr 1`] = `
