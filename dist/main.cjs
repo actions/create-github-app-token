@@ -23153,7 +23153,7 @@ async function pRetry(input, options = {}) {
 }
 
 // lib/main.js
-async function main(appId, privateKey, owner, repositories, permissions, core, createAppAuth2, request2, skipTokenRevoke) {
+async function main(clientId, privateKey, owner, repositories, permissions, core, createAppAuth2, request2, skipTokenRevoke) {
   let parsedOwner = "";
   let parsedRepositoryNames = [];
   if (!owner && repositories.length === 0) {
@@ -23188,7 +23188,7 @@ async function main(appId, privateKey, owner, repositories, permissions, core, c
     );
   }
   const auth5 = createAppAuth2({
-    appId,
+    appId: clientId,
     privateKey,
     request: request2
   });
@@ -23307,14 +23307,17 @@ if (!process.env.GITHUB_REPOSITORY_OWNER) {
 }
 async function run() {
   ensureNativeProxySupport();
-  const appId = getInput("app-id");
+  const clientId = getInput("client-id") || getInput("app-id");
+  if (!clientId) {
+    throw new Error("Either 'client-id' or 'app-id' input must be set");
+  }
   const privateKey = getInput("private-key");
   const owner = getInput("owner");
   const repositories = getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
   const skipTokenRevoke = getBooleanInput("skip-token-revoke");
   const permissions = getPermissionsFromInputs(process.env);
   return main(
-    appId,
+    clientId,
     privateKey,
     owner,
     repositories,
