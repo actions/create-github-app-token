@@ -20,7 +20,7 @@ async function run() {
 
   const clientId = core.getInput("client-id") || core.getInput("app-id");
   if (!clientId) {
-    throw new Error("The 'client-id' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
+    throw new Error("The 'client-id' (or deprecated 'app-id') input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
   }
   const privateKey = core.getInput("private-key");
   const owner = core.getInput("owner");
