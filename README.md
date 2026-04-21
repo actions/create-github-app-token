@@ -9,8 +9,8 @@ GitHub Action for creating a GitHub App installation access token.
 In order to use this action, you need to:
 
 1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app).
-2. [Store the App's Client ID in your repository environment variables](https://docs.github.com/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables#defining-configuration-variables-for-multiple-workflows) (example: `CLIENT_ID`).
-3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets?tool=webui#creating-secrets-for-a-repository) (example: `PRIVATE_KEY`).
+2. [Store the App's Client ID in your repository environment variables](https://docs.github.com/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_CLIENT_ID`).
+3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets?tool=webui#creating-secrets-for-a-repository) (example: `APP_PRIVATE_KEY`).
 
 > [!IMPORTANT]  
 > An installation access token expires after 1 hour. Please [see this comment](https://github.com/actions/create-github-app-token/issues/121#issuecomment-2043214796) for alternative approaches if you have long-running processes.
