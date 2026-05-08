@@ -1,6 +1,6 @@
 import { install, MockAgent, setGlobalDispatcher } from "undici";
 
-// Keep fetch globals paired with the npm Undici instance that provides MockAgent.
+// Ensure MockAgent intercepts requests made through global fetch.
 install();
 
 export function createMockAgent(options) {
