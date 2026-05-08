@@ -5,6 +5,7 @@ install();
 
 export function createMockAgent(options) {
   const mockAgent = new MockAgent(options);
+  mockAgent.disableNetConnect();
   setGlobalDispatcher(mockAgent);
 
   return mockAgent;

@@ -51,7 +51,6 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const baseUrl = new URL(env["INPUT_GITHUB-API-URL"]);
   const basePath = baseUrl.pathname === "/" ? "" : baseUrl.pathname;
   const mockAgent = createMockAgent({ enableCallHistory: true });
-  mockAgent.disableNetConnect();
   const mockPool = mockAgent.get(baseUrl.origin);
 
   // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
