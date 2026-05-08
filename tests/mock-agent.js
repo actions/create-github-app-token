@@ -1,7 +1,7 @@
-import { fetch as undiciFetch, MockAgent, setGlobalDispatcher } from "undici";
+import { install, MockAgent, setGlobalDispatcher } from "undici";
 
-// Keep npm Undici's fetch paired with npm Undici's MockAgent on Node 24.
-globalThis.fetch = undiciFetch;
+// Keep fetch globals paired with the npm Undici instance that provides MockAgent.
+install();
 
 export function createMockAgent(options) {
   const mockAgent = new MockAgent(options);
