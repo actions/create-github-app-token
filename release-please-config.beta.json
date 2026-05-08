@@ -4,6 +4,7 @@
     ".": {
       "prerelease": true,
       "prerelease-type": "beta",
+      "include-component-in-tag": false,
       "release-type": "node",
       "versioning": "prerelease"
     }
