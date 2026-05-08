@@ -22,7 +22,13 @@ function normalizeStderr(stderr) {
 const files = readdirSync("tests");
 
 // Files to ignore
-const ignore = ["index.js", "index.js.snapshot", "main.js", "README.md"];
+const ignore = [
+  "index.js",
+  "index.js.snapshot",
+  "main.js",
+  "mock-agent.js",
+  "README.md",
+];
 
 const testFiles = files.filter((file) => !ignore.includes(file)).sort();
 

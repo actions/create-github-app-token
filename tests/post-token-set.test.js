@@ -1,4 +1,4 @@
-import { MockAgent, setGlobalDispatcher } from "undici";
+import { createMockAgent } from "./mock-agent.js";
 
 // state variables are set as environment variables with the prefix STATE_
 // https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#sending-values-to-the-pre-and-post-actions
@@ -12,9 +12,7 @@ process.env["INPUT_SKIP-TOKEN-REVOKE"] = "false";
 // 1 hour in the future, not expired
 process.env.STATE_expiresAt = new Date(Date.now() + 1000 * 60 * 60).toISOString();
 
-const mockAgent = new MockAgent();
-
-setGlobalDispatcher(mockAgent);
+const mockAgent = createMockAgent();
 
 // Provide the base url to the request
 const mockPool = mockAgent.get("https://api.github.com");
