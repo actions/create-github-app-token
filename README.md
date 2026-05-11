@@ -173,10 +173,10 @@ jobs:
           body: "Hello, World!"
 ```
 
-The `repositories` input also accepts entries with an owner, which is useful when passing `${{ github.repository }}`:
+You can include the current repository in the list with `${{ github.repository }}`:
 
 ```yaml
-repositories: ${{ github.repository }},generic-submodule
+repositories: ${{ github.repository }},repo2
 ```
 
 ### Create a token for all repositories in another owner's installation
