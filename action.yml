@@ -19,7 +19,7 @@ inputs:
     description: "The owner of the GitHub App installation (defaults to current repository owner)"
     required: false
   repositories:
-    description: "Comma or newline-separated list of repositories to grant the token access to (defaults to current repository if owner is unset)"
+    description: "Comma or newline-separated list of repositories to grant the token access to, such as 'repo' or 'owner/repo' (defaults to current repository if owner is unset)"
     required: false
   enterprise:
     description: "The slug of the enterprise account where the GitHub App is installed (cannot be used with 'owner' or 'repositories')"
