@@ -352,6 +352,25 @@ POST /app/installations/123456/access_tokens
 {"repositories":["network-repo"]}
 `;
 
+exports[`main-token-get-owner-set-repo-non-current-full-name.test.js > stdout 1`] = `
+Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:
+- actions/toolkit
+- actions/checkout
+::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=installation-id::123456
+
+::set-output name=app-slug::github-actions
+::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+::save-state name=expiresAt::2016-07-11T22:14:10Z
+--- REQUESTS ---
+GET /repos/actions/toolkit/installation
+POST /app/installations/123456/access_tokens
+{"repositories":["toolkit","checkout"]}
+`;
+
 exports[`main-token-get-owner-set-repo-owner-mismatch.test.js > stderr 1`] = `
 Error: Repository 'octocat/hello-world' includes owner 'octocat', which does not match the resolved owner 'actions'.
     at normalizeRepositoryTarget (file://<cwd>/lib/main.js:<line>:<column>)

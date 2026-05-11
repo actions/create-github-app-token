@@ -60,8 +60,13 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const mockAppSlug = "github-actions";
   const owner = env.INPUT_OWNER ?? env.GITHUB_REPOSITORY_OWNER;
   const currentRepoName = env.GITHUB_REPOSITORY.split("/")[1];
+  const firstRepositoryInput =
+    (env.INPUT_REPOSITORIES ?? currentRepoName)
+      .split(/[\n,]+/)
+      .map((repository) => repository.trim())
+      .find(Boolean) ?? currentRepoName;
   const repo = encodeURIComponent(
-    (env.INPUT_REPOSITORIES ?? currentRepoName).split(",")[0]
+    firstRepositoryInput.split("/").pop() || firstRepositoryInput
   );
 
   mockPool
