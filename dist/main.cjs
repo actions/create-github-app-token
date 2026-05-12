@@ -23241,23 +23241,51 @@ function resolveInstallationTarget(enterprise, owner, repositories, core) {
     );
     return { type: "owner", owner };
   }
-  const parsedOwner = owner || String(process.env.GITHUB_REPOSITORY_OWNER);
+  const target = normalizeRepositoryTarget(owner, repositories);
   if (!owner) {
     core.info(
-      `No 'owner' input provided. Using default owner '${parsedOwner}' to create token for the following repositories:${repositories.map((repo) => `
-- ${parsedOwner}/${repo}`).join("")}`
+      `No 'owner' input provided. Using default owner '${target.owner}' to create token for the following repositories:${target.repositories.map((repo) => `
+- ${target.owner}/${repo}`).join("")}`
     );
   } else {
     core.info(
-      `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:${repositories.map((repo) => `
-- ${parsedOwner}/${repo}`).join("")}`
+      `Inputs 'owner' and 'repositories' are set. Creating token for the following repositories:${target.repositories.map((repo) => `
+- ${target.owner}/${repo}`).join("")}`
     );
   }
   return {
     type: "repository",
-    owner: parsedOwner,
-    repositories
+    owner: target.owner,
+    repositories: target.repositories
   };
+}
+function normalizeRepositoryTarget(owner, repositories) {
+  const parsedOwner = owner || String(process.env.GITHUB_REPOSITORY_OWNER);
+  const parsedRepositories = repositories.map(parseRepositoryInput);
+  const mismatchedRepository = parsedRepositories.find(
+    (repository) => repository.owner && repository.owner.toLowerCase() !== parsedOwner.toLowerCase()
+  );
+  if (mismatchedRepository) {
+    throw new Error(
+      `Repository '${mismatchedRepository.input}' includes owner '${mismatchedRepository.owner}', which does not match the resolved owner '${parsedOwner}'.`
+    );
+  }
+  return {
+    owner: parsedOwner,
+    repositories: parsedRepositories.map((repository) => repository.name)
+  };
+}
+function parseRepositoryInput(input) {
+  const parts = input.split("/");
+  if (parts.length === 1 && parts[0]) {
+    return { input, owner: "", name: parts[0] };
+  }
+  if (parts.length === 2 && parts[0] && parts[1]) {
+    return { input, owner: parts[0], name: parts[1] };
+  }
+  throw new Error(
+    `Invalid repository '${input}'. Expected 'repository' or 'owner/repository'.`
+  );
 }
 function getTokenRetryDescription(target) {
   switch (target.type) {
@@ -23397,6 +23425,9 @@ async function run() {
     throw new Error("The 'client-id' (or deprecated 'app-id') input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
   }
   const privateKey = getInput("private-key");
+  if (!privateKey) {
+    throw new Error("The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
+  }
   const enterprise = getInput("enterprise");
   const owner = getInput("owner");
   const repositories = getInput("repositories").split(/[\n,]+/).map((s) => s.trim()).filter((x) => x !== "");
