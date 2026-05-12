@@ -64,7 +64,7 @@ jobs:
           github_token: ${{ steps.app-token.outputs.token }}
 ```
 
-### Create a git committer string for an app installation
+### Create a Git committer string for an app installation
 
 ```yaml
 on: [pull_request]
@@ -89,7 +89,7 @@ jobs:
       - run: echo "committer string is ${{ steps.committer.outputs.string }}"
 ```
 
-### Configure git CLI for an app's bot user
+### Configure Git CLI for an app's bot user
 
 ```yaml
 on: [pull_request]
@@ -116,7 +116,7 @@ jobs:
           gh auth setup-git
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-      # git commands like commit and push work using the bot user
+      # Git commands like commit and push work using the bot user
       - run: |
           git add .
           git commit -m "Auto-generated changes"
