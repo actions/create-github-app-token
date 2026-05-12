@@ -165,6 +165,14 @@ exports[`main-missing-owner.test.js > stderr 1`] = `
 GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'
 `;
 
+exports[`main-missing-private-key.test.js > stderr 1`] = `
+The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
+`;
+
+exports[`main-missing-private-key.test.js > stdout 1`] = `
+::error::The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
+`;
+
 exports[`main-missing-repository.test.js > stderr 1`] = `
 GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'
 `;

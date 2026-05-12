@@ -23,6 +23,9 @@ async function run() {
     throw new Error("The 'client-id' (or deprecated 'app-id') input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
   }
   const privateKey = core.getInput("private-key");
+  if (!privateKey) {
+    throw new Error("The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
+  }
   const enterprise = core.getInput("enterprise");
   const owner = core.getInput("owner");
   const repositories = core
