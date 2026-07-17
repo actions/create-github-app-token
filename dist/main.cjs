@@ -22943,19 +22943,33 @@ function createAppAuth(options) {
 
 // lib/get-permissions-from-inputs.js
 function getPermissionsFromInputs(env) {
-  return Object.entries(env).reduce((permissions, [key, value]) => {
-    if (!key.startsWith("INPUT_PERMISSION-")) return permissions;
-    if (!value) return permissions;
+  const permissions = parsePermissionsInput(env.INPUT_PERMISSIONS);
+  return Object.entries(env).reduce((permissions2, [key, value]) => {
+    if (!key.startsWith("INPUT_PERMISSION-")) return permissions2;
+    if (!value) return permissions2;
     const permission = key.slice("INPUT_PERMISSION-".length).toLowerCase().replaceAll(/-/g, "_");
-    if (permissions === void 0) {
-      return { [permission]: value };
-    }
     return {
-      // @ts-expect-error - needs to be typed correctly
-      ...permissions,
+      ...permissions2,
       [permission]: value
     };
-  }, void 0);
+  }, permissions);
+}
+function parsePermissionsInput(input) {
+  if (!input) return void 0;
+  return input.split(",").reduce((permissions, pair) => {
+    const separatorIndex = pair.indexOf(":");
+    const name = pair.slice(0, separatorIndex).trim();
+    const level = pair.slice(separatorIndex + 1).trim();
+    if (separatorIndex === -1 || !name || !level) {
+      throw new Error(
+        `Invalid permission '${pair.trim()}'. Expected 'permission-name: access-level'.`
+      );
+    }
+    return {
+      ...permissions,
+      [name.replaceAll("-", "_")]: level
+    };
+  }, {});
 }
 
 // node_modules/is-network-error/index.js
