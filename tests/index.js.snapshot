@@ -153,6 +153,49 @@ POST /app/installations/123456/access_tokens
 {"permissions":{"enterprise_custom_properties_for_organizations":"read"}}
 `;
 
+exports[`main-jwt-and-private-key-set.test.js > stderr 1`] = `
+The 'private-key' and 'jwt' inputs are mutually exclusive, set only one of them.
+`;
+
+exports[`main-jwt-and-private-key-set.test.js > stdout 1`] = `
+::error::The 'private-key' and 'jwt' inputs are mutually exclusive, set only one of them.
+`;
+
+exports[`main-jwt-invalid.test.js > stderr 1`] = `
+The 'jwt' input could not be decoded as a JSON Web Token.
+`;
+
+exports[`main-jwt-invalid.test.js > stdout 1`] = `
+Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+::error::The 'jwt' input could not be decoded as a JSON Web Token.
+`;
+
+exports[`main-jwt-missing-expiration.test.js > stderr 1`] = `
+The 'jwt' input has no numeric 'exp' claim.
+`;
+
+exports[`main-jwt-missing-expiration.test.js > stdout 1`] = `
+Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+::error::The 'jwt' input has no numeric 'exp' claim.
+`;
+
+exports[`main-jwt.test.js > stdout 1`] = `
+Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=installation-id::123456
+
+::set-output name=app-slug::github-actions
+::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+::save-state name=expiresAt::2016-07-11T22:14:10Z
+--- REQUESTS ---
+GET /repos/actions/create-github-app-token/installation
+POST /app/installations/123456/access_tokens
+{"repositories":["create-github-app-token"]}
+`;
+
 exports[`main-missing-client-and-app-id.test.js > stderr 1`] = `
 The 'client-id' (or deprecated 'app-id') input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
 `;
@@ -166,11 +209,11 @@ GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'
 `;
 
 exports[`main-missing-private-key.test.js > stderr 1`] = `
-The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
+Either the 'private-key' or the 'jwt' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
 `;
 
 exports[`main-missing-private-key.test.js > stdout 1`] = `
-::error::The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
+::error::Either the 'private-key' or the 'jwt' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
 `;
 
 exports[`main-missing-repository.test.js > stderr 1`] = `

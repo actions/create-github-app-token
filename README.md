@@ -357,7 +357,7 @@ If you set `HTTP_PROXY` or `HTTPS_PROXY`, also set `NODE_USE_ENV_PROXY: "1"` on 
 
 ### `private-key`
 
-**Required:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines.
+**Required, unless `jwt` is set:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines.
 
 Some other actions may require the private key to be Base64 encoded. To avoid recreating a new secret, it can be decoded on the fly, but it needs to be managed securely. Here is an example of how this can be achieved:
 
@@ -376,6 +376,31 @@ steps:
       client-id: ${{ vars.APP_CLIENT_ID }}
       private-key: ${{ steps.decode.outputs.private-key }}
 ```
+
+### `jwt`
+
+**Required, unless `private-key` is set:** A GitHub App JSON Web Token (JWT), signed outside of this action. Use it when the private key must never enter the workflow, for example when it is held in a hardware security module or a secret store that exposes a signing endpoint instead of the key itself.
+
+The action does not verify the token, it passes it to GitHub as-is, and reads the `exp` claim to know when it expires. The token must be signed as [GitHub documents](https://docs.github.com/apps/creating-github-apps/authenticating-with-a-github-app/generating-a-json-web-token-jwt-for-a-github-app), and `client-id` must still be set so the action can identify the app.
+
+```yaml
+steps:
+  - name: Sign a JWT with the key held in the secret store
+    id: sign
+    run: |
+      jwt=$(sign-jwt --key-id "$KEY_ID" --issuer "${{ vars.APP_CLIENT_ID }}")
+      echo "::add-mask::$jwt"
+      echo "jwt=$jwt" >> "$GITHUB_OUTPUT"
+  - name: Generate GitHub App Token
+    id: app-token
+    uses: actions/create-github-app-token@v3
+    with:
+      client-id: ${{ vars.APP_CLIENT_ID }}
+      jwt: ${{ steps.sign.outputs.jwt }}
+```
+
+> [!NOTE]
+> `jwt` is mutually exclusive with `private-key`. A JWT is valid for at most 10 minutes and this action cannot renew one, so sign it in the step right before this one.
 
 ### `owner`
 

@@ -55,6 +55,12 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
 
+  // Unlike a JWT signed from `private-key`, one passed in through the `jwt` input
+  // is idempotent, so assert that it is sent as-is.
+  const appAuthorization = env.INPUT_JWT
+    ? { authorization: `bearer ${env.INPUT_JWT}` }
+    : {};
+
   // Mock installation ID and app slug request
   const mockInstallationId = "123456";
   const mockAppSlug = "github-actions";
@@ -76,7 +82,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
       headers: {
         accept: "application/vnd.github.v3+json",
         "user-agent": "actions/create-github-app-token",
-        // Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
+        ...appAuthorization,
       },
     })
     .reply(
@@ -97,7 +103,7 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
       headers: {
         accept: "application/vnd.github.v3+json",
         "user-agent": "actions/create-github-app-token",
-        // Note: Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
+        ...appAuthorization,
       },
     })
     .reply(

@@ -13,8 +13,11 @@ inputs:
     required: false
     deprecationMessage: "Use 'client-id' instead."
   private-key:
-    description: "GitHub App private key"
-    required: true
+    description: "GitHub App private key (mutually exclusive with 'jwt')"
+    required: false
+  jwt:
+    description: "A GitHub App JSON Web Token (JWT) signed elsewhere, for when the private key must not enter the workflow (mutually exclusive with 'private-key')"
+    required: false
   owner:
     description: "The owner of the GitHub App installation (defaults to current repository owner)"
     required: false
