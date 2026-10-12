@@ -74,13 +74,7 @@ null
 `;
 
 exports[`main-enterprise-installation-not-found.test.js > stderr 1`] = `
-Error: No enterprise installation found matching the enterprise slug "test-enterprise".
-    at getTokenFromEnterprise (file://<cwd>/lib/main.js:<line>:<column>)
-    at process.processTicksAndRejections (node:internal/process/task_queues:<line>:<column>)
-    at async pRetry (file://<cwd>/node_modules/p-retry/index.js:<line>:<column>)
-    at async main (file://<cwd>/lib/main.js:<line>:<column>)
-    at async test (file://<cwd>/tests/main.js:<line>:<column>)
-    at async file://<cwd>/tests/main-enterprise-installation-not-found.test.js:<line>:<column>
+[Error: No enterprise installation found matching the enterprise slug "test-enterprise".]
 `;
 
 exports[`main-enterprise-installation-not-found.test.js > stdout 1`] = `
@@ -92,13 +86,7 @@ GET /enterprises/test-enterprise/installation
 `;
 
 exports[`main-enterprise-mutual-exclusivity-owner.test.js > stderr 1`] = `
-Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
-    at main (file://<cwd>/lib/main.js:<line>:<column>)
-    at run (file://<cwd>/main.js:<line>:<column>)
-    at file://<cwd>/main.js:<line>:<column>
-    at ModuleJob.run (node:internal/modules/esm/module_job:<line>:<column>)
-    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:<line>:<column>)
-    at async file://<cwd>/tests/main-enterprise-mutual-exclusivity-owner.test.js:<line>:<column>
+[Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs]
 `;
 
 exports[`main-enterprise-mutual-exclusivity-owner.test.js > stdout 1`] = `
@@ -106,13 +94,7 @@ exports[`main-enterprise-mutual-exclusivity-owner.test.js > stdout 1`] = `
 `;
 
 exports[`main-enterprise-mutual-exclusivity-repositories.test.js > stderr 1`] = `
-Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs
-    at main (file://<cwd>/lib/main.js:<line>:<column>)
-    at run (file://<cwd>/main.js:<line>:<column>)
-    at file://<cwd>/main.js:<line>:<column>
-    at ModuleJob.run (node:internal/modules/esm/module_job:<line>:<column>)
-    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:<line>:<column>)
-    at async file://<cwd>/tests/main-enterprise-mutual-exclusivity-repositories.test.js:<line>:<column>
+[Error: Cannot use 'enterprise' input with 'owner' or 'repositories' inputs]
 `;
 
 exports[`main-enterprise-mutual-exclusivity-repositories.test.js > stdout 1`] = `
@@ -227,15 +209,7 @@ POST /app/installations/123456/access_tokens
 `;
 
 exports[`main-token-get-owner-set-client-error.test.js > stderr 1`] = `
-RequestError [HttpError]: Forbidden
-    at fetchWrapper (file://<cwd>/node_modules/@octokit/request/dist-bundle/index.js:<line>:<column>)
-    at process.processTicksAndRejections (node:internal/process/task_queues:<line>:<column>)
-    at async hook (file://<cwd>/node_modules/@octokit/auth-app/dist-node/index.js:<line>:<column>)
-    at async getTokenFromOwner (file://<cwd>/lib/main.js:<line>:<column>)
-    at async pRetry (file://<cwd>/node_modules/p-retry/index.js:<line>:<column>)
-    at async main (file://<cwd>/lib/main.js:<line>:<column>)
-    at async test (file://<cwd>/tests/main.js:<line>:<column>)
-    at async file://<cwd>/tests/main-token-get-owner-set-client-error.test.js:<line>:<column> {
+[RequestError [HttpError]: Forbidden] {
   status: 403,
   request: {
     method: 'GET',
@@ -323,17 +297,7 @@ POST /app/installations/123456/access_tokens
 `;
 
 exports[`main-token-get-owner-set-repo-invalid-format.test.js > stderr 1`] = `
-Error: Invalid repository 'octocat/hello-world/extra'. Expected 'repository' or 'owner/repository'.
-    at parseRepositoryInput (file://<cwd>/lib/main.js:<line>:<column>)
-    at Array.map (<anonymous>)
-    at normalizeRepositoryTarget (file://<cwd>/lib/main.js:<line>:<column>)
-    at resolveInstallationTarget (file://<cwd>/lib/main.js:<line>:<column>)
-    at main (file://<cwd>/lib/main.js:<line>:<column>)
-    at run (file://<cwd>/main.js:<line>:<column>)
-    at file://<cwd>/main.js:<line>:<column>
-    at ModuleJob.run (node:internal/modules/esm/module_job:<line>:<column>)
-    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:<line>:<column>)
-    at async file://<cwd>/tests/main-token-get-owner-set-repo-invalid-format.test.js:<line>:<column>
+[Error: Invalid repository 'octocat/hello-world/extra'. Expected 'repository' or 'owner/repository'.]
 `;
 
 exports[`main-token-get-owner-set-repo-invalid-format.test.js > stdout 1`] = `
@@ -380,15 +344,7 @@ POST /app/installations/123456/access_tokens
 `;
 
 exports[`main-token-get-owner-set-repo-owner-mismatch.test.js > stderr 1`] = `
-Error: Repository 'octocat/hello-world' includes owner 'octocat', which does not match the resolved owner 'actions'.
-    at normalizeRepositoryTarget (file://<cwd>/lib/main.js:<line>:<column>)
-    at resolveInstallationTarget (file://<cwd>/lib/main.js:<line>:<column>)
-    at main (file://<cwd>/lib/main.js:<line>:<column>)
-    at run (file://<cwd>/main.js:<line>:<column>)
-    at file://<cwd>/main.js:<line>:<column>
-    at ModuleJob.run (node:internal/modules/esm/module_job:<line>:<column>)
-    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:<line>:<column>)
-    at async file://<cwd>/tests/main-token-get-owner-set-repo-owner-mismatch.test.js:<line>:<column>
+[Error: Repository 'octocat/hello-world' includes owner 'octocat', which does not match the resolved owner 'actions'.]
 `;
 
 exports[`main-token-get-owner-set-repo-owner-mismatch.test.js > stdout 1`] = `
@@ -490,15 +446,7 @@ POST /app/installations/123456/access_tokens
 `;
 
 exports[`main-token-get-owner-unset-repo-owner-mismatch.test.js > stderr 1`] = `
-Error: Repository 'octocat/hello-world' includes owner 'octocat', which does not match the resolved owner 'actions'.
-    at normalizeRepositoryTarget (file://<cwd>/lib/main.js:<line>:<column>)
-    at resolveInstallationTarget (file://<cwd>/lib/main.js:<line>:<column>)
-    at main (file://<cwd>/lib/main.js:<line>:<column>)
-    at run (file://<cwd>/main.js:<line>:<column>)
-    at file://<cwd>/main.js:<line>:<column>
-    at ModuleJob.run (node:internal/modules/esm/module_job:<line>:<column>)
-    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:<line>:<column>)
-    at async file://<cwd>/tests/main-token-get-owner-unset-repo-owner-mismatch.test.js:<line>:<column>
+[Error: Repository 'octocat/hello-world' includes owner 'octocat', which does not match the resolved owner 'actions'.]
 `;
 
 exports[`main-token-get-owner-unset-repo-owner-mismatch.test.js > stdout 1`] = `

@@ -20,7 +20,7 @@ npm test
 
 ## How the tests work
 
-The output from the tests is captured into a snapshot ([tests/index.js.snapshot](index.js.snapshot)). It includes all requests sent by our scripts to verify it's working correctly and to prevent regressions.
+The output from the tests is captured into a snapshot ([tests/index.js.snapshot](index.js.snapshot)). It includes all requests sent by our scripts to verify it's working correctly and to prevent regressions. Stack traces are omitted, so snapshots don't change when Node.js or dependencies update.
 
 To update snapshots after an intentional change:
 
