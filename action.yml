@@ -44,6 +44,8 @@ inputs:
     description: "The level of permission to create and retrieve the access token for repository attestations. Can be set to 'read' or 'write'."
   permission-checks:
     description: "The level of permission to grant the access token for checks on code. Can be set to 'read' or 'write'."
+  permission-code-quality:
+    description: "The level of permission to grant the access token to view and manage code quality data. Can be set to 'read' or 'write'."
   permission-codespaces:
     description: "The level of permission to grant the access token to create, edit, delete, and list Codespaces. Can be set to 'read' or 'write'."
   permission-contents:
@@ -82,8 +84,10 @@ inputs:
     description: "The level of permission to grant the access token to manage access to an organization. Can be set to 'read' or 'write'."
   permission-organization-announcement-banners:
     description: "The level of permission to grant the access token to view and manage announcement banners for an organization. Can be set to 'read' or 'write'."
+  permission-organization-copilot-agent-settings:
+    description: "The level of permission to grant the access token to view and manage Copilot cloud agent settings for an organization. Can be set to 'read' or 'write'."
   permission-organization-copilot-seat-management:
-    description: "The level of permission to grant the access token for managing access to GitHub Copilot for members of an organization with a Copilot Business subscription. This property is in public preview and is subject to change. Can be set to 'write'."
+    description: "The level of permission to grant the access token for managing access to GitHub Copilot for members of an organization with a Copilot Business subscription. This property is in public preview and is subject to change. Can be set to 'read' or 'write'."
   permission-organization-custom-org-roles:
     description: "The level of permission to grant the access token for custom organization roles management. Can be set to 'read' or 'write'."
   permission-organization-custom-properties:
@@ -92,6 +96,8 @@ inputs:
     description: "The level of permission to grant the access token for custom repository roles management. Can be set to 'read' or 'write'."
   permission-organization-events:
     description: "The level of permission to grant the access token to view events triggered by an activity in an organization. Can be set to 'read'."
+  permission-organization-external-properties-for-repos:
+    description: "The level of permission to grant the access token for managing external custom properties for repositories in an organization. Can be set to 'read', 'write', or 'admin'."
   permission-organization-hooks:
     description: "The level of permission to grant the access token to manage the post-receive hooks for an organization. Can be set to 'read' or 'write'."
   permission-organization-packages:
@@ -136,8 +142,6 @@ inputs:
     description: "The level of permission to grant the access token to list and manage repositories a user is starring. Can be set to 'read' or 'write'."
   permission-statuses:
     description: "The level of permission to grant the access token for commit statuses. Can be set to 'read' or 'write'."
-  permission-team-discussions:
-    description: "The level of permission to grant the access token to manage team discussions and related comments. Can be set to 'read' or 'write'."
   permission-vulnerability-alerts:
     description: "The level of permission to grant the access token to manage Dependabot alerts. Can be set to 'read' or 'write'."
   permission-workflows:
