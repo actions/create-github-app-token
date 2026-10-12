@@ -18,7 +18,7 @@ jobs:
     name: release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: ./
         id: app-token
@@ -34,7 +34,7 @@ jobs:
           manifest-file: .release-please-manifest.json
           target-branch: ${{ github.ref_name }}
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         if: steps.release-please.outputs.prs_created == 'true'
         with:
           ref: ${{ fromJSON(steps.release-please.outputs.pr).headBranchName }}
