@@ -33,6 +33,9 @@ inputs:
   github-api-url:
     description: The URL of the GitHub REST API.
     default: ${{ github.api_url }}
+  permissions:
+    description: "Comma-separated permissions to grant the token, in 'permission-name: access-level' format. Individual permission-* inputs override duplicate permissions."
+    required: false
   # <START GENERATED PERMISSIONS INPUTS>
   permission-actions:
     description: "The level of permission to grant the access token for GitHub Actions workflows, workflow runs, and artifacts. Can be set to 'read' or 'write'."

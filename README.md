@@ -397,11 +397,17 @@ steps:
 > [!NOTE]
 > The `enterprise` input is mutually exclusive with `owner` and `repositories`. Use it when the GitHub App is installed on an enterprise account. Enterprise installation tokens can call enterprise APIs, but do not grant organization or repository access.
 
+### `permissions`
+
+**Optional:** Comma-separated permissions to grant to the token, using `permission-name: access-level` pairs. For example, `contents: read,pull-requests: write`.
+
+This input is useful when wrapping the action in a composite action that needs to forward a configurable set of permissions. Individual `permission-<permission name>` inputs override duplicate permissions in this list.
+
 ### `permission-<permission name>`
 
 **Optional:** The permissions to grant to the token. By default, the token inherits all of the installation's permissions. We recommend to explicitly list the permissions that are required for a use case. This follows GitHub's own recommendation to [control permissions of `GITHUB_TOKEN` in workflows](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/controlling-permissions-for-github_token). The documentation also lists all available permissions, just prefix the permission key with `permission-` (e.g., `pull-requests` → `permission-pull-requests`).
 
-The reason we define one `permision-<permission name>` input per permission is to benefit from type intelligence and input validation built into GitHub's action runner.
+The individual `permission-<permission name>` inputs make supported permissions discoverable and allow GitHub's action runner to warn about unknown inputs.
 
 ### `skip-token-revoke`
 
