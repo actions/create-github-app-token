@@ -386,7 +386,7 @@ steps:
 **Optional:** Comma or newline-separated list of repositories to grant access to.
 
 > [!NOTE]
-> If `owner` is set and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
+> If `owner` is set explicitly and `repositories` is empty, access will be scoped to all repositories in the provided repository owner's installation. If `owner` and `repositories` are empty, access will be scoped to only the current repository.
 >
 > Repository entries may include an owner, for example `owner/repo1`. The owner portion must match the `owner` input, or the current repository owner if `owner` is unset.
 
