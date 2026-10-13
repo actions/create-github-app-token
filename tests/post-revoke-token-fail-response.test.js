@@ -28,6 +28,6 @@ mockPool
       authorization: "token secret123",
     },
   })
-  .replyWithError(new Error("Internal Server Error"));
+  .reply(500, "Internal Server Error");
 
 await import("../post.js");
