@@ -28,6 +28,6 @@ mockPool
       authorization: "token secret123",
     },
   })
-  .reply(401);
+  .reply(401, "Bad credentials");
 
 await import("../post.js");
