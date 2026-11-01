@@ -22,7 +22,7 @@ jobs:
       COMMIT_MESSAGE: 'feat: update permission inputs'
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: package.json
       - name: Install dependencies
