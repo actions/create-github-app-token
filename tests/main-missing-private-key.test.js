@@ -13,7 +13,10 @@ for (const [key, value] of Object.entries({
 const _error = console.error;
 console.error = (err) => _error(err?.message ?? err);
 
-// Verify `main` exits with an error when `private-key` is not set.
+delete process.env.ACTIONS_ID_TOKEN_REQUEST_URL;
+delete process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
+
+// Verify missing private-key and OIDC permissions produce an actionable error.
 const { default: promise } = await import("../main.js");
 await promise;
 process.exitCode = 0;

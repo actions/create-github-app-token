@@ -148,15 +148,31 @@ GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'
 `;
 
 exports[`main-missing-private-key.test.js > stderr 1`] = `
-The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
+OIDC authentication requires 'id-token: write' workflow permissions. Alternatively, provide 'private-key'.
 `;
 
 exports[`main-missing-private-key.test.js > stdout 1`] = `
-::error::The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
+Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+::error::OIDC authentication requires 'id-token: write' workflow permissions. Alternatively, provide 'private-key'.
 `;
 
 exports[`main-missing-repository.test.js > stderr 1`] = `
 GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'
+`;
+
+exports[`main-oidc-auth.test.js > stdout 1`] = `
+No 'owner' input provided. Using default owner 'actions' to create token for the following repositories:
+- actions/repo
+- actions/another-repo
+::add-mask::installation-token
+
+::set-output name=token::installation-token
+
+::set-output name=installation-id::123
+
+::set-output name=app-slug::test-app
+::save-state name=token::installation-token
+::save-state name=expiresAt::2026-11-10T12:00:00Z
 `;
 
 exports[`main-private-key-with-escaped-newlines.test.js > stdout 1`] = `
@@ -210,24 +226,24 @@ POST /app/installations/123456/access_tokens
 
 exports[`main-token-get-owner-set-client-error.test.js > stderr 1`] = `
 [RequestError [HttpError]: Forbidden] {
-  status: 403,
+  status: [33m403[39m,
   request: {
-    method: 'GET',
-    url: 'https://api.github.com/users/smockle/installation',
+    method: [32m'GET'[39m,
+    url: [32m'https://api.github.com/users/smockle/installation'[39m,
     headers: {
-      accept: 'application/vnd.github.v3+json',
-      'user-agent': 'actions/create-github-app-token',
-      authorization: 'bearer [REDACTED]'
+      accept: [32m'application/vnd.github.v3+json'[39m,
+      [32m'user-agent'[39m: [32m'actions/create-github-app-token'[39m,
+      authorization: [32m'bearer [REDACTED]'[39m
     },
-    request: { hook: [Function: bound hook] AsyncFunction }
+    request: { hook: [36m[Function: bound hook] AsyncFunction[39m }
   },
   response: {
-    url: 'https://api.github.com/users/smockle/installation',
-    status: 403,
-    headers: { 'content-type': 'application/json' },
-    data: { message: 'Forbidden' }
+    url: [32m'https://api.github.com/users/smockle/installation'[39m,
+    status: [33m403[39m,
+    headers: { [32m'content-type'[39m: [32m'application/json'[39m },
+    data: { message: [32m'Forbidden'[39m }
   },
-  [cause]: undefined
+  [cause]: [90mundefined[39m
 }
 `;
 

@@ -23991,17 +23991,47 @@ async function pRetry(input, options = {}) {
   throw new Error("Retry attempts exhausted without throwing an error.");
 }
 
+// lib/create-oidc-auth.js
+async function createOidcAuth(clientId, core, request2) {
+  if (!process.env.ACTIONS_ID_TOKEN_REQUEST_URL || !process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN) {
+    throw new Error("OIDC authentication requires 'id-token: write' workflow permissions. Alternatively, provide 'private-key'.");
+  }
+  const audience = `${process.env.GITHUB_SERVER_URL || "https://github.com"}/login/oauth`;
+  const token = await core.getIDToken(audience);
+  const auth5 = async ({ installationId, repositoryNames, permissions }) => {
+    const { data } = await request2(
+      "POST /app/installations/{installation_id}/access_tokens{?client_id}",
+      {
+        installation_id: installationId,
+        client_id: clientId,
+        repositories: repositoryNames,
+        permissions,
+        headers: { authorization: `Bearer ${token}` }
+      }
+    );
+    return { token: data.token, expiresAt: data.expires_at };
+  };
+  auth5.hook = (hookRequest, route, parameters) => {
+    const endpoint2 = hookRequest.endpoint(route, parameters);
+    const url = new URL(endpoint2.url);
+    url.searchParams.set("client_id", clientId);
+    endpoint2.url = url.toString();
+    endpoint2.headers.authorization = `Bearer ${token}`;
+    return hookRequest(endpoint2);
+  };
+  return auth5;
+}
+
 // lib/main.js
 async function main(clientId, privateKey, enterprise, owner, repositories, permissions, core, createAppAuth2, request2, skipTokenRevoke) {
   if (enterprise && (owner || repositories.length > 0)) {
     throw new Error("Cannot use 'enterprise' input with 'owner' or 'repositories' inputs");
   }
+  if (enterprise && !privateKey) {
+    throw new Error("The 'enterprise' input requires 'private-key'; OIDC authentication is not supported for enterprise installations.");
+  }
   const target = resolveInstallationTarget(enterprise, owner, repositories, core);
-  const auth5 = createAppAuth2({
-    appId: clientId,
-    privateKey,
-    request: request2
-  });
+  const auth5 = privateKey ? createAppAuth2({ appId: clientId, privateKey, request: request2 }) : await createOidcAuth(clientId, core, request2);
   const { authentication, installationId, appSlug } = await pRetry(
     () => getTokenFromTarget(request2, auth5, target, permissions),
     createTokenRetryOptions(core, getTokenRetryDescription(target))
@@ -24221,8 +24251,8 @@ async function run() {
     throw new Error("The 'client-id' (or deprecated 'app-id') input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
   }
   const privateKey = getInput("private-key");
-  if (!privateKey) {
-    throw new Error("The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
+  if (!privateKey && !getInput("client-id")) {
+    throw new Error("The 'client-id' input is required for OIDC authentication. The deprecated 'app-id' input is only supported with 'private-key'.");
   }
   const enterprise = getInput("enterprise");
   const owner = getInput("owner");
