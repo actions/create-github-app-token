@@ -10,7 +10,7 @@ In order to use this action, you need to:
 
 1. [Register new GitHub App](https://docs.github.com/apps/creating-github-apps/setting-up-a-github-app/creating-a-github-app).
 2. [Store the App's Client ID in your repository variables](https://docs.github.com/actions/how-tos/write-workflows/choose-what-workflows-do/use-variables#defining-configuration-variables-for-multiple-workflows) (example: `APP_CLIENT_ID`).
-3. Configure an OIDC trust policy for the App, or [store the App's private key in your repository secrets](https://docs.github.com/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets?tool=webui#creating-secrets-for-a-repository) (example: `APP_PRIVATE_KEY`).
+3. [Store the App's private key in your repository secrets](https://docs.github.com/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets?tool=webui#creating-secrets-for-a-repository) (example: `APP_PRIVATE_KEY`).
 
 > [!IMPORTANT]
 > An installation access token expires after 1 hour. Please [see this comment](https://github.com/actions/create-github-app-token/issues/121#issuecomment-2043214796) for alternative approaches if you have long-running processes.
@@ -37,33 +37,6 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 ```
-
-### Create a token using OIDC without a private key
-
-Omit `private-key` to authenticate using GitHub Actions OIDC. You will need to add `id-token: write` permission to the workflow.
-
-GitHub App federated authentication must be enabled for your GitHub instance and App. The App must be private, owned by the organization running the workflow, and have a trust policy that accepts the workflow's issuer, repository, ref, event, and audience. This action requests the audience `${{ github.server_url }}/login/oauth` (`https://github.com/login/oauth` on github.com).
-
-```yaml
-on: [workflow_dispatch]
-
-jobs:
-  hello-world:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - uses: actions/create-github-app-token@v4
-        id: app-token
-        with:
-          client-id: ${{ vars.APP_CLIENT_ID }}
-      - uses: ./actions/staging-tests
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-```
-
-If `private-key` is supplied, the action uses it instead of OIDC. Enterprise installation tokens still require a private key.
 
 ### Use app token with `actions/checkout`
 
@@ -384,7 +357,7 @@ If you set `HTTP_PROXY` or `HTTPS_PROXY`, also set `NODE_USE_ENV_PROXY: "1"` on 
 
 ### `private-key`
 
-**Optional:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines. When omitted, the action uses [OIDC authentication](#create-a-token-using-oidc-without-a-private-key), which requires `client-id`, `id-token: write`, and a configured App trust policy. A private key is required for enterprise installations.
+**Required:** GitHub App private key. Escaped newlines (`\\n`) will be automatically replaced with actual newlines.
 
 Some other actions may require the private key to be Base64 encoded. To avoid recreating a new secret, it can be decoded on the fly, but it needs to be managed securely. Here is an example of how this can be achieved:
 
