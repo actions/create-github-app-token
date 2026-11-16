@@ -16,7 +16,7 @@ console.error = (err) => _error(err?.message ?? err);
 delete process.env.ACTIONS_ID_TOKEN_REQUEST_URL;
 delete process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
 
-// Verify missing private-key and OIDC permissions produce an actionable error.
+// Verify a missing private-key without OIDC permissions produces an actionable error.
 const { default: promise } = await import("../main.js");
 await promise;
 process.exitCode = 0;

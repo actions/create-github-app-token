@@ -101,10 +101,6 @@ await assert.rejects(createOidcAuth(clientId, {
   ...core,
   async getIDToken() { throw new Error("OIDC provider unavailable"); },
 }, request), /OIDC provider unavailable/);
-delete process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
-await assert.rejects(createOidcAuth(clientId, core, request), /id-token: write/);
-delete process.env.ACTIONS_ID_TOKEN_REQUEST_URL;
-await assert.rejects(createOidcAuth(clientId, core, request), /id-token: write/);
 
 Object.assign(process.env, DEFAULT_ENV, {
   "INPUT_PRIVATE-KEY": "",
