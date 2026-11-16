@@ -1,6 +1,6 @@
 import { readdirSync } from "node:fs";
 import { execFile } from "node:child_process";
-import { promisify } from "node:util";
+import { promisify, stripVTControlCharacters } from "node:util";
 
 import { snapshot, test } from "node:test";
 
@@ -60,8 +60,8 @@ for (const file of testFiles) {
 
       ({ stderr, stdout } = error);
     }
-    const trimmedStderr = stderr.replace(/\r?\n$/, "");
-    const trimmedStdout = stdout.replace(/\r?\n$/, "");
+    const trimmedStderr = stripVTControlCharacters(stderr).replace(/\r?\n$/, "");
+    const trimmedStdout = stripVTControlCharacters(stdout).replace(/\r?\n$/, "");
     await t.test("stderr", (t) => {
       if (trimmedStderr) t.assert.snapshot(trimmedStderr);
       else t.assert.strictEqual(trimmedStderr, "");
