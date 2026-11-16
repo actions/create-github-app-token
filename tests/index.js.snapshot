@@ -167,19 +167,68 @@ exports[`main-missing-repository.test.js > stderr 1`] = `
 GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'
 `;
 
-exports[`main-oidc-auth.test.js > stdout 1`] = `
-No 'owner' input provided. Using default owner 'actions' to create token for the following repositories:
-- actions/repo
-- actions/another-repo
-::add-mask::installation-token
+exports[`main-oidc-enterprise.test.js > stderr 1`] = `
+The 'enterprise' input requires 'private-key'; OIDC authentication is not supported for enterprise installations.
+`;
 
-::set-output name=token::installation-token
+exports[`main-oidc-enterprise.test.js > stdout 1`] = `
+::error::The 'enterprise' input requires 'private-key'; OIDC authentication is not supported for enterprise installations.
+`;
 
-::set-output name=installation-id::123
+exports[`main-oidc-id-token-fail-response.test.js > stderr 1`] = `
+Error message: Failed to get ID Token. 
+ 
+        Error Code : 403
+ 
+        Error Message: Error
+`;
 
-::set-output name=app-slug::test-app
-::save-state name=token::installation-token
-::save-state name=expiresAt::2026-11-10T12:00:00Z
+exports[`main-oidc-id-token-fail-response.test.js > stdout 1`] = `
+Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.com%252Flogin%252Foauth
+::error::Error message: Failed to get ID Token. %0A %0A        Error Code : 403%0A %0A        Error Message: Error
+`;
+
+exports[`main-oidc-owner-set.test.js > stdout 1`] = `
+Input 'repositories' is not set. Creating token for all repositories owned by actions.
+::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.example.com%252Flogin%252Foauth
+::add-mask::oidc-token
+::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=installation-id::123456
+
+::set-output name=app-slug::github-actions
+::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+::save-state name=expiresAt::2016-07-11T22:14:10Z
+--- OIDC REQUESTS ---
+GET /token?api-version=2.0&audience=https%3A%2F%2Fgithub.example.com%2Flogin%2Foauth
+--- REQUESTS ---
+GET /users/actions/installation?client_id=Iv1.0123456789abcdef
+POST /app/installations/123456/access_tokens?client_id=Iv1.0123456789abcdef
+null
+`;
+
+exports[`main-oidc-token-permissions-set.test.js > stdout 1`] = `
+Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.com%252Flogin%252Foauth
+::add-mask::oidc-token
+::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=installation-id::123456
+
+::set-output name=app-slug::github-actions
+::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+::save-state name=expiresAt::2016-07-11T22:14:10Z
+--- OIDC REQUESTS ---
+GET /token?api-version=2.0&audience=https%3A%2F%2Fgithub.com%2Flogin%2Foauth
+--- REQUESTS ---
+GET /repos/actions/create-github-app-token/installation?client_id=Iv1.0123456789abcdef
+POST /app/installations/123456/access_tokens?client_id=Iv1.0123456789abcdef
+{"repositories":["create-github-app-token"],"permissions":{"issues":"write"}}
 `;
 
 exports[`main-private-key-with-escaped-newlines.test.js > stdout 1`] = `

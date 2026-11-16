@@ -1,5 +1,7 @@
 // Base for all `main` tests.
 // @ts-check
+import { createServer } from "node:http";
+
 import { createMockAgent } from "./mock-agent.js";
 
 export const DEFAULT_ENV = {
@@ -42,6 +44,54 @@ x3WQZRiXlWejSMUAHuMwXrhGlltF3lw83+xAjnqsVp75kGS6OH61
   "INPUT_PERMISSION-ADMINISTRATION": "",
 };
 
+// Authenticate with GitHub Actions OIDC instead of a private key.
+export const OIDC_ENV = {
+  ...DEFAULT_ENV,
+  "INPUT_PRIVATE-KEY": "",
+  ACTIONS_ID_TOKEN_REQUEST_TOKEN: "runner-token",
+};
+
+/**
+ * Starts a local server that mimics the Actions OIDC token endpoint, because
+ * `core.getIDToken()` uses `@actions/http-client`, which `MockAgent` can't intercept.
+ *
+ * @param {{ status?: number }} [options]
+ */
+export async function startOidcServer({ status = 200 } = {}) {
+  /** @type {string[]} */
+  const requests = [];
+  const server = createServer((request, response) => {
+    requests.push(`${request.method} ${request.url}`);
+    const authorized = request.headers.authorization === "Bearer runner-token";
+    response.writeHead(authorized ? status : 401, {
+      "content-type": "application/json",
+    });
+    response.end(
+      JSON.stringify(
+        authorized && status === 200 ? { value: "oidc-token" } : { message: "Error" }
+      )
+    );
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", () => resolve(undefined)));
+  const { port } = /** @type {import("node:net").AddressInfo} */ (server.address());
+  process.env.ACTIONS_ID_TOKEN_REQUEST_URL = `http://127.0.0.1:${port}/token?api-version=2.0`;
+
+  // `core.getIDToken()` logs the token URL, so replace the random port to keep snapshots stable.
+  const write = process.stdout.write.bind(process.stdout);
+  process.stdout.write = /** @type {any} */ (
+    (/** @type {unknown} */ chunk, /** @type {any[]} */ ...args) =>
+      write(
+        typeof chunk === "string" ? chunk.replaceAll(`127.0.0.1:${port}`, "127.0.0.1:<port>") : chunk,
+        ...args
+      )
+  );
+
+  return {
+    requests,
+    close: () => new Promise((resolve) => server.close(() => resolve(undefined))),
+  };
+}
+
 export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   for (const [key, value] of Object.entries(env)) {
     process.env[key] = value;
@@ -54,6 +104,12 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const mockPool = mockAgent.get(baseUrl.origin);
 
   // Calling `auth({ type: "app" })` to obtain a JWT doesn’t make network requests, so no need to intercept.
+
+  // Without a private key, the action authenticates with an OIDC token and passes `client_id`.
+  const oidcServer = env["INPUT_PRIVATE-KEY"] ? undefined : await startOidcServer();
+  const clientIdQuery = oidcServer ? `?client_id=${env["INPUT_CLIENT-ID"]}` : "";
+  // JWT creation is not idempotent, so the `authorization` header is only asserted for OIDC.
+  const authorization = oidcServer ? { authorization: "Bearer oidc-token" } : {};
 
   // Mock installation ID and app slug request
   const mockInstallationId = "123456";
@@ -71,12 +127,12 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   mockPool
     .intercept({
-      path: `${basePath}/repos/${owner}/${repo}/installation`,
+      path: `${basePath}/repos/${owner}/${repo}/installation${clientIdQuery}`,
       method: "GET",
       headers: {
         accept: "application/vnd.github.v3+json",
         "user-agent": "actions/create-github-app-token",
-        // Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
+        ...authorization,
       },
     })
     .reply(
@@ -92,12 +148,12 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
 
   mockPool
     .intercept({
-      path: `${basePath}/app/installations/${mockInstallationId}/access_tokens`,
+      path: `${basePath}/app/installations/${mockInstallationId}/access_tokens${clientIdQuery}`,
       method: "POST",
       headers: {
         accept: "application/vnd.github.v3+json",
         "user-agent": "actions/create-github-app-token",
-        // Note: Intentionally omitting the `authorization` header, since JWT creation is not idempotent.
+        ...authorization,
       },
     })
     .reply(
@@ -113,12 +169,18 @@ export async function test(cb = (_mockPool) => {}, env = DEFAULT_ENV) {
   const { default: promise } = await import("../main.js");
   await promise;
 
+  if (oidcServer) {
+    await oidcServer.close();
+    console.log("--- OIDC REQUESTS ---");
+    console.log(oidcServer.requests.join("\n"));
+  }
+
   console.log("--- REQUESTS ---");
   const calls = mockAgent
     .getCallHistory()
     .calls()
     .map((call) => {
-      const route = `${call.method} ${call.path}`;
+      const route = `${call.method} ${call.path}${new URL(call.fullUrl).search}`;
       if (call.method === "GET") return route;
 
       return `${route}\n${call.body}`;

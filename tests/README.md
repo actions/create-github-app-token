@@ -34,3 +34,4 @@ We have tests both for the `main.js` and `post.js` scripts.
 
 - If you do not expect an error, take [main-token-permissions-set.test.js](main-token-permissions-set.test.js) as a starting point.
 - If your test has an expected error, take [main-missing-client-and-app-id.test.js](main-missing-client-and-app-id.test.js) as a starting point.
+- To authenticate with GitHub Actions OIDC instead of a private key, pass `OIDC_ENV` to `test()`, as in [main-oidc-token-permissions-set.test.js](main-oidc-token-permissions-set.test.js).
