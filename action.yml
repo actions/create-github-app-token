@@ -13,7 +13,7 @@ inputs:
     required: false
     deprecationMessage: "Use 'client-id' instead."
   private-key:
-    description: "GitHub App private key. If omitted, authenticate using GitHub Actions OIDC (requires client-id and id-token: write)."
+    description: "GitHub App private key. If omitted, authenticate using GitHub Actions OIDC (requires client-id and id-token: write, and a private app owned by the workflow repository's organization)."
     required: false
   owner:
     description: "The owner of the GitHub App installation (defaults to current repository owner)"
