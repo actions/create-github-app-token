@@ -148,15 +148,75 @@ GITHUB_REPOSITORY_OWNER missing, must be set to '<owner>'
 `;
 
 exports[`main-missing-private-key.test.js > stderr 1`] = `
-The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
+The 'private-key' input must be set to a non-empty string, or the workflow must have 'id-token: write' permissions to authenticate with OIDC. If using a secret or variable, ensure it is available in this workflow context.
 `;
 
 exports[`main-missing-private-key.test.js > stdout 1`] = `
-::error::The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.
+::error::The 'private-key' input must be set to a non-empty string, or the workflow must have 'id-token: write' permissions to authenticate with OIDC. If using a secret or variable, ensure it is available in this workflow context.
 `;
 
 exports[`main-missing-repository.test.js > stderr 1`] = `
 GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'
+`;
+
+exports[`main-oidc-custom-server-url.test.js > stdout 1`] = `
+Input 'repositories' is not set. Creating token for all repositories owned by actions.
+No 'private-key' provided; authenticating with GitHub Actions OIDC.
+::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.example.com%252Flogin%252Foauth
+::add-mask::oidc-token
+::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=installation-id::123456
+
+::set-output name=app-slug::github-actions
+::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+::save-state name=expiresAt::2016-07-11T22:14:10Z
+--- OIDC REQUESTS ---
+GET /token?api-version=2.0&audience=https%3A%2F%2Fgithub.example.com%2Flogin%2Foauth
+--- REQUESTS ---
+GET /users/actions/installation?client_id=Iv1.0123456789abcdef
+POST /app/installations/123456/access_tokens?client_id=Iv1.0123456789abcdef
+null
+`;
+
+exports[`main-oidc-enterprise-requires-private-key.test.js > stderr 1`] = `
+The 'enterprise' input requires 'private-key'; OIDC authentication is not supported for enterprise installations.
+`;
+
+exports[`main-oidc-enterprise-requires-private-key.test.js > stdout 1`] = `
+::error::The 'enterprise' input requires 'private-key'; OIDC authentication is not supported for enterprise installations.
+`;
+
+exports[`main-oidc-missing-client-id.test.js > stderr 1`] = `
+The 'client-id' input is required for OIDC authentication. The deprecated 'app-id' input is only supported with 'private-key'.
+`;
+
+exports[`main-oidc-missing-client-id.test.js > stdout 1`] = `
+::error::The 'client-id' input is required for OIDC authentication. The deprecated 'app-id' input is only supported with 'private-key'.
+`;
+
+exports[`main-oidc-token-permissions-set.test.js > stdout 1`] = `
+Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+No 'private-key' provided; authenticating with GitHub Actions OIDC.
+::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.com%252Flogin%252Foauth
+::add-mask::oidc-token
+::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+
+::set-output name=installation-id::123456
+
+::set-output name=app-slug::github-actions
+::save-state name=token::ghs_16C7e42F292c6912E7710c838347Ae178B4a
+::save-state name=expiresAt::2016-07-11T22:14:10Z
+--- OIDC REQUESTS ---
+GET /token?api-version=2.0&audience=https%3A%2F%2Fgithub.com%2Flogin%2Foauth
+--- REQUESTS ---
+GET /repos/actions/create-github-app-token/installation?client_id=Iv1.0123456789abcdef
+POST /app/installations/123456/access_tokens?client_id=Iv1.0123456789abcdef
+{"repositories":["create-github-app-token"],"permissions":{"issues":"write"}}
 `;
 
 exports[`main-private-key-with-escaped-newlines.test.js > stdout 1`] = `

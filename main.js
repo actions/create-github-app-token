@@ -24,7 +24,12 @@ async function run() {
   }
   const privateKey = core.getInput("private-key");
   if (!privateKey) {
-    throw new Error("The 'private-key' input must be set to a non-empty string. If using a secret or variable, ensure it is available in this workflow context.");
+    if (!process.env.ACTIONS_ID_TOKEN_REQUEST_URL || !process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN) {
+      throw new Error("The 'private-key' input must be set to a non-empty string, or the workflow must have 'id-token: write' permissions to authenticate with OIDC. If using a secret or variable, ensure it is available in this workflow context.");
+    }
+    if (!core.getInput("client-id")) {
+      throw new Error("The 'client-id' input is required for OIDC authentication. The deprecated 'app-id' input is only supported with 'private-key'.");
+    }
   }
   const enterprise = core.getInput("enterprise");
   const owner = core.getInput("owner");
