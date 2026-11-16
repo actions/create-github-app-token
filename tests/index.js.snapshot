@@ -19,14 +19,6 @@ POST /app/installations/123456/access_tokens
 {"repositories":["create-github-app-token"]}
 `;
 
-exports[`main-app-id-without-private-key.test.js > stderr 1`] = `
-The 'client-id' input is required for OIDC authentication. The deprecated 'app-id' input is only supported with 'private-key'.
-`;
-
-exports[`main-app-id-without-private-key.test.js > stdout 1`] = `
-::error::The 'client-id' input is required for OIDC authentication. The deprecated 'app-id' input is only supported with 'private-key'.
-`;
-
 exports[`main-client-id-precedence.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
@@ -167,11 +159,11 @@ exports[`main-missing-repository.test.js > stderr 1`] = `
 GITHUB_REPOSITORY missing, must be set to '<owner>/<repo>'
 `;
 
-exports[`main-oidc-enterprise.test.js > stderr 1`] = `
+exports[`main-oidc-enterprise-requires-private-key.test.js > stderr 1`] = `
 The 'enterprise' input requires 'private-key'; OIDC authentication is not supported for enterprise installations.
 `;
 
-exports[`main-oidc-enterprise.test.js > stdout 1`] = `
+exports[`main-oidc-enterprise-requires-private-key.test.js > stdout 1`] = `
 ::error::The 'enterprise' input requires 'private-key'; OIDC authentication is not supported for enterprise installations.
 `;
 
@@ -190,7 +182,15 @@ No 'private-key' provided; authenticating with GitHub Actions OIDC.
 ::error::Error message: Failed to get ID Token. %0A %0A        Error Code : 403%0A %0A        Error Message: Error
 `;
 
-exports[`main-oidc-owner-set.test.js > stdout 1`] = `
+exports[`main-oidc-missing-client-id.test.js > stderr 1`] = `
+The 'client-id' input is required for OIDC authentication. The deprecated 'app-id' input is only supported with 'private-key'.
+`;
+
+exports[`main-oidc-missing-client-id.test.js > stdout 1`] = `
+::error::The 'client-id' input is required for OIDC authentication. The deprecated 'app-id' input is only supported with 'private-key'.
+`;
+
+exports[`main-oidc-owner-set-repo-unset.test.js > stdout 1`] = `
 Input 'repositories' is not set. Creating token for all repositories owned by actions.
 No 'private-key' provided; authenticating with GitHub Actions OIDC.
 ::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.example.com%252Flogin%252Foauth
