@@ -185,12 +185,14 @@ Error message: Failed to get ID Token.
 
 exports[`main-oidc-id-token-fail-response.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+No 'private-key' provided; authenticating with GitHub Actions OIDC.
 ::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.com%252Flogin%252Foauth
 ::error::Error message: Failed to get ID Token. %0A %0A        Error Code : 403%0A %0A        Error Message: Error
 `;
 
 exports[`main-oidc-owner-set.test.js > stdout 1`] = `
 Input 'repositories' is not set. Creating token for all repositories owned by actions.
+No 'private-key' provided; authenticating with GitHub Actions OIDC.
 ::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.example.com%252Flogin%252Foauth
 ::add-mask::oidc-token
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
@@ -212,6 +214,7 @@ null
 
 exports[`main-oidc-token-permissions-set.test.js > stdout 1`] = `
 Inputs 'owner' and 'repositories' are not set. Creating token for this repository (actions/create-github-app-token).
+No 'private-key' provided; authenticating with GitHub Actions OIDC.
 ::debug::ID token url is http://127.0.0.1:<port>/token?api-version=2.0&audience=https%253A%252F%252Fgithub.com%252Flogin%252Foauth
 ::add-mask::oidc-token
 ::add-mask::ghs_16C7e42F292c6912E7710c838347Ae178B4a
