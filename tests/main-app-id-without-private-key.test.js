@@ -1,12 +1,10 @@
-import { DEFAULT_ENV } from "./main.js";
+import { OIDC_ENV } from "./main.js";
 
 for (const [key, value] of Object.entries({
-  ...DEFAULT_ENV,
+  ...OIDC_ENV,
   "INPUT_CLIENT-ID": "",
   "INPUT_APP-ID": "123456",
-  "INPUT_PRIVATE-KEY": "",
   ACTIONS_ID_TOKEN_REQUEST_URL: "https://oidc.example/token",
-  ACTIONS_ID_TOKEN_REQUEST_TOKEN: "runner-token",
 })) {
   process.env[key] = value;
 }
