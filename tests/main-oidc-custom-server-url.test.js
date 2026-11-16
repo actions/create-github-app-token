@@ -1,7 +1,6 @@
 import { OIDC_ENV, test } from "./main.js";
 
-// Verify `main` authenticates with an OIDC token when the `owner` input is set, and that the
-// OIDC audience is derived from `GITHUB_SERVER_URL`.
+// Verify the OIDC audience is derived from `GITHUB_SERVER_URL`, using an `owner` target.
 await test((mockPool) => {
   process.env.GITHUB_SERVER_URL = "https://github.example.com";
   process.env.INPUT_OWNER = process.env.GITHUB_REPOSITORY_OWNER;

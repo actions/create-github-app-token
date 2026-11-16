@@ -54,23 +54,17 @@ export const OIDC_ENV = {
 /**
  * Starts a local server that mimics the Actions OIDC token endpoint, because
  * `core.getIDToken()` uses `@actions/http-client`, which `MockAgent` can't intercept.
- *
- * @param {{ status?: number }} [options]
  */
-export async function startOidcServer({ status = 200 } = {}) {
+async function startOidcServer() {
   /** @type {string[]} */
   const requests = [];
   const server = createServer((request, response) => {
     requests.push(`${request.method} ${request.url}`);
     const authorized = request.headers.authorization === "Bearer runner-token";
-    response.writeHead(authorized ? status : 401, {
+    response.writeHead(authorized ? 200 : 401, {
       "content-type": "application/json",
     });
-    response.end(
-      JSON.stringify(
-        authorized && status === 200 ? { value: "oidc-token" } : { message: "Error" }
-      )
-    );
+    response.end(JSON.stringify(authorized ? { value: "oidc-token" } : { message: "Unauthorized" }));
   });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", () => resolve(undefined)));
   const { port } = /** @type {import("node:net").AddressInfo} */ (server.address());
