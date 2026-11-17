@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0-beta](https://github.com/actions/create-github-app-token/compare/v3.3.0...v3.4.0-beta) (2026-11-17)
+
+
+### Features
+
+* support GitHub Actions OIDC authentication ([#411](https://github.com/actions/create-github-app-token/issues/411)) ([8240f10](https://github.com/actions/create-github-app-token/commit/8240f10d3ae05b4d450da83e8e247111a36eaf2c))
+
 ## [3.3.0](https://github.com/actions/create-github-app-token/compare/v3.2.0...v3.3.0) (2026-10-12)
 
 
