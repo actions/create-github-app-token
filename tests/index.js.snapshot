@@ -514,7 +514,7 @@ exports[`post-proxy-requires-native-support.test.js > stdout 1`] = `
 `;
 
 exports[`post-revoke-token-fail-response.test.js > stdout 1`] = `
-::warning::Token revocation failed: 
+::warning::Token revocation failed: Bad credentials
 `;
 
 exports[`post-token-expired.test.js > stdout 1`] = `
