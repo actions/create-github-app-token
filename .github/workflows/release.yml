@@ -44,6 +44,7 @@ jobs:
         if: steps.release-please.outputs.prs_created == 'true'
         with:
           node-version-file: package.json
+          package-manager-cache: false
 
       - run: npm ci
         if: steps.release-please.outputs.prs_created == 'true'
